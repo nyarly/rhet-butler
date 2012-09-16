@@ -27,6 +27,8 @@ describe RhetButler do
 
     describe "review view" do
       it "should update the slides automatically when the files change"
+
+      it "should update processed assets automatically"
     end
   end
 
@@ -49,6 +51,10 @@ describe RhetButler do
 
     describe "arrangements" do
       it "should apply arrangements to the slide set"
+    end
+
+    describe "asset handling" do
+      it "should process SASS files and provide CSS links"
     end
   end
 end
