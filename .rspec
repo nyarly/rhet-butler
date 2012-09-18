@@ -2,8 +2,8 @@
 --out last_run
 --color
 --format documentation
--I spec_help/interpose
+-I spec_support/interpose
 -I lib
--I spec_help
---require spec_helper
---pattern *.rb
+-I spec_support
+-r setup
+--pattern **/*.rb

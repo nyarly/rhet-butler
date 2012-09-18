@@ -1,3 +1,5 @@
+require 'rhet-butler'
+
 describe RhetButler do
   describe "web server" do
     describe "presentation view" do
@@ -33,10 +35,6 @@ describe RhetButler do
   end
 
   describe "slide processing" do
-    it "should read slide configs and produce HTML"
-
-    it "should parse YAML for the configs"
-
     describe "text processing" do
       it "should process slide text as directed"
 
@@ -47,10 +45,6 @@ describe RhetButler do
       it "should insert slides from set references"
 
       it "should nest slides from set references"
-    end
-
-    describe "arrangements" do
-      it "should apply arrangements to the slide set"
     end
 
     describe "asset handling" do

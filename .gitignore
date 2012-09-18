@@ -1,2 +1,5 @@
 .bundle/
 *.sw?
+slides.yaml
+static/
+last_run

@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+# vim: set ft=ruby :
+require 'rhet-butler/command-line'
+
+RhetButler::CommandLine.start
