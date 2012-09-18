@@ -10,7 +10,7 @@ describe RhetButler::FileManager do
   end
 
   let :slides do
-    file_manager.load_slides('one.yaml')
+    file_manager.load_slides('slides.yaml')
   end
 
   it "should parse YAML for the configs" do

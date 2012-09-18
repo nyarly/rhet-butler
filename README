@@ -1,0 +1,23 @@
+# Rhet Butler
+
+A presentation app.  Inspired by Showoff and its "might could dos."
+
+# Features
+
+Slides formatted as YAML.
+
+Presentations driven by impress.js
+
+# FAQ
+
+Q. Why is it named after a character in Gone Wind the Wind?
+A. It's not.  It's a helper for your speeches.  A rhetoric butler.  From there,
+it's a *pun* on the name of a character in Gone With the Wind.
+
+Q. Why a pun?
+A. I should think that would be obvious.  Puns are awesome.
+
+# Thanks
+
+Bartek Szopka - author of impress.js
+Scott Chacon - wrote Showoff

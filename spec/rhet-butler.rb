@@ -16,6 +16,11 @@ describe RhetButler do
       it "should have a resource for the current presenter's slide"
     end
 
+    describe "passive view" do
+      it "should serve the presentation"
+
+      it "should not respond to key press events"
+    end
 
     describe "presenter's view" do
       it "should serve a presenter's view"
