@@ -1,15 +1,13 @@
 require 'valise'
-require 'rhet-butler/extendable-valise'
 require 'rhet-butler/template-handler'
 require 'rhet-butler/html-generator'
-require 'rhet-butler/slide-loader'
 require 'rhet-butler/arrangement'
 
 module RhetButler
   class StaticGenerator
-    def initialize(valise)
+    def initialize(valise, configuration)
       @base_valise = valise
-      @root_slides = "slides.yaml"
+      @configuration = configuration
       @target_directory = "static"
     end
 
@@ -30,19 +28,15 @@ module RhetButler
     end
 
     def html_document
-      slide_loader = SlideLoader.new(@base_valise)
-
       html_generator = HTMLGenerator.new(template_handler)
 
-      html_generator.slides = Arrangement["horizontal"].new(slide_loader.load(root_slides))
-
+      html_generator.slides = Arrangement["horizontal"].new(@base_valise.load_slides(@configuration.root_slide))
 
       return html_generator.html
     end
 
     def populate_assets
       @base_valise.sub_set("templates").glob("assets/**").map do |stack|
-        p stack.segments
         stack.segments[1..-2] +
           [stack.segments.last.sub(/(.*(?:\..*)?).*/){|| $1}]
       end.uniq.each do |target_file|

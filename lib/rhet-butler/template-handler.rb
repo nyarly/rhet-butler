@@ -1,10 +1,7 @@
 require 'tilt'
-require 'valise'
-require 'rhet-butler/extendable-valise'
 
 module RhetButler
   class TemplateHandler
-    include ExtendableValise
 
     class IdentityTemplate
       def initialize(contents)
@@ -19,20 +16,20 @@ module RhetButler
     def initialize(valise, search)
       @template_cache = Tilt::Cache.new
       @search = search
-      @base_valise = valise
-      @extra_valise = Valise::Set.new
+      @valise = valise
     end
 
+    attr_reader :valise
+
     def find_template(path)
-      p path
       potential_templates = valise.glob(path + "*").group_by do |item|
         item.depth
       end
       highest = potential_templates.min_by do |depth, items|
         depth
-      end.last
-      return  highest.min_by do |item|
-        item.rel_path.length
+      end
+      return highest.last.min_by do |item|
+        item.segments.last.split(".").length
       end
     end
 

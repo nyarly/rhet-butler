@@ -1,29 +1,54 @@
 require 'thor'
+require 'rhet-butler/file-manager'
+require 'rhet-butler/configuration'
 
 module RhetButler
   class CommandLine < ::Thor
 
+    def self.shared_options
+      method_option :sources, :type => :array
+      method_option :root_slide, :type => :string
+    end
+
     desc "static", "Builds a static version of the presentation"
     method_option :target, :type => :string
-    method_option :sources, :type => :array
-    method_option :root_slides, :type => :string
+    shared_options
     def static
       require 'rhet-butler/static-generator'
-      require 'rhet-butler/base-valise'
-      generator = StaticGenerator.new(BaseValise.instance)
-      generator.target_directory = options[:target] if options.has_key? :target
-      generator.root_slides = options[:root_slides] if options.has_key? :root_slides
 
       slides = options[:sources]
-      unless slides.nil?
-        generator.extend_search("slides") do
-          slides.each do |source|
-            ro source
-          end
-        end
+      files = FileManager.current_directory + FileManager.default
+
+      unless options[:sources].nil?
+        files = FileManager.role_search("slides", options[:sources]) + files
       end
 
+      configuration = Configuration.load_from(files)
+      configuration.root_slide = options[:root_slide] if options.has_key? :root_slide
+
+      generator = StaticGenerator.new(files, configuration)
+      generator.target_directory = options[:target] if options.has_key? :target
+
       generator.go!
+    end
+
+    desc "serve", "Run the presentation server"
+    shared_options
+    def serve
+      require 'rhet-butler/web/main-app'
+
+      slides = options[:sources]
+      files = FileManager.current_directory + FileManager.default
+
+      unless options[:sources].nil?
+        files = FileManager.role_search("slides", options[:sources]) + files
+      end
+
+      configuration = Configuration.load_from(files)
+      configuration.root_slide = options[:root_slide] if options.has_key? :root_slide
+
+      app = Web::MainApp.new(files, configuration)
+      app.start
     end
   end
 end

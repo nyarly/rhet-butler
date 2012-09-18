@@ -1,5 +1,5 @@
 require 'rhet-butler/html-generator'
-require 'rhet-butler/base-valise'
+require 'rhet-butler/file-manager'
 require 'rhet-butler/slide'
 
 describe RhetButler::HTMLGenerator do
@@ -10,7 +10,7 @@ describe RhetButler::HTMLGenerator do
   end
 
   let :template_handler do
-    RhetButler::TemplateHandler.new(RhetButler::BaseValise.instance)
+    RhetButler::TemplateHandler.new(RhetButler::FileManager.default, "templates")
   end
 
   let :generator do
