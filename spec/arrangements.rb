@@ -1,5 +1,6 @@
 require 'rhet-butler/arrangement'
 require 'rhet-butler/slide'
+require 'rhet-butler/slide-loader'
 
 describe RhetButler::Arrangement do
   let :slides do
@@ -12,11 +13,20 @@ describe RhetButler::Arrangement do
 
   describe "horizontal" do
     let :arrangement do
-      RhetButler::Arrangement["horizontal"].new(slides)
+      arrangement = RhetButler::Arrangement["horizontal"].new
+      arrangement.slides = slides
+      arrangement
+    end
+
+    let :arranger do
+      arranger = RhetButler::SlideArranger.new
+      arranger.root_arrangement = arrangement
+      arranger
     end
 
     let :arranged do
-      arrangement.to_a
+      arranger.traverse
+      arranger.slides
     end
 
     it "should all at the same y position" do

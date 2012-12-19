@@ -1,5 +1,5 @@
 require 'rhet-butler/html-generator'
-require 'rhet-butler/arrangement'
+require 'rhet-butler/slide-loader'
 require 'rhet-butler/template-handler'
 
 module RhetButler
@@ -17,13 +17,17 @@ module RhetButler
       end
 
       def slides
-        @slides ||= Arrangement[@configuration.arrangement].new(@valise.load_slides(@configuration.root_slide))
+        @slides ||=
+          begin
+            slide_loader = SlideLoader.new(@configuration)
+            slide_loader.load_slides
+          end
       end
 
       def html_generator
         @html_generator ||=
           begin
-            generator = HTMLGenerator.new(template_handler)
+            generator = HTMLGenerator.new(@configuration, template_handler)
             generator.slides = slides
             generator
           end

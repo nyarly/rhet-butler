@@ -1,0 +1,6 @@
+<script type="text/javascript">
+  var sock = new SockJS("/live/leader");
+  document.addEventListener("impress:stepenter", function(event){
+    sock.send(event.target.id)
+  })
+</script>

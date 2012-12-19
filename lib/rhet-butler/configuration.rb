@@ -1,11 +1,22 @@
 module RhetButler
   class Configuration
-    def initialize(hash)
-      @base_hash = hash
+    attr_reader :files
+    def initialize(files, overrides=nil)
+      @files = files
+      @base_hash = files.find("config.yaml").contents
+      @base_hash.merge!(overrides) unless overrides.nil?
     end
 
-    def arrangement
+    def impress_config
+      @base_hash['impress-config'] || {}
+    end
+
+    def root_arrangement
       @base_hash["arrangement"] || "horizontal"
+    end
+
+    def arrangement_blueprint
+      @base_hash["blueprint"] || {}
     end
 
     def serve_port
@@ -14,10 +25,6 @@ module RhetButler
 
     def root_slide
       @base_hash["root_slide"] || "slides.yaml"
-    end
-
-    def self.load_from(files)
-      self.new(files.find("config.yaml").contents)
     end
   end
 end

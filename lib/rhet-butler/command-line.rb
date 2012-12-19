@@ -16,12 +16,7 @@ module RhetButler
     def static
       require 'rhet-butler/static-generator'
 
-      slides = options[:sources]
-      files = FileManager.current_directory + FileManager.default
-
-      unless options[:sources].nil?
-        files = FileManager.role_search("slides", options[:sources]) + files
-      end
+      files = FileManager.build(options[:sources])
 
       configuration = Configuration.load_from(files)
       configuration.root_slide = options[:root_slide] if options.has_key? :root_slide
@@ -37,17 +32,7 @@ module RhetButler
     def serve
       require 'rhet-butler/web/main-app'
 
-      slides = options[:sources]
-      files = FileManager.current_directory + FileManager.default
-
-      unless options[:sources].nil?
-        files = FileManager.role_search("slides", options[:sources]) + files
-      end
-
-      configuration = Configuration.load_from(files)
-      configuration.root_slide = options[:root_slide] if options.has_key? :root_slide
-
-      app = Web::MainApp.new(files, configuration)
+      app = Web::MainApp.new(options[:sources], options[:root_slide])
       app.start
     end
   end

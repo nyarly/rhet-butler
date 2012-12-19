@@ -12,7 +12,9 @@ describe RhetButler::Web::MainApp do
         stemmed("slides") do
           rw "spec_support/fixtures/project"
         end
-      end + RhetButler::FileManager.default
+      end +
+        RhetButler::FileManager.defaults("viewer") +
+        RhetButler::FileManager.defaults("common")
     end
 
     let :config_hash do
@@ -20,11 +22,11 @@ describe RhetButler::Web::MainApp do
     end
 
     let :configuration do
-      RhetButler::Configuration.new(config_hash)
+      RhetButler::Configuration.new(files, config_hash)
     end
 
     let :app do
-      described_class.new(files, configuration).app
+      described_class.new(nil, nil).app
     end
 
     describe "/" do

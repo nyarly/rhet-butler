@@ -1,0 +1,20 @@
+Incrementals: slideset member -> multiple related slides.  Processing thing like:
+
+Here are some bullets:
+
+[1+: A bullet]
+[2+: Another bullet]
+[3+: More bulleting]
+
+Or
+
+def a_method([1: hl: args])
+  [2: hl: interesting_line]
+  another thing([1: hl: args])
+end
+
+Becomes nested div.step s in output - allows for css like:
+
+div.step.inc-1 span.highlight.inc-1 {
+  @include !code-highlighting
+}

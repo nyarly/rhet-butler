@@ -14,16 +14,21 @@ module RhetButler
       attr_accessor :author_name, :title, :description
     end
 
-    def initialize(template_handler)
+    def initialize(configuration, template_handler)
+      @impress_config = configuration.impress_config
       @template_handler = template_handler
       @slides = []
       @presentation = Presentation.new
     end
 
-    attr_accessor :slides, :presentation
+    attr_accessor :slides, :presentation, :impress_config
+
+    def render(path)
+      @template_handler.render(path, self)
+    end
 
     def html
-      @template_handler.render("presentation.html", self)
+      render("presentation.html")
     end
   end
 end

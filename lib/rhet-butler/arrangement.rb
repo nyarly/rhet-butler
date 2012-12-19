@@ -2,17 +2,23 @@ module RhetButler
   class Arrangement
     include Enumerable
 
-    def initialize(slides)
-      @slides = slides
+    def initialize(*args)
+      @slides = []
       @slide_width = 1000
       @slide_height = 1000
     end
 
-    attr_accessor :slide_width, :slide_height
+    attr_accessor :slides, :slide_width, :slide_height
+
+    def previous_slide
+      @slides.last
+    end
 
     def each
-      @slides.each_with_index do |slide, index|
-        yield(arrange(slide.dup, index))
+      if block_given?
+        @slides.each{|slide| yield slide}
+      else
+        @slides.each
       end
     end
 
@@ -34,8 +40,9 @@ module RhetButler
   class Horizontal < Arrangement
     register "horizontal"
 
-    def arrange(slide, index)
-      slide.position.x = index * slide_width
+    def arrange(slideset)
+      slide = slideset.current_slide
+      slide.position.x = slideset.previous_slide.position.x + slide_width
       slide.position.y = 0
       return slide
     end

@@ -14,6 +14,7 @@ describe RhetButler::FileManager do
   end
 
   it "should parse YAML for the configs" do
+    pending
     slides.should have_at_least(1).slides
     slides.should be_all{|slide| RhetButler::Slide === slide}
   end

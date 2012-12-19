@@ -2,6 +2,8 @@ require 'tilt'
 
 module RhetButler
   class TemplateHandler
+    class NotFound < ::Exception
+    end
 
     class IdentityTemplate
       def initialize(contents)
@@ -25,6 +27,7 @@ module RhetButler
       potential_templates = valise.glob(path + "*").group_by do |item|
         item.depth
       end
+      raise NotFound, path if potential_templates.empty?
       highest = potential_templates.min_by do |depth, items|
         depth
       end

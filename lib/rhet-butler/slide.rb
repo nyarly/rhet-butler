@@ -1,9 +1,20 @@
+require 'rhet-butler/yaml-type'
+
 module RhetButler
   class Slide
-    EXPECTED_CONFIG = %w[
-      content title html_id html_classes html_class
-      pos_x pos_y pos_z rot_x rot_y rot_z scale
-    ]
+    include YamlType
+    class << self
+      def optional_config
+        %w[
+          title html_id html_classes html_class
+          pos_x pos_y pos_z rot_x rot_y rot_z scale
+        ]
+      end
+
+      def required_config
+        %w[content]
+      end
+    end
 
     class Position
       def initialize
@@ -64,13 +75,11 @@ module RhetButler
           coder.map
         when :scalar
           { 'content' => coder.scalar.to_s }
-        when :sequence
+        when :seq
           warn "Got a sequence for a slide - not sure how to parse that.  Skipping"
         end
-      weird_keys = config_hash.keys.find_all{|key| !EXPECTED_CONFIG.include?(key)}
-      unless weird_keys.empty?
-        warn "Found weird keys in slide: #{weird_keys.inspect}"
-      end
+
+      check_config_hash(@config_hash)
 
       @content = @config_hash["content"]
 
@@ -112,12 +121,6 @@ module RhetButler
 
       value_from_config("scale") do |value|
         @scale = value
-      end
-    end
-
-    def value_from_config(name)
-      if @config_hash.has_key?(name)
-        yield(hash[name])
       end
     end
 

@@ -1,6 +1,7 @@
 require 'rhet-butler/html-generator'
 require 'rhet-butler/file-manager'
 require 'rhet-butler/slide'
+require 'rhet-butler/configuration'
 
 describe RhetButler::HTMLGenerator do
   let :slides do
@@ -9,12 +10,20 @@ describe RhetButler::HTMLGenerator do
     [ one ]
   end
 
+  let :files do
+    RhetButler::FileManager.defaults("viewer") + RhetButler::FileManager.defaults("common")
+  end
+
   let :template_handler do
-    RhetButler::TemplateHandler.new(RhetButler::FileManager.default, "templates")
+    RhetButler::TemplateHandler.new(files, "templates")
+  end
+
+  let :configuration do
+    RhetButler::Configuration.new(files)
   end
 
   let :generator do
-    described_class.new(template_handler).tap do |gen|
+    described_class.new(configuration, template_handler).tap do |gen|
       gen.slides = slides
     end
   end

@@ -3,13 +3,27 @@ require 'rhet-butler/slide'
 
 module RhetButler
   class FileManager < Valise::Set
-    def self.default
+
+    def self.build(roles, sources)
+      files = FileManager.current_directory
+
+      roles.each do |role|
+        files += FileManager.defaults(role)
+      end
+
+      unless sources.nil? or sources.empty?
+        files = FileManager.role_search("slides", sources) + files
+      end
+      return files
+    end
+
+    def self.defaults(role)
       self.new.define do
-        rw ".rhet"
-        rw "~/.rhet"
-        rw "/usr/share/rhet-butler"
-        rw "/etc/rhet-butler"
-        ro from_here("../../default-configuration")
+        rw [".rhet", role]
+        rw ["~", ".rhet", role]
+        rw ["", "usr", "share", "rhet-butler", role]
+        rw ["", "etc", "rhet-butler", role]
+        ro from_here(["..", "..", "default-configuration", role])
 
         handle "config.yaml", :yaml, :hash_merge
       end
@@ -31,13 +45,6 @@ module RhetButler
             rw path
           end
         end
-      end
-    end
-
-    def load_slides(*paths)
-      require 'rhet-butler/yaml-schema'
-      paths.inject([]) do |array, path|
-        array + YAML.load_stream(sub_set("slides").find(path).contents).flatten
       end
     end
   end
