@@ -30,4 +30,10 @@ describe RhetButler::SlideLoader do
     slides.should have_at_least(1).slides
     slides.should be_all{|slide| RhetButler::Slide === slide}
   end
+
+  it "should have the included slide" do
+    slides.find do |slide|
+      slide.content =~ /included/
+    end.should_not be_nil
+  end
 end

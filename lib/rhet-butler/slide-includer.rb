@@ -2,8 +2,17 @@ module RhetButler
   class Includer
     include Enumerable
 
+
     def initialize
       @slides = []
+    end
+
+    def init_with(coder)
+      p coder
+      unless coder.type == :scalar
+        raise "!include with non-scalar - use a path string"
+      end
+      @path = coder.scalar
     end
 
     attr_accessor :path
