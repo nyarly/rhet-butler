@@ -1,10 +1,12 @@
 require 'rhet-butler/slide-group'
 require 'rhet-butler/slide'
+require 'rhet-butler/slide-includer'
 require 'rhet-butler/arrangement'
 
 module RhetButler
   class SlideLoader
     def initialize(configuration)
+      p configuration
       @file_set = configuration.files
       @root_slide = configuration.root_slide
       @root_group = SlideGroup.new
@@ -13,16 +15,42 @@ module RhetButler
     end
 
     def load_slides
-      require 'rhet-butler/yaml-schema'
-      slides = YAML.load_stream(@file_set.sub_set("slides").find(@root_slide).contents).first
-      @root_group.slides = slides
+      root_group = SlideGroup.new
+      includer = Includer.new
+      includer.path = @root_slide
+      root_group.slides = [includer]
+
+      loading = FileLoading.new(@file_set)
+      including = IncludeProcessor.new(loading)
+      including.root_group = root_group
+      including.traverse
 
       processor = SlideProcessor.new
-      processor.root_group = @root_group
+      processor.root_group = root_group
       processor.root_arrangement = @root_arrangement
       processor.blueprint = @blueprint
       processor.process
       return processor.slides
+    end
+  end
+
+  require 'rhet-butler/yaml-schema'
+  class FileLoading
+    def initialize(file_set)
+      @file_set = file_set
+      @loaded_paths = {}
+    end
+
+    def load_file(rel_path)
+      file = @file_set.sub_set("slides").find(rel_path)
+
+      if @loaded_paths.has_key?(file.full_path)
+        raise "Circular inclusion of slides: #{@loaded_paths.inspect}"
+      else
+        @loaded_paths[file.full_path] = true
+      end
+
+      return YAML.load_stream(file.contents).flatten
     end
   end
 
@@ -68,8 +96,11 @@ module RhetButler
       until iter_stack.empty?
         begin
           item = iter_stack.last.next
-          if Slide === item
+          case item
+          when Slide
             on_slide(item)
+          when Includer
+            on_include(item)
           else
             on_group(item)
           end
@@ -77,6 +108,48 @@ module RhetButler
           ascend
         end
       end
+    end
+  end
+
+  class IncludeProcessor < SlideTraverser
+    Collector = Struct.new(:group, :slides)
+    attr_accessor :root_group
+
+    def initialize(loader)
+      @loader = loader
+      super()
+    end
+
+    def setup
+      descend(@root_group, @root_group)
+    end
+
+    def descend(source, dest)
+      unless Collector === dest
+        dest = Collector.new(dest, [])
+      end
+      super(source, dest)
+    end
+
+    def ascend
+      target = target_stack.pop
+      unless target == target_stack.last
+        target.group.slides = target.slides
+      end
+      iter_stack.pop
+    end
+
+    def on_include(includer)
+      includer.load(@loader)
+      descend(includer, target_stack.last)
+    end
+
+    def on_slide(slide)
+      target_stack.last.slides << slide
+    end
+
+    def on_group(group)
+      descend(group, group)
     end
   end
 
