@@ -36,4 +36,16 @@ describe RhetButler::SlideLoader do
       slide.content =~ /included/
     end.should_not be_nil
   end
+
+  it "should have the slide group" do
+    slides.find do |slide|
+      slide.content =~ /grouped/
+    end.should_not be_nil
+  end
+
+  it "should allow sibling inclusions" do
+    expect do
+      slides
+    end.not_to raise_error
+  end
 end

@@ -39,12 +39,18 @@ module RhetButler
       @file_set = file_set
       @loaded_paths = {}
     end
+    attr_reader :loaded_paths, :file_set
+
+    def initialize_copy(other)
+      @file_set = other.file_set
+      @loaded_paths = other.loaded_paths.dup
+    end
 
     def load_file(rel_path)
       file = @file_set.sub_set("slides").find(rel_path)
 
       if @loaded_paths.has_key?(file.full_path)
-        raise "Circular inclusion of slides: #{@loaded_paths.inspect}"
+        raise "Circular inclusion of slides: >> #{file.full_path} << #{@loaded_paths.keys.inspect}"
       else
         @loaded_paths[file.full_path] = true
       end
@@ -111,12 +117,20 @@ module RhetButler
   end
 
   class IncludeProcessor < SlideTraverser
-    Collector = Struct.new(:group, :slides)
+    Collector = Struct.new(:group, :slides, :loader)
     attr_accessor :root_group
 
     def initialize(loader)
       @loader = loader
       super()
+    end
+
+    def current_loader
+      if target_stack.empty?
+        return @loader
+      else
+        return target_stack.last.loader
+      end
     end
 
     def setup
@@ -125,7 +139,7 @@ module RhetButler
 
     def descend(source, dest)
       unless Collector === dest
-        dest = Collector.new(dest, [])
+        dest = Collector.new(dest, [], current_loader)
       end
       super(source, dest)
     end
@@ -139,8 +153,10 @@ module RhetButler
     end
 
     def on_include(includer)
-      includer.load(@loader)
-      descend(includer, target_stack.last)
+      loader = includer.load(current_loader)
+      collector = target_stack.last.dup
+      collector.loader = loader
+      descend(includer, collector)
     end
 
     def on_slide(slide)
@@ -148,6 +164,7 @@ module RhetButler
     end
 
     def on_group(group)
+      target_stack.last.slides << group
       descend(group, group)
     end
   end

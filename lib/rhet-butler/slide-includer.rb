@@ -8,7 +8,6 @@ module RhetButler
     end
 
     def init_with(coder)
-      p coder
       unless coder.type == :scalar
         raise "!include with non-scalar - use a path string"
       end
@@ -27,7 +26,9 @@ module RhetButler
     end
 
     def load(loader)
+      loader = loader.dup
       @slides = loader.load_file(path)
+      loader
     end
   end
 end
