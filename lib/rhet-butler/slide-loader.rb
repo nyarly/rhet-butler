@@ -6,7 +6,6 @@ require 'rhet-butler/arrangement'
 module RhetButler
   class SlideLoader
     def initialize(configuration)
-      p configuration
       @file_set = configuration.files
       @root_slide = configuration.root_slide
       @root_group = SlideGroup.new

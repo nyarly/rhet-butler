@@ -35,7 +35,6 @@ describe RhetButler::Web::MainApp do
       end
 
       it "should serve a presentation" do
-        p last_response
         last_response.should be_ok
       end
 
