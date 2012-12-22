@@ -47,7 +47,8 @@ module RhetButler
 
       check_config_hash(@config_hash)
 
-      @slides = @config_hash['slides']
+      @slides = @config_hash.delete('slides')
+      @metadata = @config_hash
     end
   end
 end

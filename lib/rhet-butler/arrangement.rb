@@ -37,14 +37,28 @@ module RhetButler
     end
   end
 
-  class Horizontal < Arrangement
-    register "horizontal"
+  class Linear < Arrangement
+    register "linear"
+
+    def initialize(plus_x, plus_y)
+      super
+      @plus_x = plus_x
+      @plus_y = plus_y
+    end
 
     def arrange(slideset)
       slide = slideset.current_slide
-      slide.position.x = slideset.previous_slide.position.x + slide_width
-      slide.position.y = 0
+      slide.position.x = slideset.previous_slide.position.x + @plus_x
+      slide.position.y = slideset.previous_slide.position.y + @plus_y
       return slide
+    end
+  end
+
+  class Horizontal < Linear
+    register "horizontal"
+
+    def initialize
+      super(1000, 0)
     end
   end
 end

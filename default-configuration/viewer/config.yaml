@@ -5,6 +5,3 @@ blueprint:
   - !layout-rule
     - default
     - [ linear, [ 1000, 0 ]]
-  - !layout-rule
-    - { type: aside }
-    - [ digress-linear, [ 0, 1000 ]]

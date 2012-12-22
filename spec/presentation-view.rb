@@ -35,6 +35,7 @@ describe RhetButler::Web::MainApp do
       end
 
       it "should serve a presentation" do
+        puts last_response.errors
         last_response.should be_ok
       end
 

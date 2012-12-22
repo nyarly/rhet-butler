@@ -16,7 +16,7 @@ module RhetButler
 
     def value_from_config(name)
       if @config_hash.has_key?(name)
-        yield(hash[name])
+        yield(@config_hash[name])
       end
     end
   end

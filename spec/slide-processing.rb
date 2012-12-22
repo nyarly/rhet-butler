@@ -30,13 +30,16 @@ describe RhetButler::SlideProcessor do
   end
 
   let :blueprint do
-    {}
+    [
+      RhetButler::LayoutRule.new.tap do |rule|
+        rule.layout_type = 'horizontal'
+      end
+    ]
   end
 
   let :processor do
     processor = RhetButler::SlideProcessor.new
     processor.root_group = root_group
-    processor.root_arrangement = root_arrangement
     processor.blueprint = blueprint
     processor
   end
@@ -50,6 +53,11 @@ describe RhetButler::SlideProcessor do
     result.each do |slide|
       slide.should be_a_kind_of(RhetButler::Slide)
     end
+  end
+
+  it "should have five slides" do
+    result.should have(5).slides
+
   end
 
   it "should put all the slides in order" do

@@ -9,7 +9,6 @@ module RhetButler
       @file_set = configuration.files
       @root_slide = configuration.root_slide
       @root_group = SlideGroup.new
-      @root_arrangement = Arrangement[configuration.root_arrangement].new
       @blueprint = configuration.arrangement_blueprint
     end
 
@@ -26,7 +25,6 @@ module RhetButler
 
       processor = SlideProcessor.new
       processor.root_group = root_group
-      processor.root_arrangement = @root_arrangement
       processor.blueprint = @blueprint
       processor.process
       return processor.slides
@@ -60,18 +58,19 @@ module RhetButler
   end
 
   class SlideProcessor
-    attr_accessor :root_group, :root_arrangement, :blueprint
+    attr_accessor :root_group, :blueprint
     attr_reader :slides
 
     def process
+      require 'pp'
+
       finder = ArrangementFinder.new
       finder.root_group = @root_group
-      finder.root_arrangement = @root_arrangement
       finder.blueprint = @blueprint
       finder.traverse
 
       arranger = SlideArranger.new
-      arranger.root_arrangement = @root_arrangement
+      arranger.root_arrangement = finder.root_arrangement
       arranger.traverse
 
       @slides = arranger.slides
@@ -174,10 +173,27 @@ module RhetButler
 
     def initialize
       super
-      @active_match = {}
     end
 
     def setup
+      if @blueprint.empty?
+        raise "Empty blueprint - can't layout slides"
+      end
+
+      @blueprint.combination(2) do |first, second|
+        if first.match == second.match
+          warn "Blueprint rules with duplicate rules: will ignore the later one:"
+          warn second.inspect
+        end
+      end
+      #XXX Not where this belongs
+      first_rule = @blueprint.first
+      unless first_rule.match == {}
+        raise "First rule of layout blueprint should be 'default', not: #{first_rule.inspect}"
+      end
+
+      @active_match = first_rule
+      @root_arrangement = first_rule.layout
       descend(@root_group, @root_arrangement)
     end
 
@@ -189,36 +205,23 @@ module RhetButler
       descend(group, find_arrangement(group))
     end
 
-    def match(filter, value)
+    def match?(filter, value)
       return filter === value
     end
 
     def find_arrangement(group)
       match = {}
       template = nil
-      blueprint.each_pair do |criteria, possible_template|
-        possible = {}
-        criteria.each_pair do |key, filter|
-          begin
-            value = group.fetch(key)
-            if match?(filter, value)
-              possible[key] = value
-            end
-          rescue KeyError
-          end
-        end
-        if possible.keys.length > match.keys
-          match = possible
-          template = possible_template
-        end
+      match = blueprint.find do |rule|
+        rule.match?(group)
       end
-      if match != @active_match
-        type = template.shift
-        arrangement = Arrangement[type].new(*template)
+
+      if !match.nil? and match != @active_match
+        @active_match = match
+        return match.layout
       else
-        arrangement = target_stack.last
+        return target_stack.last
       end
-      return arrangement
     end
   end
 
