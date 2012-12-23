@@ -8,7 +8,7 @@ module RhetButler
       end
 
       def template_handler
-        @template_handler ||= TemplateHandler.new(@valise, "templates/assets")
+        @template_handler ||= TemplateHandler.new(@valise, "assets")
       end
 
       def call(env)

@@ -2,50 +2,44 @@ require 'valise'
 require 'rhet-butler/slide'
 
 module RhetButler
-  class FileManager < Valise::Set
-
-    def self.build(roles, sources)
-      files = FileManager.current_directory
-
-      roles.each do |role|
-        files += FileManager.defaults(role)
-      end
-
-      unless sources.nil? or sources.empty?
-        files = FileManager.role_search("slides", sources) + files
-      end
-      return files
-    end
-
-    def self.defaults(role)
-      self.new.define do
-        rw [".rhet", role]
-        rw ["~", ".rhet", role]
-        rw ["", "usr", "share", "rhet-butler", role]
-        rw ["", "etc", "rhet-butler", role]
-        ro from_here(["..", "..", "default-configuration", role])
+  module FileManager
+    def config_files(role)
+      sub_path = [*role].compact
+      Valise::Set.define do
+        rw [".rhet"] + sub_path
+        rw ["~", ".rhet"] + sub_path
+        rw ["", "usr", "share", "rhet-butler"] + sub_path
+        rw ["", "etc", "rhet-butler"] + sub_path
+        ro from_here(["..", "..", "default-configuration"] + sub_path)
 
         handle "config.yaml", :yaml, :hash_merge
       end
     end
 
-    def self.current_directory
-      self.new.define do
+    def slide_files(sources)
+      Valise::Set.define do
+        rw "."
         stemmed "slides" do
           rw "."
-        end
-        rw "."
-      end
-    end
-
-    def self.role_search(role, search)
-      self.new.define do
-        stemmed role do
-          search.each do |path|
+          (sources||[]).each do |path|
             rw path
           end
         end
-      end
+      end + config_files([])
+    end
+
+    def presenter_config
+      config_files("presenter") +
+        config_files("common")
+    end
+
+    def viewer_config
+      Valise::Set.define do
+        rw "."
+        handle "config.yaml", :yaml, :hash_merge
+      end +
+        config_files("viewer") +
+        config_files("common")
     end
   end
 end

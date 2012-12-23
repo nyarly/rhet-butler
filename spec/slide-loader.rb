@@ -19,7 +19,7 @@ describe RhetButler::SlideLoader do
   end
 
   let :loader do
-    described_class.new(configuration)
+    described_class.new(files, configuration)
   end
 
   let :slides do

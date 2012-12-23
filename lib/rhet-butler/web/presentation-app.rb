@@ -13,13 +13,13 @@ module RhetButler
       attr_reader :configuration
 
       def template_handler
-        @template_handler ||= TemplateHandler.new(@valise, "templates")
+        @template_handler ||= TemplateHandler.new(@configuration.files, "templates")
       end
 
       def slides
         @slides ||=
           begin
-            slide_loader = SlideLoader.new(@configuration)
+            slide_loader = SlideLoader.new(@valise, @configuration)
             slide_loader.load_slides
           end
       end

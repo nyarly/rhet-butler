@@ -1,9 +1,11 @@
 require 'thor'
-require 'rhet-butler/file-manager'
+require 'valise'
 require 'rhet-butler/configuration'
 
 module RhetButler
   class CommandLine < ::Thor
+    #XXX Should go into StaticGenerator
+    include FileManager
 
     def self.shared_options
       method_option :sources, :type => :array
@@ -16,12 +18,11 @@ module RhetButler
     def static
       require 'rhet-butler/static-generator'
 
-      files = FileManager.build(options[:sources])
-
-      configuration = Configuration.load_from(files)
+      slide_files = slide_files(options[:sources])
+      configuration = Configuration.load_from(viewer_config)
       configuration.root_slide = options[:root_slide] if options.has_key? :root_slide
 
-      generator = StaticGenerator.new(files, configuration)
+      generator = StaticGenerator.new(slide_files, configuration)
       generator.target_directory = options[:target] if options.has_key? :target
 
       generator.go!

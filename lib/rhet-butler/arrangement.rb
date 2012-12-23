@@ -54,6 +54,19 @@ module RhetButler
     end
   end
 
+  class LinearDigression < Linear
+    register "linear-digress"
+
+    def previous_slide
+      @preceeding
+    end
+
+    def arrange(slideset)
+      @preceeding ||= slideset.previous_slide
+      super
+    end
+  end
+
   class Horizontal < Linear
     register "horizontal"
 
