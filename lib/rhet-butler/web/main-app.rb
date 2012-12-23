@@ -9,7 +9,7 @@ require 'rhet-butler/file-manager'
 module RhetButler
   module Web
     class MainApp
-      include FileManager
+      include RhetButler::FileManager
 
       def initialize(slide_sources, root_slide)
         @slide_sources = slide_sources
@@ -137,7 +137,7 @@ module RhetButler
       end
 
       def start
-        configuration = load_config(config_files("common"))
+        configuration = load_config(current_directory + base_config_set.sub_set("common"))
 
         puts "Starting server on http://127.0.0.1:#{configuration.serve_port}/"
         EM.run do

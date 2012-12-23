@@ -45,7 +45,7 @@ module RhetButler
     end
 
     def load_file(rel_path)
-      file = @file_set.sub_set("slides").find(rel_path)
+      file = @file_set.find(rel_path)
 
       if @loaded_paths.has_key?(file.full_path)
         raise "Circular inclusion of slides: >> #{file.full_path} << #{@loaded_paths.keys.inspect}"

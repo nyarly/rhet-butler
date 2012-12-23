@@ -1,6 +1,7 @@
 require 'thor'
 require 'valise'
 require 'rhet-butler/configuration'
+require 'rhet-butler/file-manager'
 
 module RhetButler
   class CommandLine < ::Thor
