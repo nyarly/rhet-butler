@@ -1,6 +1,5 @@
 source :rubygems
 
-gem 'valise', :path => "../valise"
 gem 'corundum'
 gem 'mattock'
 

@@ -21,8 +21,10 @@ module RhetButler
 
     def initialize
       @slides = []
+      @metadata = {}
     end
     attr_accessor :slides
+    attr_reader :metadata
 
     def each
       if block_given?

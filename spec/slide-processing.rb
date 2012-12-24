@@ -22,7 +22,7 @@ describe RhetButler::SlideProcessor do
   end
 
   let :root_group do
-    group(slides)
+    group(*slides)
   end
 
   let :root_arrangement do

@@ -13,7 +13,7 @@ describe RhetButler::HTMLGenerator do
   let :files do
     manager = Object.new
     manager.extend(RhetButler::FileManager)
-    manager.config_files("viewer") + manager.config_files("common")
+    manager.base_config_set.sub_set("viewer") + manager.base_config_set.sub_set("common")
   end
 
   let :template_handler do

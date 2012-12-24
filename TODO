@@ -18,3 +18,7 @@ Becomes nested div.step s in output - allows for css like:
 div.step.inc-1 span.highlight.inc-1 {
   @include !code-highlighting
 }
+
+Slide reloading - I'm running EM already
+
+Arrangement stereotype (automatic anonymous subclasses)

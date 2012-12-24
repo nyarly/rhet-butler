@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("rack", "> 0")
   spec.add_dependency("thin", "> 0")
   spec.add_dependency("sockjs", "~> 0.2.1")
-  spec.add_dependency("valise", "~> 0.8")
+  spec.add_dependency("valise", "~> 0.8.2")
 
   #spec.post_install_message = "Thanks for installing my gem!"
 end

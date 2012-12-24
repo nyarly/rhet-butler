@@ -55,6 +55,7 @@ module RhetButler
   end
 
   class LinearDigression < Linear
+    register "digress-linear"
     register "linear-digress"
 
     def previous_slide
