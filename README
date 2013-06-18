@@ -1,14 +1,63 @@
 # Rhet Butler
 
-A presentation app.  Inspired by Showoff and its "might could dos."
+A presentation app for developers and other tech people. Inspired by Showoff
+and its "might could dos."
 
 # Features
 
-Slides formatted as YAML.
+Slides are formatted as YAML.
 
-Presentations driven by impress.js
+Slides are styled with CSS (or CSS generating languages supported by Tilt)
 
-Offline operation.  I can never get wifi in a crowded tech presentation
+Presentations driven by impress.js for all kinds of whiz-bang transition
+effects.
+
+Offline operation.  I can never get wifi in a crowded tech presentation.
+
+Cascading configuration, so you can reuse slides, images, layouts, etc, without
+having to keep copying everything everywhere. All your presentations should
+start and end roughly the same way, so why repeat yourself?
+
+# How do I use it?
+
+Start by
+
+  gem install rhet-butler
+
+(If you're lucky and smart you might need to "sudo" that command)
+
+This is one of the rare gems that's actually intended to be used as a command
+line utility, so it really helps to install it system-wide.  (Or at least in
+your user gem path.)
+
+<A miracle occurs where you write a presentation in YAML.>
+
+Run
+
+  rhet-butler serve
+
+You'll see come possible URLs for the presentation - pick one that seems
+appropriate and plug it into your browser. There's a setup page with
+instructions from there.
+
+# Slide format
+
+We take great advantage of the YAML format - it really is very nice, and you'll
+do yourself a favor becoming more familiar. Rhet will do its best to output
+useful error messages if you screw it up.
+
+There's a few custom YAML tags that rhet-butler slides use:
+
+  !slide
+    content:
+    notes:
+
+  !group
+    slides:
+
+  #Used in configs
+  !layout
+
 
 # FAQ
 
@@ -19,7 +68,10 @@ it's a *pun* on the name of a character in Gone With the Wind.
 Q. Why a pun?
 A. I should think that would be obvious.  Puns are awesome.
 
-# Thanks
+# Many Thanks
 
+Scott Chacon - wrote Showoff, the original inspiration
 Bartek Szopka - author of impress.js
-Scott Chacon - wrote Showoff
+Ryan Tomayko - for Tilt, the excellent templating plugin system
+Ivan Sagalaev - author of highlight.js, used for code highlighting
+Google Fonts
