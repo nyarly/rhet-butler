@@ -1,3 +1,19 @@
+!!! MUST set apps to check their path and 404 if not matched
+  (Currently, missing assets returns the whole presentation html)
+
+SSL support - self-signed certs, signed certs...
+
+Better control messages
+  Current is just "this is the step"
+  Should be:
+  { type: "step", data: "this is the step" }
+  { type: "presenter-connection", data: "arrive"|"leave" }
+  etc...
+  { type: "increment", data: "this increment" }
+
+Slide Queue needs to manage app state better - "is there a presenter?" "what's
+current slide/increment?"
+
 Incrementals: slideset member -> multiple related slides.  Processing thing like:
 
   Here are some bullets:
@@ -23,7 +39,15 @@ Incrementals: slideset member -> multiple related slides.  Processing thing like
 
 Admin style (and templating) for next slide, simple layout
 
+Admin slide index
+  UX needs consideration
+  Jump to slide
+
+Publish static to github pages - other destinations?
+
 Debug Android Chrome "aw, snap" - impress? styles?
+  Styles appear to take too long to render - argument for stripping down
+  presenter styles
 
 Slide reloading - I'm running EM already, so something like Watcher seems
 obvious
@@ -39,3 +63,8 @@ Fork Impress - allow Android Chrome, support incrementals
 Markdown slide renderer, make default
 
 Slide group "default slide type" setting
+
+Presentation address macro (for live follow)
+
+Live follow widgets - voting, pause connection (let me wander, resume = jump to
+current presenters position)

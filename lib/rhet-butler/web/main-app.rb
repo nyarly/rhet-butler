@@ -117,7 +117,13 @@ module RhetButler
 
       class SelectiveAuth < Rack::Auth::Basic
         def call(env)
-          if /^http/ =~ env["rack.url_scheme"]
+          #XXX This is to work around a Chrome bug:
+          #https://code.google.com/p/chromium/issues/detail?id=123862
+          #When fixed upstream, this'll come out and we'll stop supporting old
+          #versions of Chrome.
+          #As is, under SSL this is kinda secure (i.e. not at all) because the
+          #WS details are secret
+          if /^http/ =~ env["rack.url_scheme"] and env["HTTP_UPGRADE"] != "websocket"
             super
           else
             @app.call(env)
@@ -146,14 +152,14 @@ module RhetButler
         auth_validation = build_authentication_block(presenter_config)
 
         Rack::Builder.new do
-          SockJS.debug!
+          #SockJS.debug!
 
           map "/live/follower" do
             run Rack::SockJS.new(FollowerSession, sockjs_options)
           end
 
           map "/live/leader" do
-            #use SelectiveAuth, "Rhet Butler Presenter", &auth_validation
+            use SelectiveAuth, "Rhet Butler Presenter", &auth_validation
             run Rack::SockJS.new(LeaderSession, sockjs_options)
           end
 
