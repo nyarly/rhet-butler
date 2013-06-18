@@ -8,6 +8,7 @@ module RhetButler
         %w[
           title html_id html_classes html_class
           pos_x pos_y pos_z rot_x rot_y rot_z scale
+          notes type
         ]
       end
 
@@ -50,6 +51,8 @@ module RhetButler
       @position = Position.new
       @rotation = Rotation.new
       @scale = 1.0
+      @notes = ""
+      @type = nil
     end
 
     def initialize
@@ -60,9 +63,11 @@ module RhetButler
       super
       @config_hash = source.config_hash.dup unless source.config_hash.nil?
       @content = source.content.dup unless source.content.nil?
+      @notes = source.notes.dup unless source.notes.nil?
       @html_id = source.html_id.dup unless source.html_id.nil?
       @position = source.position.dup unless source.position.nil?
       @rotation = source.rotation.dup unless source.rotation.nil?
+      @type = source.type.dup unless source.type.nil?
       @html_classes = source.html_classes.dup unless source.html_classes.nil?
     end
 
@@ -81,10 +86,18 @@ module RhetButler
 
       check_config_hash(@config_hash)
 
-      @content = @config_hash["content"]
-
       value_from_config("title") do |title|
         @html_id = title.downcase.split(/\s/).join("-")
+      end
+
+      value_from_config("content") do |content|
+        raise "Slide content needs to be a string, was: #{content.inspect}" unless String === content
+        @content = content
+      end
+
+      value_from_config("notes") do |notes|
+        raise "Slide notes needs to be a string, was: #{notes.inspect}" unless String === notes
+        @notes = notes
       end
 
       value_from_config("html_id") do |value|
@@ -122,11 +135,16 @@ module RhetButler
       value_from_config("scale") do |value|
         @scale = value
       end
+
+      value_from_config("type") do |value|
+        @type = value
+        @html_classes << value
+      end
     end
 
     attr_reader :config_hash
-    attr_accessor :content, :html_classes, :html_id
-    attr_reader :position, :rotation
+    attr_accessor :content, :html_classes, :html_id, :notes
+    attr_reader :position, :rotation, :type
     attr_accessor :scale
 
     def impress_attrs

@@ -4,6 +4,7 @@ require 'thin'
 require 'rack/sockjs'
 require 'rhet-butler/web/presentation-app'
 require 'rhet-butler/web/assets-app'
+require 'rhet-butler/web/qr-display-app'
 require 'rhet-butler/file-manager'
 
 module RhetButler
@@ -39,11 +40,13 @@ module RhetButler
         end
 
         def process_message(message)
+          @queue.current_slide = message
           @queue.enqueue(message)
         end
       end
 
       class SlideMessageQueue
+        attr_accessor :current_slide
         def initialize
           @listeners = {}
         end
@@ -54,6 +57,7 @@ module RhetButler
 
         def subscribe(session)
           @listeners[session] = true
+          session.send(current_slide) unless current_slide.nil?
         end
 
         def unsubscribe(session)
@@ -94,16 +98,52 @@ module RhetButler
         PresentationApp.new(slides, configuration)
       end
 
+      def slides
+        slide_files(@slide_sources)
+      end
+
+      def viewer_app
+        @viewer_app ||= presentation_app(slides, viewer_config)
+      end
+
+      def presenter_app
+        @presenter_app ||= presentation_app(slides, presenter_config)
+      end
+
+      def check
+        viewer_app.html_generator.html
+        presenter_app.html_generator.html
+      end
+
+      class SelectiveAuth < Rack::Auth::Basic
+        def call(env)
+          if /^http/ =~ env["rack.url_scheme"]
+            super
+          else
+            @app.call(env)
+          end
+        end
+      end
+
+      def build_authentication_block(presenter_config)
+        creds_config = load_config(presenter_config)
+        return (proc do |user, pass|
+          creds_config.username == user &&
+            creds_config.password == pass
+        end)
+      end
+
       def app
         sockjs_options = {
           :sockjs_url => "/assets/javascript/sockjs-0.2.1.js",
           :queue => SlideMessageQueue.new
         }
 
-        slides = slide_files(@slide_sources)
-
-        viewer_app = presentation_app(slides, viewer_config)
-        presenter_app = presentation_app(slides, presenter_config)
+        viewer_app = self.viewer_app
+        presenter_app = self.presenter_app
+        slides = self.slides
+        presenter_config = self.presenter_config
+        auth_validation = build_authentication_block(presenter_config)
 
         Rack::Builder.new do
           SockJS.debug!
@@ -113,9 +153,7 @@ module RhetButler
           end
 
           map "/live/leader" do
-            use Rack::Auth::Basic, "Rhet Butler Presenter" do |user, pass|
-              "secret" == pass
-            end
+            #use SelectiveAuth, "Rhet Butler Presenter", &auth_validation
             run Rack::SockJS.new(LeaderSession, sockjs_options)
           end
 
@@ -125,10 +163,12 @@ module RhetButler
             run AssetsApp.new(slides)
           end
 
+          map "/qr" do
+            run QrDisplayApp.new(presenter_config, "/presenter")
+          end
+
           map "/presenter" do
-            use Rack::Auth::Basic, "Rhet Butler Presenter" do |user, pass|
-              "secret" == pass
-            end
+            use SelectiveAuth, "Rhet Butler Presenter", &auth_validation
             run presenter_app
           end
 
@@ -139,10 +179,15 @@ module RhetButler
       def start
         configuration = load_config(current_directory + base_config_set.sub_set("common"))
 
-        puts "Starting server on http://127.0.0.1:#{configuration.serve_port}/"
+        puts "Starting server. Try one of these:"
+        require 'system/getifaddrs'
+        System.get_all_ifaddrs.each do |interface|
+          puts "  http://#{interface[:inet_addr].to_s}:#{configuration.serve_port}/"
+          puts "  http://#{interface[:inet_addr].to_s}:#{configuration.serve_port}/qr"
+        end
         EM.run do
           thin = Rack::Handler.get("thin")
-          thin.run(app.to_app, :Port => configuration.serve_port) do |server|
+          thin.run(app.to_app, :Host => "0.0.0.0", :Port => configuration.serve_port) do |server|
             server.threaded = true
           end
         end

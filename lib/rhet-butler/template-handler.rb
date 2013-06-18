@@ -2,7 +2,10 @@ require 'tilt'
 
 module RhetButler
   class TemplateHandler
-    class NotFound < ::Exception
+    class NotFound < ::StandardError
+      def initialize(path)
+        super("Could not find template: #{path}")
+      end
     end
 
     class IdentityTemplate

@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <style type="text/css">
+      table{
+        font-size: 1px
+      }
+      td {
+        padding: 0;
+        width: 10px;
+        height: 10px
+      }
+
+      td.light {
+        background-color: white
+      }
+
+      td.dark {
+        background-color: black
+      }
+    </style>
+
+    <script type="text/javascript" src="/assets/javascript/sockjs-0.2.1.js"></script>
+    <script type="text/javascript">
+      var sock = new SockJS("/live/follower");
+
+      sock.onopen = function() {
+        console.log("open");
+      };
+
+      sock.onmessage = function(e) {
+        console.log("message", e.data);
+        document.location = "<%= view_url %>"
+      };
+
+      sock.onclose = function() {
+        console.log("close");
+      };
+    </script>
+    <link href="assets/stylesheets/setup.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h2>Welcome to your presentation!</h2>
+    <p>This is the setup page. From here, there are three steps to getting started:</p>
+    <ol>
+      <li>
+      <p>Start a presenter's control page by either:
+      <ul>
+        <li>
+        Scanning this QR code to control the presentation from your smart phone
+        <table cellspacing="0">
+          <% module_count.times do |x| %>
+            <tr>
+              <% module_count.times do |y| %>
+                <td class='<%= dark?(x,y) ? "dark" : "light" %>'>&nbsp</td>
+              <% end %>
+            </tr>
+          <% end %>
+        </table>
+        </li>
+        <li>
+        <a href="<%= presenter_url %>" target="rhet-butler-presenter">Clicking on this link</a>
+        to control the presentation from another browser window
+        </li>
+      </ul>
+
+      <p>This window will become a viewer window when you do that.</p>
+      </li>
+      <li>Connect a projector, and configure your computer to output side-by-side.</li>
+      <li>Maximize this window on the projector, and begin.</li>
+    </ol>
+
+    <p> If you have trouble, or just don't want to use this technique, you can always just
+    <a href="<%= view_url %>">go to presentation</a></p>
+
+    <p>Breathe deep, relax, make eye contact. Have fun!</p>
+  </body>
+</html>

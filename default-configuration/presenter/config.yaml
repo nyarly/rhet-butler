@@ -1,0 +1,7 @@
+---
+impress-config:
+  transition-duration: 200
+blueprint:
+  - !layout-rule
+    - default
+    - [ linear, [ 1000, 0 ]]

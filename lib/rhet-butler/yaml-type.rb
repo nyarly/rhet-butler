@@ -7,10 +7,10 @@ module RhetButler
         !config_hash.has_key?(key)
       }
       unless weird_keys.empty?
-        warn "Found weird keys: #{weird_keys.inspect}"
+        warn "Found weird keys: #{weird_keys.inspect} in #{config_hash.inspect}"
       end
       unless missing_keys.empty?
-        raise "Missing required keys: #{missing_keys.inspect}"
+        raise "Missing required keys: #{missing_keys.inspect} in #{config_hash.inspect}"
       end
     end
 

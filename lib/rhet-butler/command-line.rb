@@ -29,11 +29,25 @@ module RhetButler
       generator.go!
     end
 
+    desc "check", "Load slide set to check syntax"
+    shared_options
+    def check
+      require 'rhet-butler/web/main-app'
+
+      app = Web::MainApp.new(options[:sources], options[:root_slide])
+      app.check
+
+      say "Slides loaded and parsed"
+      say "  #{app.viewer_app.slides.length} slides loaded"
+      say "  Serving slides and assets found in: #{app.slides}"
+    end
+
     desc "serve", "Run the presentation server"
     shared_options
     def serve
       require 'rhet-butler/web/main-app'
 
+      invoke :check
       app = Web::MainApp.new(options[:sources], options[:root_slide])
       app.start
     end

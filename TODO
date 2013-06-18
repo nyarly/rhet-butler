@@ -19,6 +19,21 @@ div.step.inc-1 span.highlight.inc-1 {
   @include !code-highlighting
 }
 
+Incrementals differ from Steps because a) going back skips them and b) in an index view they're not listed
+
 Slide reloading - I'm running EM already
 
 Arrangement stereotype (automatic anonymous subclasses)
+
+Localize assets - e.g. download everything in the Google Web Font stylesheet
+
+SASS processing
+
+Fork Impress - allow Android Chrome, support incrementals
+
+Sockjs needs update - hopefully upstream current isn't as fragile/recognizes Android Chrome Websockets support
+  Alternative: presenter mode doesn't need websockets, just AJAX.
+
+Markdown slide renderer, make default
+
+Slide group "default slide type" setting

@@ -7,6 +7,14 @@ module RhetButler
       @base_hash.merge!(overrides) unless overrides.nil?
     end
 
+    def username
+      @base_hash['username'] || 'judson'
+    end
+
+    def password
+      @base_hash['password'] || 'judsonr00tzme'
+    end
+
     def impress_config
       @base_hash['impress-config'] || {}
     end
@@ -25,6 +33,10 @@ module RhetButler
 
     def root_slide
       @base_hash["root_slide"] || "slides.yaml"
+    end
+
+    def default_slide_type
+      @base_hash["default_slide_type"] || "textile"
     end
   end
 end

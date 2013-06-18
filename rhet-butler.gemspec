@@ -17,6 +17,31 @@ Gem::Specification.new do |spec|
   # Do this: y$@"
   # !!find lib bin doc spec spec_help -not -regex '.*\.sw.' -type f 2>/dev/null
   spec.files		= %w[
+    lib/rhet-butler/web/assets-app.rb
+    lib/rhet-butler/web/presentation-app.rb
+    lib/rhet-butler/web/main-app.rb
+    lib/rhet-butler/file-manager.rb
+    lib/rhet-butler/configuration.rb
+    lib/rhet-butler/command-line.rb
+    lib/rhet-butler/html-generator.rb
+    lib/rhet-butler/slide-group.rb
+    lib/rhet-butler/arrangement.rb
+    lib/rhet-butler/yaml-schema.rb
+    lib/rhet-butler/slide-loader.rb
+    lib/rhet-butler/template-handler.rb
+    lib/rhet-butler/slide.rb
+    lib/rhet-butler/slide-includer.rb
+    lib/rhet-butler/static-generator.rb
+    lib/rhet-butler/yaml-type.rb
+    lib/rhet-butler/layout-rule.rb
+    lib/rhet-butler.rb
+    bin/rhet-butler
+    spec/slide-loader.rb
+    spec/slide-processing.rb
+    spec/html-generation.rb
+    spec/rhet-butler.rb
+    spec/presentation-view.rb
+    spec/arrangements.rb
   ]
 
   spec.test_file        = "spec_help/gem_test_suite.rb"
@@ -30,12 +55,19 @@ Gem::Specification.new do |spec|
   spec.rdoc_options	+= %w{--main doc/README }
   spec.rdoc_options	+= ["--title", "#{spec.name}-#{spec.version} Documentation"]
 
+  spec.executables = %w{rhet-butler}
+
   spec.add_dependency("tilt", "> 0")
   spec.add_dependency("thor", "> 0")
   spec.add_dependency("rack", "> 0")
   spec.add_dependency("thin", "> 0")
   spec.add_dependency("sockjs", "~> 0.2.1")
-  spec.add_dependency("valise", "~> 0.8.2")
+  spec.add_dependency("valise", "~> 0.9.1")
+
+  spec.add_dependency("system-getifaddrs", "~> 0.2.0")
+  spec.add_dependency("rqrcode", "~> 0.4.2")
+
+  spec.add_dependency("RedCloth", "~> 4.2.9")
 
   #spec.post_install_message = "Thanks for installing my gem!"
 end

@@ -10,7 +10,7 @@ module RhetButler
           rw ["~", ".rhet"]
           rw ["", "usr", "share", "rhet-butler"]
           rw ["", "etc", "rhet-butler"]
-          ro from_here(["..", "..", "default-configuration"])
+          ro from_here(["..", "..", "..", "default-configuration"])
 
           handle "config.yaml", :yaml, :hash_merge
         end

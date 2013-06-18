@@ -1,6 +1,26 @@
 <script type="text/javascript">
-  var sock = new SockJS("/live/leader");
-  document.addEventListener("impress:stepenter", function(event){
-    sock.send(event.target.id)
-  })
+  function sockJSSetup(){
+    var sock = new SockJS("/live/leader", null, {debug: true});
+    var currentStep = null;
+
+    var earlyStepEnter = function(event){ currentStep = event.target.id };
+    document.addEventListener("impress:stepenter", earlyStepEnter);
+
+    var handleSockOpen = function() {
+      document.removeEventListener("impress:stepenter", earlyStepEnter);
+      document.addEventListener("impress:stepenter", function(event){
+          sock.send(event.target.id);
+          })
+      if(currentStep !== null){
+        sock.send(currentStep);
+      }
+      sock.removeEventListener("open", handleSockOpen);
+    };
+
+    sock.addEventListener("open", handleSockOpen);
+    if(sock.readyState === SockJS.OPEN){
+      handleSockOpen();
+    }
+  };
+  sockJSSetup();
 </script>

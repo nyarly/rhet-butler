@@ -7,6 +7,7 @@ module RhetButler
   class SlideLoader
     def initialize(slide_files, configuration)
       @file_set = slide_files
+      @default_slide_type = configuration.default_slide_type
       @root_slide = configuration.root_slide
       @root_group = SlideGroup.new
       @blueprint = configuration.arrangement_blueprint
@@ -25,6 +26,7 @@ module RhetButler
 
       processor = SlideProcessor.new
       processor.root_group = root_group
+      processor.default_slide_type = @default_slide_type
       processor.blueprint = @blueprint
       processor.process
       return processor.slides
@@ -58,17 +60,19 @@ module RhetButler
   end
 
   class SlideProcessor
-    attr_accessor :root_group, :blueprint
+    attr_accessor :root_group, :blueprint, :default_slide_type
     attr_reader :slides
 
     def process
-      require 'pp'
+      rendering = SlideRendering.new
+      rendering.root_group = @root_group
+      rendering.default_type = @default_slide_type
+      rendering.traverse
 
       finder = ArrangementFinder.new
       finder.root_group = @root_group
       finder.blueprint = @blueprint
       finder.traverse
-
 
       arranger = SlideArranger.new
       arranger.root_arrangement = finder.root_arrangement
@@ -85,6 +89,10 @@ module RhetButler
     end
 
     attr_reader :iter_stack, :target_stack
+
+    def on_group(group)
+      descend(group, group)
+    end
 
     def ascend
       target_stack.pop
@@ -113,6 +121,83 @@ module RhetButler
           ascend
         end
       end
+    end
+  end
+
+  class ClassRegistry
+    def initialize
+      @classes = {}
+    end
+
+    def register(name, klass)
+      @classes[name.to_s] = klass
+    end
+
+    def fetch(name)
+      @classes.fetch(name.to_s)
+    end
+    alias [] fetch
+  end
+
+  class SlideRenderer
+    class << self
+      def registry
+        @registry ||= ClassRegistry.new
+      end
+
+      def register(name)
+        SlideRenderer.registry.register(name, self)
+      end
+
+      def for_type(type)
+        SlideRenderer.registry.fetch(type)
+      end
+
+      def process(type, options, slide)
+        for_type(type).new(options, slide).to_s
+      end
+    end
+
+    def initialize(options, slide)
+      @options = options
+      @slide_content = slide
+    end
+
+    def to_s
+      process(@slide_content)
+    end
+  end
+
+  class CodeRenderer < SlideRenderer
+    register :code
+
+    def process(string)
+      "<pre><code#{@options ? " class='#{@options}'" : ""}>#{string}</code></pre>"
+    end
+  end
+
+  require 'redcloth'
+  class TextileRenderer < SlideRenderer
+    register :textile
+    register :texttile
+
+    def process(string)
+      RedCloth.new(string).to_html
+    end
+  end
+
+  class SlideRendering < SlideTraverser
+    attr_accessor :root_group, :default_type
+
+    def setup
+      descend(@root_group, @root_group)
+    end
+
+    def on_slide(slide)
+      slide_type = slide.type || default_type
+      base_type,options = *(slide_type.split(":"))
+      slide.content = SlideRenderer.process(base_type, options, slide.content)
+      slide.notes = SlideRenderer.process("textile", nil, slide.notes) unless slide.notes.nil?
     end
   end
 
@@ -165,7 +250,7 @@ module RhetButler
 
     def on_group(group)
       target_stack.last.slides << group
-      descend(group, group)
+      super
     end
   end
 
@@ -271,10 +356,6 @@ module RhetButler
     def ascend
       @previous_slide = target_stack.last
       super
-    end
-
-    def on_group(arranger)
-      descend(arranger, arranger)
     end
   end
 end

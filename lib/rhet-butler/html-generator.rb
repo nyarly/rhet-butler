@@ -23,8 +23,8 @@ module RhetButler
 
     attr_accessor :slides, :presentation, :impress_config
 
-    def render(path)
-      @template_handler.render(path, self)
+    def render(path, scope=nil)
+      @template_handler.render(path, scope || self)
     end
 
     def html
