@@ -17,7 +17,7 @@ describe RhetButler::HTMLGenerator do
   end
 
   let :template_handler do
-    RhetButler::TemplateHandler.new(files, "templates")
+    files.templates
   end
 
   let :configuration do
@@ -30,8 +30,12 @@ describe RhetButler::HTMLGenerator do
     end
   end
 
+  let :root_template do
+    "presentation.html"
+  end
+
   let :html do
-    generator.html
+    generator.render(root_template)
   end
 
   it "should produce text from slides" do

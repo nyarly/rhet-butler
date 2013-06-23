@@ -1,74 +1,37 @@
 require 'rack/builder'
 require 'rack/handler'
 require 'thin'
-require 'rack/sockjs'
 require 'rhet-butler/web/presentation-app'
 require 'rhet-butler/web/assets-app'
 require 'rhet-butler/web/qr-display-app'
 require 'rhet-butler/file-manager'
+require 'rhet-butler/messaging'
+
 
 module RhetButler
   module Web
+    class SelectiveAuth < Rack::Auth::Basic
+      def call(env)
+        #XXX This is to work around a Chrome bug:
+        #https://code.google.com/p/chromium/issues/detail?id=123862 #ok
+        #When fixed upstream, this'll come out and we'll stop supporting old
+        #versions of Chrome.
+        #As is, under SSL this is kinda secure (i.e. not at all) because the
+        #WS details are secret
+        if /^http/ =~ env["rack.url_scheme"] and env["HTTP_UPGRADE"] != "websocket"
+          super
+        else
+          @app.call(env)
+        end
+      end
+    end
+
     class MainApp
       include RhetButler::FileManager
 
       def initialize(slide_sources, root_slide)
         @slide_sources = slide_sources
         @root_slide = root_slide
-      end
-
-      class FollowerSession < SockJS::Session
-        def initialize(connection)
-          super
-          @queue = connection.options[:queue]
-        end
-
-        def opened
-          @queue.subscribe(self)
-        end
-
-        def close(*args)
-          @queue.unsubscribe(self)
-          super
-        end
-      end
-
-      class LeaderSession < SockJS::Session
-        def initialize(connection)
-          super
-          @queue = connection.options[:queue]
-        end
-
-        def process_message(message)
-          @queue.current_slide = message
-          @queue.enqueue(message)
-        end
-      end
-
-      class SlideMessageQueue
-        attr_accessor :current_slide
-        def initialize
-          @listeners = {}
-        end
-
-        def inspect
-          "<<#{self.class.name} Listeners: #{@listeners.keys.length}>>"
-        end
-
-        def subscribe(session)
-          @listeners[session] = true
-          session.send(current_slide) unless current_slide.nil?
-        end
-
-        def unsubscribe(session)
-          @listeners.delete_key(session)
-        end
-
-        def enqueue(message)
-          @listeners.keys.each do |session|
-            session.send(message)
-          end
-        end
       end
 
       def load_config(files)
@@ -94,8 +57,9 @@ module RhetButler
       #
       def presentation_app(slides, config_files)
         configuration = load_config(config_files)
+        templates = config_files.templates("templates")
 
-        PresentationApp.new(slides, configuration)
+        PresentationApp.new(slides, templates, configuration)
       end
 
       def slides
@@ -110,25 +74,13 @@ module RhetButler
         @presenter_app ||= presentation_app(slides, presenter_config)
       end
 
+      #Simply renders the bodies of the viewer and presenter apps to make sure
+      #there aren't any exceptions
       def check
-        viewer_app.html_generator.html
-        presenter_app.html_generator.html
-      end
-
-      class SelectiveAuth < Rack::Auth::Basic
-        def call(env)
-          #XXX This is to work around a Chrome bug:
-          #https://code.google.com/p/chromium/issues/detail?id=123862
-          #When fixed upstream, this'll come out and we'll stop supporting old
-          #versions of Chrome.
-          #As is, under SSL this is kinda secure (i.e. not at all) because the
-          #WS details are secret
-          if /^http/ =~ env["rack.url_scheme"] and env["HTTP_UPGRADE"] != "websocket"
-            super
-          else
-            @app.call(env)
-          end
-        end
+        viewer_app.body
+        presenter_app.body
+        #XXX static generator "populate assets" - make sure all the assets
+        #render as well
       end
 
       def build_authentication_block(presenter_config)
@@ -178,7 +130,10 @@ module RhetButler
             run presenter_app
           end
 
-          run viewer_app
+          map "/" do
+            run viewer_app
+          end
+          run AssetsApp.new(slides)
         end
       end
 

@@ -14,6 +14,8 @@ Better control messages
 Slide Queue needs to manage app state better - "is there a presenter?" "what's
 current slide/increment?"
 
+Better error for missing slide type
+
 Incrementals: slideset member -> multiple related slides.  Processing thing like:
 
   Here are some bullets:
@@ -61,6 +63,7 @@ Localize assets - e.g. download everything in the Google Web Font stylesheet
 Fork Impress - allow Android Chrome, support incrementals
 
 Markdown slide renderer, make default
+  Implication is plugable types - RedCloth and Kramdown? Why?
 
 Slide group "default slide type" setting
 
@@ -68,3 +71,11 @@ Presentation address macro (for live follow)
 
 Live follow widgets - voting, pause connection (let me wander, resume = jump to
 current presenters position)
+
+Presentation widgets
+  Timers (count up/down)
+  Follower information (where they are etc)
+  Voting?
+  Twitter?
+
+Configuration for Tilt template options

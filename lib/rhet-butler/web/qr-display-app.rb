@@ -1,4 +1,3 @@
-require 'rhet-butler/template-handler'
 require 'rqrcode'
 
 module RhetButler
@@ -10,7 +9,7 @@ module RhetButler
       end
 
       def template_handler
-        @template_handler ||= TemplateHandler.new(@valise, "templates")
+        @template_handler ||= @valise.templates
       end
 
       def call(env)

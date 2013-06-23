@@ -1,10 +1,24 @@
 module RhetButler
+  #This class is used to manage application config throughout. Basically it
+  #wraps a hash loaded from the base fileset. Since the file search path can be
+  #configured from there, it would be overly complex to allow config.yaml files
+  #in a configured source path.
+  #
+  #Also, n.b. all access to configuration is through methods on this class, so
+  #it's easy to see what values are allowed
   class Configuration
-    attr_reader :files
     def initialize(files, overrides=nil)
-      @files = files
-      @base_hash = files.find("config.yaml").contents
+      @base_hash =
+        begin
+          files.find("config.yaml").contents rescue {}
+        rescue Object
+          {}
+        end
       @base_hash.merge!(overrides) unless overrides.nil?
+    end
+
+    def root_slide_template
+      @base_hash['root_slide_template'] || 'presentation.html'
     end
 
     def username
@@ -13,6 +27,26 @@ module RhetButler
 
     def password
       @base_hash['password'] || 'judsonr00tzme'
+    end
+
+    def author
+      @base_hash['author_name'] || "Judson Lester"
+    end
+
+    def title
+      @base_hash['presentation_title'] || 'Presentation'
+    end
+
+    def description
+      @base_hash['presentation_description'] || "A nifty presentation made with Rhet Butler"
+    end
+
+    def search_paths
+      @base_hash["sources"] || []
+    end
+
+    def static_target
+      @base_hash["static_target"] || "static"
     end
 
     def impress_config

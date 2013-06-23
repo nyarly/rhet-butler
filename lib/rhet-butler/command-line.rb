@@ -20,8 +20,7 @@ module RhetButler
       require 'rhet-butler/static-generator'
 
       slide_files = slide_files(options[:sources])
-      configuration = Configuration.load_from(viewer_config)
-      configuration.root_slide = options[:root_slide] if options.has_key? :root_slide
+      configuration = Configuration.new(viewer_config, options)
 
       generator = StaticGenerator.new(slide_files, configuration)
       generator.target_directory = options[:target] if options.has_key? :target

@@ -7,7 +7,7 @@ module RhetButler
 
     class <<self
       def optional_config
-        []
+        %w[type slide_type]
       end
 
       def required_config

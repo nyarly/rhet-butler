@@ -20,6 +20,8 @@ Gem::Specification.new do |spec|
     lib/rhet-butler/web/assets-app.rb
     lib/rhet-butler/web/presentation-app.rb
     lib/rhet-butler/web/main-app.rb
+    lib/rhet-butler/web/qr-display-app.rb
+    lib/rhet-butler/messaging.rb
     lib/rhet-butler/file-manager.rb
     lib/rhet-butler/configuration.rb
     lib/rhet-butler/command-line.rb
@@ -28,7 +30,6 @@ Gem::Specification.new do |spec|
     lib/rhet-butler/arrangement.rb
     lib/rhet-butler/yaml-schema.rb
     lib/rhet-butler/slide-loader.rb
-    lib/rhet-butler/template-handler.rb
     lib/rhet-butler/slide.rb
     lib/rhet-butler/slide-includer.rb
     lib/rhet-butler/static-generator.rb
@@ -44,7 +45,7 @@ Gem::Specification.new do |spec|
     spec/arrangements.rb
   ]
 
-  spec.test_file        = "spec_help/gem_test_suite.rb"
+  spec.test_file        = "spec_support/gem_test_suite.rb"
   spec.licenses = ["MIT"]
   spec.require_paths = %w[lib/]
   spec.rubygems_version = "1.3.5"

@@ -37,10 +37,15 @@ describe RhetButler::SlideProcessor do
     ]
   end
 
+  let :default_slide_type do
+    "textile"
+  end
+
   let :processor do
     processor = RhetButler::SlideProcessor.new
     processor.root_group = root_group
     processor.blueprint = blueprint
+    processor.default_slide_type = default_slide_type
     processor
   end
 
@@ -63,6 +68,6 @@ describe RhetButler::SlideProcessor do
   it "should put all the slides in order" do
     result.map do |slide|
       slide.content
-    end.should == %w{A B C D E}
+    end.should == %w{A B C D E}.map{|str| "<p>#{str}</p>"}
   end
 end

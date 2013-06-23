@@ -1,20 +1,27 @@
 require 'valise'
-require 'rhet-butler/template-handler'
 require 'rhet-butler/html-generator'
 require 'rhet-butler/arrangement'
+require 'rhet-butler/file-manager'
+require 'rhet-butler/slide-loader'
 
 module RhetButler
   class StaticGenerator
-    def initialize(valise, configuration)
-      @base_valise = valise
+    include FileManager
+
+    def initialize(configuration)
       @configuration = configuration
-      @target_directory = "static"
+      @base_valise = slide_files(configuration)
+      @target_directory = configuration.static_target
+      @root_slide = configuration.root_slide
+      @root_slide_template = configuration.root_slide_template
     end
 
     attr_accessor :target_directory, :root_slides
+    attr_reader :configuration
 
     def template_handler
-      @template_handler ||= TemplateHandler.new(@base_valise, "templates")
+      @template_handler ||=
+        viewer_config.templates("templates")
     end
 
     def target_valise
@@ -28,11 +35,10 @@ module RhetButler
     end
 
     def html_document
-      html_generator = HTMLGenerator.new(template_handler)
+      html_generator = HTMLGenerator.new(configuration, template_handler)
+      html_generator.slides = SlideLoader.new(@base_valise, configuration).load_slides
 
-      html_generator.slides = Arrangement["horizontal"].new(@base_valise.load_slides(@configuration.root_slide))
-
-      return html_generator.html
+      return html_generator.render(@root_slide_template)
     end
 
     def populate_assets

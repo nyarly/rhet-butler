@@ -26,7 +26,7 @@ describe RhetButler::Web::MainApp do
     end
 
     let :app do
-      described_class.new(nil, nil).app
+      described_class.new(configuration, nil).app
     end
 
     describe "/" do
