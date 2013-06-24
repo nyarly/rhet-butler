@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rhet-butler (0.0.1)
+    rhet-butler (0.5.0)
       RedCloth (~> 4.2.9)
       rack (> 0)
       rqrcode (~> 0.4.2)

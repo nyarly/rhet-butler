@@ -1,5 +1,4 @@
-!!! MUST set apps to check their path and 404 if not matched
-  (Currently, missing assets returns the whole presentation html)
+Slide group "default slide type" setting
 
 SSL support - self-signed certs, signed certs...
 
@@ -47,10 +46,6 @@ Admin slide index
 
 Publish static to github pages - other destinations?
 
-Debug Android Chrome "aw, snap" - impress? styles?
-  Styles appear to take too long to render - argument for stripping down
-  presenter styles
-
 Slide reloading - I'm running EM already, so something like Watcher seems
 obvious
 
@@ -60,12 +55,11 @@ Arrangement stereotype (automatic anonymous subclasses)
 
 Localize assets - e.g. download everything in the Google Web Font stylesheet
 
-Fork Impress - allow Android Chrome, support incrementals
-
-Markdown slide renderer, make default
+Add Markdown slide renderer, make default
   Implication is plugable types - RedCloth and Kramdown? Why?
 
-Slide group "default slide type" setting
+rhet-butler init <dir>
+  mkdir, Load skeleton project from base_config, populate into <dir>
 
 Presentation address macro (for live follow)
 

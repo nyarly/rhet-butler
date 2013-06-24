@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rhet-butler"
-  spec.version		= "0.0.1"
+  spec.version		= "0.5.0"
   author_list = {
     "Judson Lester" => 'nyarly@gmail.com'
   }
@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
 
   # Do this: y$@"
   # !!find lib bin doc spec spec_help -not -regex '.*\.sw.' -type f 2>/dev/null
+  # !!find default-configuration -not -regex '.*\.sw.' -type f 2>/dev/null
   spec.files		= %w[
     lib/rhet-butler/web/assets-app.rb
     lib/rhet-butler/web/presentation-app.rb
@@ -43,6 +44,47 @@ Gem::Specification.new do |spec|
     spec/rhet-butler.rb
     spec/presentation-view.rb
     spec/arrangements.rb
+    default-configuration/assets/favicon.ico
+    default-configuration/assets/apple-touch-icon-precomposed.png
+    default-configuration/assets/apple-touch-icon.png
+    default-configuration/assets/rhet-butler.jpg
+    default-configuration/assets/fonts/ptserif/v5/QABk9IxT-LFTJ_dQzv7xpJ0EAVxt0G0biEntp43Qt6E.ttf
+    default-configuration/assets/fonts/ptserif/v5/EgBlzoNBIHxNPCMwXaAhYPesZW2xOQ-xsNqO47m55DA.ttf
+    default-configuration/assets/fonts/ptserif/v5/Foydq9xJp--nfYIx2TBz9fEr6Hm6RMS0v1dtXsGir4g.ttf
+    default-configuration/assets/fonts/ptserif/v5/03aPdn7fFF3H6ngCgAlQzC3USBnSvpkopQaUR-2r7iU.ttf
+    default-configuration/assets/fonts/ptsans/v5/lILlYDvubYemzYzN7GbLkInF5uFdDttMLvmWuJdhhgs.ttf
+    default-configuration/assets/fonts/ptsans/v5/FUDHvzEKSJww3kCxuiAo2A.ttf
+    default-configuration/assets/fonts/ptsans/v5/0XxGQsSc1g4rdRdjJKZrNC3USBnSvpkopQaUR-2r7iU.ttf
+    default-configuration/assets/fonts/ptsans/v5/PIPMHY90P7jtyjpXuZ2cLKCWcynf_cDxXwCLxiixG1c.ttf
+    default-configuration/assets/fonts/opensans/v6/MTP_ySUJH_bn48VBG8sNSonF5uFdDttMLvmWuJdhhgs.ttf
+    default-configuration/assets/fonts/opensans/v6/xjAJXh38I15wypJXxuGMBp0EAVxt0G0biEntp43Qt6E.ttf
+    default-configuration/assets/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3aCWcynf_cDxXwCLxiixG1c.ttf
+    default-configuration/assets/fonts/opensans/v6/PRmiXeptR36kaC0GEAetxi8cqLH4MEiSE0ROcU-qHOA.ttf
+    default-configuration/assets/stylesheets/google-open-sans.css
+    default-configuration/assets/stylesheets/presenter/presentation.css
+    default-configuration/assets/stylesheets/highlight/solarized_dark.css
+    default-configuration/assets/stylesheets/setup.css
+    default-configuration/assets/stylesheets/presentation.css
+    default-configuration/assets/javascript/sockjs-0.2.1.js
+    default-configuration/assets/javascript/highlight.pack.js
+    default-configuration/assets/javascript/highlight.js/LICENSE
+    default-configuration/assets/javascript/highlight.js/README.md
+    default-configuration/assets/javascript/highlight.js/README.ru.md
+    default-configuration/assets/javascript/highlight.js/classref.txt
+    default-configuration/assets/javascript/impress.js
+    default-configuration/assets/javascript/sockjs-0.3.js
+    default-configuration/presenter/config.yaml
+    default-configuration/presenter/templates/stylesheets.html.erb
+    default-configuration/presenter/templates/slide-notes.html.erb
+    default-configuration/presenter/templates/live-javascript.html.erb
+    default-configuration/common/config.yaml
+    default-configuration/common/templates/header-javascript.html
+    default-configuration/common/templates/stylesheets.html.erb
+    default-configuration/common/templates/presentation.html.erb
+    default-configuration/common/templates/presenter-qr.html.erb
+    default-configuration/viewer/config.yaml
+    default-configuration/viewer/templates/slide-notes.html.erb
+    default-configuration/viewer/templates/live-javascript.html.erb
   ]
 
   spec.test_file        = "spec_support/gem_test_suite.rb"
