@@ -9,14 +9,8 @@
     <meta name="description" content="<%= presentation.description %>" />
     <meta name="author" content="<%= presentation.author_name %>" />
 
-    <link href="assets/stylesheets/google-open-sans.css" rel="stylesheet" />
-    <link href="assets/stylesheets/presentation.css" rel="stylesheet" />
-    <link href="assets/stylesheets/highlight/solarized_dark.css" rel="stylesheet" />
-
-    <script type="text/javascript" src="assets/javascript/sockjs-0.2.1.js"></script>
-
-    <script src="assets/javascript/highlight.pack.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <%= render 'stylesheets.html' %>
+    <%= render 'header-javascript.html' %>
   </head>
 
   <body class="impress-not-supported">
@@ -42,7 +36,7 @@
       <p id="touch-hint" style="display:none">Tap on the left or right to navigate</p>
     </div>
 
-    <script src="assets/javascript/impress.js"></script>
+    <script src="/javascript/impress.js"></script>
     <%= render 'live-javascript.html' %>
     <script>impress().init();</script>
 

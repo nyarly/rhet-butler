@@ -33,7 +33,6 @@ module RhetButler
         extension = asset_path.sub(/.*[.]/, ".")
 
         mime_type = Rack::Mime.mime_type(extension, "text/plain")
-        puts; puts "#{__FILE__}:#{__LINE__} => #{[extension, mime_type].inspect}"
         [200, {'Content-Type' => mime_type}, [assets_context.render(asset_path)]]
       end
     end

@@ -3,18 +3,15 @@ require 'rqrcode'
 module RhetButler
   module Web
     class QrDisplayApp
-      def initialize(valise, path)
-        @valise = valise
+      def initialize(files, path)
+        @config = files.aspect_config(:presenter)
+        @templates = files.aspect_templates(:presenter)
         @path = path
       end
 
-      def template_handler
-        @template_handler ||= @valise.templates
-      end
+      attr_reader :template_handler
 
       def call(env)
-        require 'pp'
-        pp env
         url = [env["rack.url_scheme"], "://"]
         if env["HTTP_HOST"].nil? or env["HTTP_HOST"].empty?
           url << env["SERVER_NAME"]
@@ -30,10 +27,10 @@ module RhetButler
         qr = RQRCode::QRCode.new(url, :size => 5)
 
         mime_type = "text/html"
-        [200, {'Content-Type' => mime_type}, [template_handler.render("presenter-qr.html", qr){|vars|
-          vars[:view_url] = view_url
-          vars[:presenter_url] = url
-        }]]
+        generator = HTMLGenerator.new(@config, @templates)
+        [200, {'Content-Type' => mime_type}, [
+          generator.render("presenter-qr.html", qr, :view_url => view_url, :presenter_url => url)
+        ]]
       end
     end
   end

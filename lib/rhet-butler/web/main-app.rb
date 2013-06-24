@@ -53,6 +53,8 @@ module RhetButler
       #Simply renders the bodies of the viewer and presenter apps to make sure
       #there aren't any exceptions
       def check
+        viewer_app = PresentationApp.new(:viewer, @file_manager)
+        presenter_app = PresentationApp.new(:presenter, @file_manager)
         viewer_app.body
         presenter_app.body
         #XXX static generator "populate assets" - make sure all the assets
@@ -75,6 +77,7 @@ module RhetButler
         viewer_app = PresentationApp.new(:viewer, @file_manager)
         presenter_app = PresentationApp.new(:presenter, @file_manager)
         assets_app = AssetsApp.new(@file_manager)
+        qr_app = QrDisplayApp.new(@file_manager, "/presenter")
         presenter_config = presenter_app.configuration
         auth_validation = build_authentication_block(presenter_config)
 
@@ -97,7 +100,7 @@ module RhetButler
           end
 
           map "/qr" do
-            run QrDisplayApp.new(presenter_config, "/presenter")
+            run qr_app
           end
 
           map "/presenter" do
@@ -116,7 +119,7 @@ module RhetButler
       end
 
       def start
-        configuration = load_config(current_directory + base_config_set.sub_set("common"))
+        configuration = @file_manager.base_config
 
         puts "Starting server. Try one of these:"
         require 'system/getifaddrs'
