@@ -11,17 +11,15 @@ describe RhetButler::HTMLGenerator do
   end
 
   let :files do
-    manager = Object.new
-    manager.extend(RhetButler::FileManager)
-    manager.base_config_set.sub_set("viewer") + manager.base_config_set.sub_set("common")
+    manager = RhetButler::FileManager.new
   end
 
   let :template_handler do
-    files.templates
+    files.aspect_templates(:viewer)
   end
 
   let :configuration do
-    RhetButler::Configuration.new(files)
+    files.aspect_config(:viewer)
   end
 
   let :generator do

@@ -27,17 +27,8 @@ module RhetButler
     end
 
     class MainApp
-      include RhetButler::FileManager
-
-      def initialize(slide_sources, root_slide)
-        @slide_sources = slide_sources
-        @root_slide = root_slide
-      end
-
-      def load_config(files)
-        configuration = Configuration.new(files)
-        configuration.root_slide = @root_slide unless @root_slide.nil?
-        return configuration
+      def initialize(file_manager)
+        @file_manager = file_manager
       end
 
       # Notes re filesets config and slides:
@@ -55,23 +46,8 @@ module RhetButler
       # version should require special config (since I'm assuming a boring
       # presentation view)
       #
-      def presentation_app(slides, config_files)
-        configuration = load_config(config_files)
-        templates = config_files.templates("templates")
-
-        PresentationApp.new(slides, templates, configuration)
-      end
-
       def slides
-        slide_files(@slide_sources)
-      end
-
-      def viewer_app
-        @viewer_app ||= presentation_app(slides, viewer_config)
-      end
-
-      def presenter_app
-        @presenter_app ||= presentation_app(slides, presenter_config)
+        @file_manager.slide_files
       end
 
       #Simply renders the bodies of the viewer and presenter apps to make sure
@@ -83,8 +59,7 @@ module RhetButler
         #render as well
       end
 
-      def build_authentication_block(presenter_config)
-        creds_config = load_config(presenter_config)
+      def build_authentication_block(creds_config)
         return (proc do |user, pass|
           creds_config.username == user &&
             creds_config.password == pass
@@ -97,10 +72,10 @@ module RhetButler
           :queue => SlideMessageQueue.new
         }
 
-        viewer_app = self.viewer_app
-        presenter_app = self.presenter_app
-        slides = self.slides
-        presenter_config = self.presenter_config
+        viewer_app = PresentationApp.new(:viewer, @file_manager)
+        presenter_app = PresentationApp.new(:presenter, @file_manager)
+        assets_app = AssetsApp.new(@file_manager)
+        presenter_config = presenter_app.configuration
         auth_validation = build_authentication_block(presenter_config)
 
         Rack::Builder.new do
@@ -118,7 +93,7 @@ module RhetButler
           use Rack::ShowExceptions
 
           map "/assets" do
-            run AssetsApp.new(slides)
+            run assets_app
           end
 
           map "/qr" do
@@ -130,10 +105,13 @@ module RhetButler
             run presenter_app
           end
 
-          map "/" do
-            run viewer_app
-          end
-          run AssetsApp.new(slides)
+          run lambda{|env|
+            if env["PATH_INFO"] == "/"
+              viewer_app.call(env)
+            else
+              assets_app.call(env)
+            end
+          }
         end
       end
 

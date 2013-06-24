@@ -6,33 +6,17 @@ require 'rhet-butler/slide-loader'
 
 module RhetButler
   class StaticGenerator
-    include FileManager
-
-    def initialize(configuration)
-      @configuration = configuration
-      @base_valise = slide_files(configuration)
-      @target_directory = configuration.static_target
+    def initialize(file_manager)
+      @configuration = file_manager.base_config
+      @base_valise = file_manager.slide_files
+      @target_valise = file_manager.target_valise
       @root_slide = configuration.root_slide
       @root_slide_template = configuration.root_slide_template
+      @template_handler = file_manager.aspect_templates(:viewer)
     end
 
     attr_accessor :target_directory, :root_slides
-    attr_reader :configuration
-
-    def template_handler
-      @template_handler ||=
-        viewer_config.templates("templates")
-    end
-
-    def target_valise
-      @target_valise ||=
-        begin
-          target_directory = @target_directory
-          Valise::define do
-            rw target_directory
-          end
-        end
-    end
+    attr_reader :configuration, :template_handler, :target_valise
 
     def html_document
       html_generator = HTMLGenerator.new(configuration, template_handler)

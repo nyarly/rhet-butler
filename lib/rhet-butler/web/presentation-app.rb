@@ -4,18 +4,27 @@ require 'rhet-butler/slide-loader'
 module RhetButler
   module Web
     class PresentationApp
-      def initialize(valise, templates, configuration)
-        @valise = valise
-        @template_handler = templates
-        @configuration = configuration
+      def initialize(aspect, file_manager)
+        @file_manager = file_manager
+        @aspect = aspect
       end
 
-      attr_reader :configuration, :template_handler
+      def configuration
+        @file_manager.aspect_config(@aspect)
+      end
+
+      def template_handler
+        @file_manager.aspect_templates(@aspect)
+      end
+
+      def slides_valise
+        @file_manager.slide_files
+      end
 
       def slides
         @slides ||=
           begin
-            slide_loader = SlideLoader.new(@valise, configuration)
+            slide_loader = SlideLoader.new(slides_valise, configuration)
             slide_loader.load_slides
           end
       end

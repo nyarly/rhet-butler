@@ -1,8 +1,72 @@
 require 'valise'
-require 'rhet-butler/slide'
+require 'rhet-butler/configuration'
 
 module RhetButler
-  module FileManager
+  #All file handling is routed through this class.
+  #
+  #Basic configuration (including additional search paths for other configs and
+  #slides) can only come from the current directory or the "basic search path":
+  #* .rhet/
+  #* ~/.rhet/
+  #* /usr/share/rhet-butler/
+  #* /etc/rhet-butler/
+  #[the defaults provided by the gem]
+  #
+  #Other paths configured by --sources or sources: [] in base configs are added
+  #after the current directory and before that list.
+  #
+  #There are several subdirectories searched in these search paths, depending
+  #on context:
+  #
+  #* presenter/
+  #* viewer/
+  #* common/
+  #
+  #Presenter and viewer files are used for displaying the appropriate
+  #presentation, so that the presenter can have a different display (e.g. with
+  #notes and a timer) than the audience (e.g. nifty transitions etc.)
+  #
+  #Slide files are loaded without a sub-directory - they're always the same
+  #regardless of context.
+  #
+  #Presenter configs, templates, and assets are searched for in presenter, then
+  #common.
+  #
+  #Audience configs, templates and assets are searched for in viewer, then
+  #common.
+  #
+  class FileManager
+    def initialize(overrides = nil)
+      @overrides = overrides || {}
+      @cached_configs = {}
+      @cached_templates = {}
+    end
+
+    def base_config
+      @base_config ||= load_config(base_config_search_path)
+    end
+
+    def slide_files
+      all_files.sub_set("slides") + all_files
+    end
+
+    def base_assets
+      all_files.templates("assets")
+    end
+
+    def aspect_config(aspect_name)
+      @cached_configs[aspect_name] ||= load_config(aspect_search_path(aspect_name))
+    end
+
+    def aspect_templates(aspect)
+      @cached_templates[aspect] ||= aspect_search_path(aspect).templates
+    end
+
+
+    def load_config(files)
+      Configuration.new(files, @overrides)
+    end
+
     def current_directory
       Valise::Set.define do
         rw "."
@@ -10,9 +74,10 @@ module RhetButler
       end
     end
 
-    def configured_search_path(config)
+    def configured_search_path
+      base_config = self.base_config
       Valise::Set.define do
-        config.search_paths.each do |path|
+        base_config.search_paths.each do |path|
           rw path
         end
       end
@@ -31,37 +96,31 @@ module RhetButler
         end
     end
 
-    def all_files(config)
-      current_directory + configured_search_path(config) + base_config_set
+    def target_valise
+      @target_valise ||=
+        begin
+          target_directory = base_config.static_target
+          Valise::define do
+            rw target_directory
+          end
+        end
     end
 
-    def slide_files(config)
-      return all_files(config).sub_set("slides") + all_files(config)
+    def all_files
+      current_directory + configured_search_path + base_config_set
     end
 
-    def presenter_config
-      current_directory.sub_set("presenter") +
-        base_config_set.sub_set("presenter") +
-        base_config_set.sub_set("common")
+    def base_config_search_path
+      set = current_directory + base_config_set
+      set + set.sub_set("common")
     end
 
-    def viewer_config
-      current_directory.sub_set("viewer") +
-      current_directory +
-      base_config_set.sub_set("viewer") +
-      base_config_set.sub_set("common")
-    end
-
-    def presenter_templates(subset = nil)
-      (all_files.subset("presenter") +
-        all_files.subset("common") +
-        all_files).templates(subset)
-    end
-
-    def viewer_templates(subset = nil)
-      (all_files.subset("viewer") +
-        all_files.subset("common") +
-        all_files).templates(subset)
+    def aspect_search_path(aspect)
+      aspect = aspect.to_s
+      set = all_files.sub_set(aspect)
+      set += all_files.sub_set("common")
+      set += all_files
+      return set
     end
   end
 end

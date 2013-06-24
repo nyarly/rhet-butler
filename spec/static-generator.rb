@@ -9,16 +9,11 @@ describe RhetButler::StaticGenerator do
   before :all do
     test_target = "spec_support/tmp/test_target"
 
-    filer = Object.new.tap do |obj|
-      obj.extend RhetButler::FileManager
-    end
-
-    files = filer.viewer_config
-    configuration = RhetButler::Configuration.new(
-      files,
+    files = RhetButler::FileManager.new(
       "sources" => ["spec_support/fixtures/project"],
       "static_target" => test_target)
-    generator = RhetButler::StaticGenerator.new(configuration)
+
+    generator = RhetButler::StaticGenerator.new(files)
 
     FileUtils::rm_rf test_target
     FileUtils::mkdir_p test_target

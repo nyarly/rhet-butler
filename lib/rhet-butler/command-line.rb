@@ -5,9 +5,6 @@ require 'rhet-butler/file-manager'
 
 module RhetButler
   class CommandLine < ::Thor
-    #XXX Should go into StaticGenerator
-    include FileManager
-
     def self.shared_options
       method_option :sources, :type => :array
       method_option :root_slide, :type => :string
@@ -19,11 +16,8 @@ module RhetButler
     def static
       require 'rhet-butler/static-generator'
 
-      slide_files = slide_files(options[:sources])
-      configuration = Configuration.new(viewer_config, options)
-
-      generator = StaticGenerator.new(slide_files, configuration)
-      generator.target_directory = options[:target] if options.has_key? :target
+      file_manager = FileManager.new(options)
+      generator = StaticGenerator.new(file_manager)
 
       generator.go!
     end
@@ -33,8 +27,8 @@ module RhetButler
     def check
       require 'rhet-butler/web/main-app'
 
-      app = Web::MainApp.new(options[:sources], options[:root_slide])
-      app.check
+      file_manager = FileManager.new(options)
+      app = Web::MainApp.new(file_manager)
 
       say "Slides loaded and parsed"
       say "  #{app.viewer_app.slides.length} slides loaded"
@@ -46,8 +40,9 @@ module RhetButler
     def serve
       require 'rhet-butler/web/main-app'
 
-      invoke :check
-      app = Web::MainApp.new(options[:sources], options[:root_slide])
+      file_manager = FileManager.new(options)
+      app = Web::MainApp.new(file_manager)
+      app.check
       app.start
     end
   end

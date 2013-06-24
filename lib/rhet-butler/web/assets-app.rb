@@ -1,13 +1,11 @@
 module RhetButler
   module Web
     class AssetsApp
-      def initialize(valise)
-        @valise = valise
+      def initialize(file_manager)
+        @template_handler = file_manager.base_assets
       end
 
-      def template_handler
-        @template_handler ||= @valise.templates("assets")
-      end
+      attr_reader :template_handler
 
       class AssetsContext
         def render(path, locals = nil)
@@ -35,6 +33,7 @@ module RhetButler
         extension = asset_path.sub(/.*[.]/, ".")
 
         mime_type = Rack::Mime.mime_type(extension, "text/plain")
+        puts; puts "#{__FILE__}:#{__LINE__} => #{[extension, mime_type].inspect}"
         [200, {'Content-Type' => mime_type}, [assets_context.render(asset_path)]]
       end
     end
