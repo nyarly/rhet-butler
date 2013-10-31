@@ -5,3 +5,5 @@ static/
 last_run
 corundum/
 spec_support/tmp/
+node_modules/
+pkg/

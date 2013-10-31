@@ -35,4 +35,10 @@ module Corundum
   end
 end
 
+file "default-configuration/assets/javascript/present.js" => "javascript/src/present.js" do |task|
+  cmd("cp", "default-configuration/assets/javascript/present.js", "javascript/src/present.js").must_succeed!
+end
+
+task 'gemspec_sanity:files_exist' => "default-configuration/assets/javascript/present.js"
+
 task :default => [:release, :publish_docs]

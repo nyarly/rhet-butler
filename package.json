@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "karma": "~0.10.2",
+    "karma-sinon": "~0.0.1",
+    "karma-coverage": "~0.1",
+    "jasmine-jquery": "~1.3.3",
+    "sinon": "~1.7.3"
+  }
+}
