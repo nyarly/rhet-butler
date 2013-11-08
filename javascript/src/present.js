@@ -1,4 +1,4 @@
-/*
+  /*
  * RhetButler presentation Javascript
  *
  * Copyright 2013 Judson Lester (@judsonlester)
@@ -72,6 +72,40 @@ rhetButler = { };
         el.dispatchEvent(event);
     };
 
+    utils.bindFunction = (function() {
+        if(!Function.prototype.bind){
+          return function(fToBind, thisArg) {
+            if (typeof fToBind !== "function") {
+              // closest thing possible to the ECMAScript 5 internal IsCallable function
+              throw new TypeError("bindFunction - what is trying to be bound is not callable");
+            }
+
+            var aArgs = Array.prototype.slice.call(arguments, 2),
+            fNOP = function () {},
+            fBound = function () {
+              return fToBind.apply(thisArg, aArgs.concat(Array.prototype.slice.call(arguments)));
+              /*
+               * Probably more correct, but fails if `this` has undefined prototype
+               * which sometimes happens with DOM nodes...
+              return fToBind.apply(this instanceof fNOP && thisArg
+                ? this
+                : thisArg,
+                aArgs.concat(Array.prototype.slice.call(arguments)));
+                */
+            };
+
+            fNOP.prototype = this.prototype;
+            fBound.prototype = new fNOP();
+
+            return fBound;
+          };
+        } else {
+          return function(fun, thisArg) {
+            return fun.bind(thisArg);
+          };
+        }
+      })();
+
     // `pfx` is a function that takes a standard CSS property name as a parameter
     // and returns it's prefixed version valid for current browser it runs in.
     // The code is heavily inspired by Modernizr http://www.modernizr.com/
@@ -98,47 +132,18 @@ rhetButler = { };
             return memory[ prop ];
         };
     })();
-});
+})();
 
 rhetButler.Step = function(element){
   this.element = element;
   this.groups = [];
   this.steps = [];
-}
-
-rhetButler.Step = function(){};
-
-rhetButler.Group = function(parent, element, indexes){
-  this.setup(parent, element,indexes);
 };
-rhetButler.Group.prototype = new rhetButler.Step
 
-rhetButler.Slide = function(parent, element, indexes){
-  this.setup(parent, element, indexes);
-};
-rhetButler.Slide.prototype = new rhetButler.Step
-
-rhetButler.Item = function(parent, element, indexes){
-  this.setup(parent, element, indexes);
-};
-rhetButler.Item.prototype = new rhetButler.Step
-
-// DONE
-//Steps (Item, Slide, Group, [Root?])
-//  References to the elements within the document that are part of the presentation
-//  Able to relate selves to other steps in order to calculate motions
-//    - "which step is <motion> from you?"
-//    - "where is <step> in relation to you?"
-//
-(function(){
+;(function(){
     var step = rhetButler.Step.prototype;
-
-    var group = rhetButler.Group.prototype;
-    var slide = rhetButler.Slide.prototype;
-    var item = rhetButler.Item.prototype;
-
     rhetButler.Step.buildTree = function(rootElement, elements){
-      var steps = [];
+      var rootStep;
       var parentStack = [];
       var indexes = {
         step: 0,
@@ -172,38 +177,47 @@ rhetButler.Item.prototype = new rhetButler.Step
 
           var parent = getParent(element);
 
-          indexes.step++;
-          if(element.classList.has("item")){
-            indexes.item++;
+          if(element.classList.contains("root")){
             if(element.id.length == 0){
-              element.id = "item-" + indexes.item
+              element.id = "rhet-root"
             }
-            step = new rhetButler.Item(parent, element, indexes);
-          } else if(element.classList.has("slide")){
-            indexes.slide++;
-            if(element.id.length == 0){
-              element.id = "slide-" + indexes.slide
-            }
-            step = new rhetButler.Slide(parent, element, indexes);
-          } else if(element.classList.has("group")){
+            step = new rhetButler.Root(element, indexes);
+            rootStep = step;
+          } else if(element.classList.contains("group")){
             indexes.group++;
             if(element.id.length == 0){
               element.id = "group-" + indexes.group
             }
             step = new rhetButler.Group(parent, element, indexes);
+          } else if(element.classList.contains("slide")){
+            indexes.slide++;
+            if(element.id.length == 0){
+              element.id = "slide-" + indexes.slide
+            }
+            step = new rhetButler.Slide(parent, element, indexes);
+          } else if(element.classList.contains("item")){
+            indexes.item++;
+            if(element.id.length == 0){
+              element.id = "item-" + indexes.item
+            }
+            step = new rhetButler.Item(parent, element, indexes);
+          } else {
+            return //root or malformed
           }
+          indexes.step++;
 
           parentStack.unshift(step);
-
-          steps[step.indexes.step] = step;
         });
 
-      return steps;
+      return rootStep;
     };
 
-    step.setup = function(parent, element, indexes){
+    step.toString = function() {
+      return "A Step " + this.element.id
+    };
+
+    step.setup = function(element, indexes){
       this.element = element;
-      this.parent = parent;
       this.children = [];
       this.indexes = {};
 
@@ -224,8 +238,25 @@ rhetButler.Item.prototype = new rhetButler.Step
 
       this.prevItem = null;
       this.nextItem = null;
+    };
 
-      parent.addChild(this);
+    step.addClass = function(name){
+      this.element.classList.add(name);
+    };
+
+    step.removeClass = function(name){
+      this.element.classList.remove(name);
+    };
+
+    step.hasClass = function(name){
+      return this.element.classList.contains(name);
+    };
+
+    step.eachStep = function(dothis){
+      dothis(this);
+      this.children.forEach(function(step){
+          step.eachStep(dothis);
+        });
     };
 
     // Given a structure level, return the kind and direction of transition to another step
@@ -254,24 +285,129 @@ rhetButler.Item.prototype = new rhetButler.Step
     };
 
     step.addChild = function(newChild){
+      this.debugAssoc("Xac", newChild);
+      //console.log("addchild", this.toString(), newChild.toString());
       var lastChild = this.children.slice(-1)[0];
-      newChild.addPrevStep(lastChild);
-      lastChild.addNextStep(newChild);
+      if(lastChild){
+        newChild.addPrevStep(lastChild);
+        lastChild.addNextStep(newChild);
+      }
       this.children.push(newChild);
       this.addDescendant(newChild);
     };
 
+    step.addDescendant = function(newChild){
+      if(newChild instanceof rhetButler.Slide){
+        this.lastSlide = newChild;
+        console.log("sad f?", this.toString(), (this.firstSlide == null ? null : this.firstSlide.toString()))
+        if (this.firstSlide == null) {
+          this.firstSlide = newChild;
+          this.firstItem = newChild;
+          console.log("sad n?", (this.prevSlide != null))
+          if(this.prevSlide != null){
+            this.prevSlide.addNextSlide(newChild);
+            newChild.addPrevSlide(this.prevSlide);
+          }
+        }
+      }
+      if(newChild instanceof rhetButler.Item){
+        this.lastItem = newChild;
+      }
 
-    slide.addDescendant = function(newChild){
-      this.nextItem = newChild;
-      newChild.prevItem = this;
-      this.parent.addDescendant(newChild);
+      this.propagateDescendant(newChild);
     };
 
     step.lastChild = function(){
-      this.children.slice(-1)[0];
+      if(this.children.length > 0){
+        return this.children.slice(-1)[0];
+      } else {
+        return this
+      }
     };
 
+    step.debugAssoc = function(assoc, other){
+      console.log(assoc, this.toString(), other.toString());
+    };
+
+    step.addNextRoot = function(root){
+      this.debugAssoc("Xnr", root)
+    };
+
+    step.addPrevRoot = function(root){
+      this.debugAssoc("Xpr", root)
+    };
+
+    step.addNextGroup = function(group){
+      this.debugAssoc("Xng", group)
+    };
+
+    step.addPrevGroup = function(group){
+      this.debugAssoc("Xpg", group)
+    };
+
+    step.addNextSlide = function(slide){
+      this.debugAssoc("Xns", slide)
+    };
+
+    step.addPrevSlide = function(slide){
+      this.debugAssoc("Xps", slide)
+    };
+
+    step.addNextItem = function(item){
+      this.debugAssoc("Xni", item)
+    };
+
+    step.addPrevItem = function(item){
+      this.debugAssoc("Xpi", item)
+    };
+  })();
+
+rhetButler.Root = function(element, indexes){
+  this.setup(element, indexes);
+};
+rhetButler.Root.prototype = new rhetButler.Step;
+
+;(function(){
+    var root = rhetButler.Root.prototype;
+
+    root.propagateDescendant = function(newChild){
+    };
+
+    root.addNextStep = function(step){
+      step.addPrevRoot(this);
+    };
+
+    root.addPrevStep = function(step){
+      step.addNextRoot(this);
+    };
+  })();
+
+rhetButler.ChildStep = function(){
+};
+rhetButler.ChildStep.prototype = new rhetButler.Step;
+
+;(function(){
+    var childStep = rhetButler.ChildStep.prototype;
+    var supertype = rhetButler.Step.prototype;
+
+    childStep.setup = function(parent, element, indexes){
+      this.parent = parent;
+      supertype.setup.call(this, element, indexes);
+      this.parent.addChild(this);
+    };
+
+    childStep.propagateDescendant = function(newChild){
+      this.parent.addDescendant(newChild);
+    };
+})();
+
+rhetButler.Group = function(parent, element, indexes){
+  this.setup(parent, element, indexes);
+};
+rhetButler.Group.prototype = new rhetButler.ChildStep;
+
+;(function(){
+    var group = rhetButler.Group.prototype;
     group.addNextStep = function(step){
       step.addPrevGroup(this);
     };
@@ -280,81 +416,119 @@ rhetButler.Item.prototype = new rhetButler.Step
       step.addNextGroup(this);
     };
 
+    group.addNextSlide = function(slide){
+      this.debugAssoc("gns", slide)
+
+      this.nextSlide = slide;
+      if(this.lastSlide){
+        this.lastSlide.addNextSlide(slide);
+      }
+    };
+
+    group.addPrevSlide = function(slide){
+      this.debugAssoc("gps", slide)
+      if(!this.lastSlide){
+        this.lastSlide = slide;
+      }
+      if(!this.lastItem){
+        this.lastItem = slide.lastChild();
+      }
+      this.prevSlide = slide;
+      this.prevItem = slide.lastChild();
+    };
+
+    group.addNextGroup = function(group){
+      this.debugAssoc("gng", group)
+      //
+    };
+
+    group.addPrevGroup = function(group){
+      this.debugAssoc("gpg", group)
+
+      this.prevSlide = group.lastSlide;
+
+      this.lastSlide = group.lastSlide;
+      this.lastItem = group.lastItem;
+    };
+  })();
+
+
+rhetButler.Slide = function(parent, element, indexes){
+  this.setup(parent, element, indexes);
+};
+rhetButler.Slide.prototype = new rhetButler.ChildStep;
+;(function(){
+    var slide = rhetButler.Slide.prototype;
+    var step = rhetButler.Step.prototype;
+
+    slide.addChild = function(newChild){
+      if(this.children.length == 0){
+        newChild.prevItem = this
+        this.nextItem = newChild
+      }
+      step.addChild.call(this, newChild)
+    };
+
     slide.addNextStep = function(step){
       step.addPrevSlide(this);
     };
+
     slide.addPrevStep = function(step){
       step.addNextSlide(this);
     };
 
-    item.addNextStep = function(step){
-      step.addPrevItem(this);
-    };
-    item.addPrevStep = function(step){
-      step.addNextItem(this);
-    };
-
-    item.addNextItem = function(item){
-      this.nextItem = item;
-    };
-    item.addPrevItem = function(item){
-      this.prevItem = item;
+    slide.addPrevGroup = function(group){
+      this.debugAssoc("spg", group)
+      console.log("spg l?", group.lastSlide ? group.lastSlide.toString(): group.lastSlide);
+      if(group.lastSlide){
+        this.addPrevSlide(group.lastSlide)
+      }
     };
 
     slide.addNextSlide = function(slide){
+      this.debugAssoc("sns", slide)
+
       this.nextSlide = slide;
-      this.children.forEach(function(item){
-          item.nextSlide = slide;
-        })
+      this.children.forEach(function(item){ item.nextSlide = slide; })
       this.lastChild().nextItem = slide;
     };
 
     slide.addPrevSlide = function(slide){
+      this.debugAssoc("sps", slide)
       this.prevSlide = slide;
       this.children.forEach(function(item){
           item.prevSlide = slide;
         })
       this.prevItem = slide.lastChild();
     };
+  })();
 
-    group.addNextSlide = function(slide){
-      this.nextSlide = slide;
-      this.lastSlide.addNextSlide(slide);
+rhetButler.Item = function(parent, element, indexes){
+  this.setup(parent, element, indexes);
+};
+rhetButler.Item.prototype = new rhetButler.ChildStep;
+
+;(function(){
+    var item = rhetButler.Item.prototype;
+
+    item.addNextStep = function(step){
+      step.addPrevItem(this);
     };
 
-    group.addPrevSlide = function(slide){
-      this.prevSlide = slide;
-      //no firstSlide, yet
+    item.addPrevStep = function(step){
+      step.addNextItem(this);
     };
 
-    group.addNextGroup = function(group){
-      //
+    item.addNextItem = function(item){
+      this.debugAssoc("ini", item)
+      this.nextItem = item;
     };
 
-    group.addPrevGroup = function(group){
-      this.prevSlide = group.lastSlide;
+    item.addPrevItem = function(item){
+      this.debugAssoc("ipi", item)
+      this.prevItem = item;
     };
-
-    group.addDescendant = function(newChild){
-      if(newChild instanceof rhetButler.Slide){
-        this.lastSlide = newChild;
-        if (this.firstSlide == null) {
-          this.firstSlide = newChild;
-          this.firstItem = newChild;
-          this.prevSlide.addNextSlide(newChild);
-          newChild.addPrevSlide(this.prevSlide);
-        }
-      }
-      if(newChild instanceof rhetButler.Item){
-        this.lastItem = newChild;
-      }
-
-      if(this.parent != null){
-        this.parent.addDescendant(newChild);
-      }
-    };
-})
-
+  })();
 //StationList -> *[Station]
 //  Runs through the JS mechanics of transitioning between steps -
 //
@@ -376,33 +550,31 @@ rhetButler.TransitionStations = function(presenter, firstStep, currentStep, last
   this.changeState("preparing")
 };
 
-//XXX I think rather than element, this should be step
 rhetButler.TransitionStation = function(stationList, step){
   this.stationList = stationList;
   this.step = step;
   this.checkedIn = false;
   this.eventListener = null;
-  this.eventListener = this.handleMotionComplete.bind(this);
-  this.motionStyles = this.buildMotionStyles();
+  this.eventListener = rhetButler.bindFunction(this.handleMotionComplete, this);
 };
 
 //XXX element/step/station...
-(function(){
+;(function(){
     var motionStyles = [
-        "transition-duration",
-        "animation-name",
-        "animation-iteration-count",
-        "animation-play-state"
-      ];
+      "transition-duration",
+      "animation-name",
+      "animation-iteration-count",
+      "animation-play-state"
+    ];
 
     var motionCompleteEvents = (function(){
-      var events = ["transitionend", "animationend"];
-      var prefixes = ["webkit", "o"];
-      prefixes.forEach(function(prefix){
-          events = events.concat(events.map(function(event){ return prefix + event; }))
-        })
-      return events;
-    })();
+        var events = ["transitionend", "animationend"];
+        var prefixes = ["webkit", "o"];
+        prefixes.forEach(function(prefix){
+            events = events.concat(events.map(function(event){ return prefix + event; }))
+          })
+        return events;
+      })();
 
     var utils = rhetButler;
     var stationList = rhetButler.TransitionStations.prototype;
@@ -423,6 +595,10 @@ rhetButler.TransitionStation = function(stationList, step){
       //raise exception?
     };
 
+    baseState.cancel = function(args){
+
+    };
+
     baseState.forceFinish = function(){
 
     };
@@ -439,7 +615,7 @@ rhetButler.TransitionStation = function(stationList, step){
     };
 
     baseState.resumeStep = function(){
-      this.firstStep;
+      return this.firstStep;
     };
 
     for(name in states){
@@ -447,7 +623,6 @@ rhetButler.TransitionStation = function(stationList, step){
         states[name][func] = baseState[func];
       }
     }
-
 
     states.preparing.start = function(){
       this.changeState("uphill");
@@ -468,8 +643,8 @@ rhetButler.TransitionStation = function(stationList, step){
       this.direction.forEach(function(dirPart){
           this.presenter.root.classList.add(dirPart);
         })
-      this.firstStep.element.classList.add("previous");
-      this.lastStep.element.classList.add("next");
+      this.firstStep.addClass("previous");
+      this.lastStep.addClass("next");
     };
 
     states.uphill.finish = function(){
@@ -489,31 +664,31 @@ rhetButler.TransitionStation = function(stationList, step){
     };
 
     states.downhill.resumeStep = function(){
-      this.lastStep;
+      return this.lastStep;
     };
 
     states.arrived.enterState = function(){
-      this.stations.forEach(function(station){ station.removeListener() })
+      this.eachStation(function(station){ station.removeListener() })
 
       this.presenter.root.classList.remove("moving");
       this.presenter.root.classList.remove(this.startElemId());
       this.presenter.root.classList.remove(this.endElemId());
       this.direction.forEach(function(dirPart){
-          this.presenter.root.classList.remove(dirPart);
-        })
-      this.firstStep.element.classList.remove("previous");
-      this.firstStep.element.classList.remove("present");
-      this.firstStep.element.classList.add("past");
+          this.presenter.rootStep.removeClass(dirPart);
+        }, this)
+      this.firstStep.removeClass("previous");
+      this.firstStep.removeClass("present");
+      this.firstStep.addClass("past");
 
-      this.lastStep.element.classList.remove("next");
-      this.lastStep.element.classList.remove("current");
-      this.lastStep.element.classList.remove("future");
-      this.lastStep.element.classList.remove("present");
+      this.lastStep.removeClass("next");
+      this.lastStep.removeClass("current");
+      this.lastStep.removeClass("future");
+      this.lastStep.removeClass("present");
       this.presenter.completeTransition();
     };
 
     states.arrived.resumeStep = function(){
-      this.lastStep;
+      return this.lastStep;
     };
 
     stationList.changeState = function(name){
@@ -533,20 +708,20 @@ rhetButler.TransitionStation = function(stationList, step){
       var checkedIn = true;
       var station;
 
-      this.direction = this.firstStep.relativePostion(this.lastStep);
+      this.direction = this.firstStep.relativePosition(this.lastStep);
 
       while(step != null){
-        checkedIn = checkedIn && (step != currentStep);
-        station = new rhetButler.TransitionStation(step);
-        uphill.push(station);
+        checkedIn = checkedIn && (step != this.currentStep);
+        station = new rhetButler.TransitionStation(this, step);
+        this.uphill.push(station);
         if(checkedIn){
           station.visisted();
         }
         step = step.parent;
       }
-      step = lastStep;
+      step = this.lastStep;
       while(step != null){
-        downhill.unshift(new rhetButler.TransitionStation(step));
+        this.downhill.unshift(new rhetButler.TransitionStation(this, step));
         step = step.parent;
       }
     };
@@ -579,14 +754,14 @@ rhetButler.TransitionStation = function(stationList, step){
       if(this.checkIn){ return true; }
 
       beforeStyles = this.getMotionStyles();
-      this.step.element.classList.add("am-at");
+      this.step.addClass("am-at");
       afterStyles = this.getMotionStyles();
 
       if(beforeStyles != afterStyles){ this.checkIn = false; };
 
       if(!this.elementHasMotion()){ this.visited(); };
 
-      if(this.checkIn){ this.step.element.classList.remove("am-at"); };
+      if(this.checkIn){ this.step.removeClass("am-at"); };
 
       this.stationList.currentStep = this.step;
 
@@ -603,13 +778,13 @@ rhetButler.TransitionStation = function(stationList, step){
     };
 
     station.visited = function(){
-      this.step.element.classList.remove("to-come");
-      this.step.element.classList.add("has-gone");
+      this.step.removeClass("to-come");
+      this.step.addClass("has-gone");
       this.checkIn = true;
     };
 
     station.prepare = function(){
-      this.step.element.classList.add("to-come");
+      this.step.addClass("to-come");
       this.attachListener();
     };
 
@@ -648,7 +823,7 @@ rhetButler.TransitionStation = function(stationList, step){
       motionCompleteEvents.forEach(function(eventName){
           this.step.element.addEventListener(eventName, this.eventListener, true);
         }, this)
-   };
+    };
 
     station.removeListener = function(){
       motionCompleteEvents.forEach(function(eventName){
@@ -661,8 +836,8 @@ rhetButler.Presenter = function(document, window){
   this.document = document;
   this.body = document.body;
   this.window = window;
-  this.stepsbyId = {};
-  this.stepsList = [];
+  this.stepsById = {};
+  this.rootStep = null;
   this.currentTransition = null;
 
   this.previousSlideIndex = 0;
@@ -682,32 +857,28 @@ rhetButler.Presenter = function(document, window){
       this.body.classList.add("rhet-enabled");
 
       // get and init steps
-      var stepElements = this.arrayify(root.getElementsByClassName("rhet-butler"));
-      this.stepsList = rhetButler.Step.buildTree(stepElements)
-      this.stepsList.forEach(function(step){ this.stepsById[step.element.id] = step; }, this)
+      var stepElements = utils.arrayify(this.root.getElementsByClassName("rhet-butler"));
+      this.rootStep = rhetButler.Step.buildTree(this.root, stepElements);
+      this.rootStep.eachStep(function (step) {
+          step.addClass("future");
+        });
 
-      //initial TransitionStations
+      var prev = this.rootStep.firstItem;
+
+      this.currentTransition = new rhetButler.TransitionStations(this, prev, prev, prev);
+      this.currentTransition.forceFinish();
 
       this.bindHandlers();
 
       utils.triggerEvent(this.root, "rhet:init", { api: this });
     };
 
-    presenter.goto = function(nextStep){
-      var previousStep = this.currentTransition.resumeStep();
-      var currentStep = this.currentTransition.currentStep;
-      this.currentTransition.cancel();
-      this.currentTransition = new rhetButler.TransitionStations(previousStep, currentStep, nextStep);
-      this.currentTransition.start();
-      this.updateBeforeAndAfter(previousStep, nextStep);
-    };
-
-    presenter.updateBeforeAndAfter = function(previousStep, nextStep){
-      this.markRange(0, previousStep.indexes.step, "before");
-      this.markRange(nextStep.indexes.step, undefined, "after");
-      previousStep.eachParent(function(step){ step.removeClass("before"); });
-      nextStep.eachParent(function(step){ step.removeClass("after"); });
-    };
+    //    presenter.updateBeforeAndAfter = function(previousStep, nextStep){
+    //      this.markRange(0, previousStep.indexes.step, "before");
+    //      this.markRange(nextStep.indexes.step, undefined, "after");
+    //      previousStep.eachParent(function(step){ step.removeClass("before"); });
+    //      nextStep.eachParent(function(step){ step.removeClass("after"); });
+    //    };
 
     presenter.markRange = function(start, end, mark){
       this.stepsList.slice(start, end).forEach(function(elem){
@@ -716,6 +887,75 @@ rhetButler.Presenter = function(document, window){
           containers.steps.forEach(function(step){ this.thisClassNotThose(step, mark, "before", "after", "passing"); }, this);
           containers.slides.forEach(function(slide){ this.thisClassNotThose(slide, mark, "before", "after", "passing"); }, this);
         }, this);
+    };
+
+    presenter.bindHandlers = function(){
+      //Our own :init event
+      var initListener = function(){
+        // last hash detected
+        var lastHash = "";
+
+        // STEP CLASSES
+//        this.root.addEventListener("rhet:stepenter", function (event) {
+//            this.thisClassNotThose(event.target, "present", "past", "future");
+//          }, false);
+//
+//        this.root.addEventListener("rhet:stepleave", function (event) {
+//            this.thisClassNotThose(event.target, "past", "present", "future");
+//          }, false);
+
+        // `#/step-id` is used instead of `#step-id` to prevent default browser
+        // scrolling to element in hash.
+        //
+        // And it has to be set after animation finishes, because in Chrome it
+        // makes transtion laggy.
+        // BUG: http://code.google.com/p/chromium/issues/detail?id=62820
+        this.root.addEventListener("rhet:stepenter", function (event) {
+            window.location.hash = lastHash = "#/" + event.target.id;
+          }, false);
+
+        window.addEventListener("hashchange", function () {
+            if (window.location.hash !== lastHash) {
+              this.goto( this.getElementFromHash() );
+            }
+          }, false);
+
+        // START
+        // by selecting step defined in url or first step of the presentation
+
+        this.teleport(this.getElementFromHash() || this.rootStep.firstItem);
+      };
+
+      this.root.addEventListener("rhet:init", utils.bindFunction(initListener, this), false);
+    };
+
+    presenter.resolveStep = function(reference){
+      if(reference instanceof rhetButler.Step){
+        return reference;
+      }
+    };
+
+    presenter.buildTransition = function(reference){
+      var previousStep = this.currentTransition.resumeStep();
+      var currentStep = this.currentTransition.currentStep;
+      var nextStep = this.resolveStep(reference);
+
+      this.currentTransition.cancel();
+      this.currentTransition = new rhetButler.TransitionStations(this, previousStep, currentStep, nextStep);
+      //this.updateBeforeAndAfter(previousStep, nextStep);
+    };
+
+    presenter.teleport = function(reference){
+      this.buildTransition(reference);
+      this.currentTransition.forceFinish();
+    };
+
+    presenter.goto = function(reference){
+      this.buildTransition(reference);
+      this.currentTransition.start();
+    };
+
+    presenter.completeTransition = function(){
     };
 
     ///// METHODS BELOW HERE STILL IN NEED OF REFACTORING
@@ -739,9 +979,9 @@ rhetButler.Presenter = function(document, window){
     // `getElementFromHash` returns an element located by id from hash part of
     // window location.
     presenter.getElementFromHash = function () {
-        // get id from url # by removing `#` or `#/` from the beginning,
-        // so both "fallback" `#slide-id` and "enhanced" `#/slide-id` will work
-        return this.byId( window.location.hash.replace(/^#\/?/,"") );
+      // get id from url # by removing `#` or `#/` from the beginning,
+      // so both "fallback" `#slide-id` and "enhanced" `#/slide-id` will work
+      return utils.byId( window.location.hash.replace(/^#\/?/,"") );
     };
 
     // `getStep` is a helper function that returns a step element defined by
@@ -751,9 +991,9 @@ rhetButler.Presenter = function(document, window){
     // if it is a correct step element.
     presenter.getStep = function ( step ) {
       if (typeof step === "number") {
-        step = step < 0 ? this.steps[ steps.length + step] : this.steps[ step ];
+        step = step < 0 ? this.stepsList[ stepsList.length + step] : this.stepsList[ step ];
       } else if (typeof step === "string") {
-        step = byId(step);
+        step = utils.byId(step);
       }
       return (step && step.id && this.stepsData[step.id]) ? step : null;
     };
@@ -780,7 +1020,7 @@ rhetButler.Presenter = function(document, window){
     presenter.thisClassNotThose = function(element, setClass) { //...exclusiveClasses
       var idx, length = arguments.length;
       for(idx=2; idx < arguments.length; idx++){
-        element.classLIst.remove(arguments[idx]);
+        element.classList.remove(arguments[idx]);
       }
       element.classList.add(setClass);
     };
@@ -798,52 +1038,6 @@ rhetButler.Presenter = function(document, window){
     //
     //XXX Move to stationList
     //Relation between current/next/etc step and slide and group
-    presenter.update = function(previousStep, nextStep){
-      var stationList = [];
-      var containers;
-      var lowStep, highStep = previousStep, nextStep;
-      if( previousStep > nextStep ){
-        lowStep = nextStep;
-        highStep = previousStep;
-      }
-      this.markRange(0, lowStep, "before");
-      this.markRange(lowStep + 1, highStep, "passing");
-      this.markRange(highStep + 1, undefined, "after");
-
-      switch(highStep - lowStep) {
-        case 0:
-          this.thisClassNotThose(this.root, "arrived", "stepping", "jumping");
-          break
-        case 1:
-          this.thisClassNotThose(this.root, "stepping", "arrived", "jumping");
-          break
-        default:
-          this.thisClassNotThose(this.root, "jumping", "stepping", "arrived");
-      }
-
-      if(this.previousStep != previousStep){
-        this.unmarkEndpoint(this.previousStep, "previous");
-        this.markTime(this.previousStep, "past")
-        containers = this.markEndpoint(previousStep, "previous");
-        stationList.append(containers.slides)
-        stationList.append(containers.groups)
-      }
-
-      if(this.nextStep != nextStep){
-        this.unmarkEndpoint(this.nextStep, "next");
-        this.markTime(nextStep, "present")
-        containers = this.markEndpoint(nextStep, "next");
-        stationList.append(containers.slides)
-        stationList.append(containers.groups)
-      }
-
-      this.stations = new rhetButler.TransitionStationList(this, stationList)
-      this.stations.start();
-
-      this.previousStep = previousStep;
-      this.nextStep = nextStep;
-    };
-
     presenter.unmarkEndpoint = function(stepIndex, mark){
       var containers = this.containingElements(this.steps[stepIndex]);
       var slide = containers.slides[0];
@@ -874,58 +1068,4 @@ rhetButler.Presenter = function(document, window){
       return containers
     };
 
-    presenter.goto = function(index){
-      this.update(this.previousStep, index);
-    };
-
-    presenter.completeTransition = function(){
-      this.update(this.nextStep, this.NextStep);
-    };
-
-    presenter.bindHandlers = function(){
-      //Our own :init event
-      console.log(typeof this);
-      console.log(this.root);
-      this.root.addEventListener("rhet:init", function(){
-          // STEP CLASSES
-          this.steps.forEach(function (step) {
-              step.classList.add("future");
-            });
-
-          this.root.addEventListener("rhet:stepenter", function (event) {
-              this.thisClassNotThose(event.target, "present", "past", "future");
-            }, false);
-
-          this.root.addEventListener("rhet:stepleave", function (event) {
-              this.thisClassNotThose(event.target, "past", "present", "future");
-            }, false);
-        }, false);
-
-      // Adding hash change support.
-      this.root.addEventListener("rhet:init", function(){
-
-          // last hash detected
-          var lastHash = "";
-
-          // `#/step-id` is used instead of `#step-id` to prevent default browser
-          // scrolling to element in hash.
-          //
-          // And it has to be set after animation finishes, because in Chrome it
-          // makes transtion laggy.
-          // BUG: http://code.google.com/p/chromium/issues/detail?id=62820
-          this.root.addEventListener("rhet:stepenter", function (event) {
-              window.location.hash = lastHash = "#/" + event.target.id;
-            }, false);
-
-          window.addEventListener("hashchange", function () {
-              if (window.location.hash !== lastHash) {
-                goto( getElementFromHash() );
-              }
-            }, false);
-
-          // START
-          // by selecting step defined in url or first step of the presentation
-          goto(getElementFromHash() || this.steps[0], 0);
-        }, false);
-    };
   })();

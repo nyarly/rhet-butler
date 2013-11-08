@@ -1,17 +1,99 @@
-
-describe("Presentation Structure", function(){
+describe("Presentor", function(){
     var presenter
+    var slideCount = 6;
+    var itemCount = 5;
+
+    function logStep(step){
+      console.log("test", step.toString());
+    }
 
     beforeEach(function(){
         document.body.innerHTML = __html__["javascript/test_support/test-presentation.html"];
 
         presenter = new rhetButler.Presenter(document, window);
+        presenter.setup("test-presentation");
       })
 
     it("Should initialize a presenter", function(){
         expect(presenter).not.toBe(null);
       })
-})
+
+    describe("slide structure", function(){
+        var presentation
+
+        beforeEach(function() {
+            presentation = presenter.rootStep
+          });
+
+        it('should iterate nextSlide correctly', function() {
+            var step = presentation.firstSlide
+            var slides = []
+
+            while(step){
+              slides.push(step)
+              logStep(step)
+              //console.log(step.toString());
+              step = step.nextSlide
+            }
+
+            expect(slides.length).toBe(slideCount)
+            expect(slides.every(function(slide){
+                  return ( slide instanceof rhetButler.Slide )
+                })).toBe(true)
+          });
+
+        it('should iterate prevSlide correctly', function() {
+            var step = presentation.lastSlide
+            var slides = []
+
+            while(step){
+              slides.push(step)
+              logStep(step)
+              //console.log(step.toString());
+              step = step.prevSlide
+            }
+
+            expect(slides.length).toBe(slideCount)
+            expect(slides.every(function(slide){
+                  return ( slide instanceof rhetButler.Slide )
+                })).toBe(true)
+          });
+
+        it('should iterate nextItem correctly', function() {
+            var step = presentation.firstItem
+            var items = []
+
+            while(step){
+              items.push(step)
+              logStep(step)
+              //console.log(step.toString());
+              step = step.nextItem
+            }
+
+            expect(items.length).toBe(slideCount + itemCount)
+            expect(items.every(function(item){
+                  return ( item instanceof rhetButler.Slide || item instanceof rhetButler.Item)
+                })).toBe(true)
+          });
+
+        it('should iterate prevItem correctly', function() {
+            var step = presentation.lastItem
+            var items = []
+
+            while(step){
+              items.push(step)
+              logStep(step)
+              //console.log(step.toString());
+              step = step.prevItem
+            }
+
+            expect(items.length).toBe(slideCount + itemCount)
+            expect(items.every(function(item){
+                  return ( item instanceof rhetButler.Slide || item instanceof rhetButler.Item)
+                })).toBe(true)
+          });
+      });
+  });
 
 
 //That steps tree is built properly when:

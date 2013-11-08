@@ -1,31 +1,66 @@
 <div id="test-presentation">
+  <!-- Need more here - guiding principle has to be the transtions between steps
+  So: from root,group,slide,item (16 pairs)
+  Where the steps are at: same level, +1, +2, -1, -2 (5 changes)
+  Not all are legit (parsing invalid structures is next...)
+
+  Still not tested:
+  group group -2
+  group slide -2
+  group slide -1
+  slide group -2
+  slide group -1
+  slide slide 0
+  item group -2
+  item group -1
+  item slide -2
+  item slide -1
+  item slide +2
+  item slide +1
+  item item -1
+  item item -2
+  item item +1
+  item item +2
+  -->
   <!-- root:slide -->
-  <div class="root">
-    <div class="slide"></div>
+  <div class="rhet-butler root">
+    <div class="rhet-butler slide"></div>
 
     <!-- root:group:slide -->
-    <div class="group">
-      <div class="slide"></div>
+    <div class="rhet-butler group">
+      <div class="rhet-butler group">
+        <div class="rhet-butler slide">
+          <span class="rhet-butler item"></span>
+          <span class="rhet-butler item"></span>
+          <span class="rhet-butler item"></span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="rhet-butler slide"></div>
+    <!-- empty group -->
+    <div class="rhet-butler group">
     </div>
 
     <!-- root:slide:item -->
-    <div class="slide">
-      <span class="item"></span>
+    <div class="rhet-butler slide">
+      <span class="rhet-butler item"></span>
     </div>
 
     <!-- root:group:group:slide -->
-    <div class="group">
-      <div class="group">
-        <div class="slide"></div>
+    <div class="rhet-butler group">
+      <div class="rhet-butler group">
+        <div class="rhet-butler slide"></div>
       </div>
     </div>
 
     <!-- root:<something>:group:<something>:slide -->
     <div>
-      <div class="group">
+      <div class="rhet-butler group">
       <div>
-        <div class="slide">
-        <span class="item"></span>
+        <div class="rhet-butler slide">
+        <span class="rhet-butler item"></span>
       </div>
     </div>
   </div>
