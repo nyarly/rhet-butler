@@ -6,21 +6,26 @@ module.exports = function(config) {
   var settings = {};
 
   settings.files=[
-    'javascript/src/**/*.js',
+    'node_modules/closure-library/closure/goog/base.js',
     'javascript/test/**/*.js',
     'javascript/test_support/**/*.html',
-    'javascript/test_support/**/*.js'
+    'javascript/test_support/**/*.js',
+    {pattern: 'javascript/src/**/*.js', included: false},
+    {pattern: 'node_modules/closure-library/closure/goog/deps.js', included: false, served: false}
   ];
 
   // base path, that will be used to resolve files and exclude
   settings.basePath = '';
 
   // frameworks to use
-  settings.frameworks = ['jasmine', 'sinon'];
+  settings.frameworks = ['jasmine', 'sinon', 'closure'];
 
   settings.preprocessors = {
     'javascript/test_support/**/*.html': ['html2js'],
-    'javascript/test_support/**/*.js': ['html2js']
+    'javascript/test_support/**/*.js': ['html2js'],
+    'javascript/test/*.js': ['closure', 'closure-iit'],
+    'javascript/src/**/*.js': ['closure'],
+    'node_modules/closure-library/closure/goog/deps.js': ['closure-deps']
   };
 
   // list of files to exclude
@@ -68,7 +73,7 @@ module.exports = function(config) {
      process.stdout.write("COVERAGE is set - instrumenting and only running once\n\n");
      settings.singleRun = true;
      settings.reporters = ['coverage', 'progress'];
-     settings.preprocessors['**/src/javascript/**/*.js'] = ['coverage'];
+     settings.preprocessors['javascript/**/*.js'] = ['coverage'];
     //alter settings to handle coverage
   }
   config.set(settings);
