@@ -1,5 +1,6 @@
 # vim: set ft=ruby :
 require 'corundum/tasklibs'
+require 'closure-tasklib'
 
 module Corundum
   Corundum::register_project(__FILE__)
@@ -7,7 +8,9 @@ module Corundum
   core = Core.new
 
   core.in_namespace do
-    sanity = GemspecSanity.new(core)
+    GemspecFiles.new(core) do |files|
+      files.extra_files = Rake::FileList["default-configuration/**/*"]
+    end
     QuestionableContent.new(core) do |swearing|
       swearing.type = :swear
       swearing.words = %w{fuck shit bitch cock}
@@ -35,10 +38,14 @@ module Corundum
   end
 end
 
+ClosureCompiler::Build.new do |build|
+  build.target_dir.absolute_path = "default-configuration/assets/javascript"
+  build.target_javascript.relative_path = "rhet-present.js"
+  build.entry_point = "rhetButler.Presenter"
+end
+
 file "default-configuration/assets/javascript/present.js" => "javascript/src/present.js" do |task|
   cmd("cp", "default-configuration/assets/javascript/present.js", "javascript/src/present.js").must_succeed!
 end
-
-task 'gemspec_sanity:files_exist' => "default-configuration/assets/javascript/present.js"
 
 task :default => [:release, :publish_docs]

@@ -8,3 +8,5 @@ spec_support/tmp/
 node_modules/
 pkg/
 coverage/
+default-configuration/assets/javascript/rhet-present.*
+javascript/tmp/

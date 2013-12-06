@@ -100,7 +100,7 @@ Gem::Specification.new do |spec|
 
   spec.executables = %w{rhet-butler}
 
-  spec.add_dependency("tilt", "> 0")
+  spec.add_dependency("tilt", "~> 1.4")
   spec.add_dependency("thor", "> 0")
   spec.add_dependency("rack", "> 0")
   spec.add_dependency("thin", "> 0")

@@ -13,7 +13,7 @@ rhetButler.TreeBuilder = function(element, stepClass){
     step: 0,
     group: 0,
     slide: 0,
-    item: 0,
+    item: 0
   };
 };
 
