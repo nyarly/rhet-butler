@@ -8,6 +8,10 @@ module RhetButler
       attr_reader :template_handler
 
       class AssetsContext
+        def initialize(template_handler)
+          @template_handler = template_handler
+        end
+
         def render(path, locals = nil)
           template = @template_handler.find(path).contents
           if template.respond_to? :render
@@ -19,12 +23,7 @@ module RhetButler
       end
 
       def assets_context
-        @context ||=
-          begin
-            context = AssetsContext.new
-            context.instance_variable_set("@template_handler", template_handler)
-            context
-          end
+        @context ||= AssetsContext.new(template_handler)
       end
 
       def call(env)
@@ -34,6 +33,9 @@ module RhetButler
 
         mime_type = Rack::Mime.mime_type(extension, "text/plain")
         [200, {'Content-Type' => mime_type}, [assets_context.render(asset_path)]]
+      rescue Object => ex
+        puts ex
+        raise
       end
     end
   end

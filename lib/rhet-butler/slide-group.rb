@@ -1,9 +1,10 @@
 require 'rhet-butler/yaml-type'
 
 module RhetButler
-  class SlideGroup
-    include YamlType
+  class SlideGroup < YamlType
     include Enumerable
+
+    register "group"
 
     class <<self
       def optional_config
@@ -15,16 +16,43 @@ module RhetButler
       end
     end
 
-
     def setup_defaults
-    end
-
-    def initialize
+      @html_id = nil
+      @classes = ["group"]
       @slides = []
       @metadata = {}
     end
+
+    def normalize_config(coder)
+      case coder.type
+      when :map
+        coder.map
+      when :scalar
+        raise "A slide group needs to at least be a list of slides"
+      when :seq
+        { 'slides' => coder.seq}
+      end
+    end
+
+    def configure
+      value_from_config("html_id") do |value|
+        @html_id = value
+      end
+
+      value_from_config("html_classes") do |value|
+        @html_classes += [*value]
+      end
+
+      value_from_config("html_class") do |value|
+        @html_classes << value
+      end
+
+      @slides = @config_hash.delete('slides')
+      @metadata = @config_hash
+    end
+
     attr_accessor :slides
-    attr_reader :metadata
+    attr_reader :metadata, :classes
 
     def each
       if block_given?
@@ -34,23 +62,30 @@ module RhetButler
       end
     end
 
-    def init_with(coder)
-      setup_defaults
-
-      @config_hash =
-        case coder.type
-        when :map
-          coder.map
-        when :scalar
-          raise "A slide group needs to at least be a list of slides"
-        when :seq
-          { 'slides' => coder.seq}
+    def each_slide
+      if block_given?
+        @slides.each do |slide|
+          if slide.is_a? SlideGroup
+            slide.each_slide{|sl| yield sl}
+          else
+            yield slide
+          end
         end
+      else
+        enum_for :each_slide
+      end
+    end
 
-      check_config_hash(@config_hash)
+    def template_name
+      "group.html"
+    end
 
-      @slides = @config_hash.delete('slides')
-      @metadata = @config_hash
+    def id_attr
+      if @html_id.nil?
+        return ""
+      else
+        "id='#@html_id'"
+      end
     end
   end
 end

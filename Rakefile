@@ -10,17 +10,16 @@ module Corundum
   core.in_namespace do
     GemspecFiles.new(core) do |files|
       files.extra_files = Rake::FileList["default-configuration/**/*"]
+      files.extra_files.exclude("**/*-sourcemap-js")
     end
-    QuestionableContent.new(core) do |swearing|
-      swearing.type = :swear
-      swearing.words = %w{fuck shit bitch cock}
-    end
-    QuestionableContent.new(core) do |dbg|
-      dbg.words = %w{p debugger}
+    %w{profanity debugging ableism racism sexism}.each do |type|
+      QuestionableContent.new(core) do |qc|
+        qc.type = type
+      end
     end
     rspec = RSpec.new(core)
     cov = SimpleCov.new(core, rspec) do |cov|
-      cov.threshold = 70
+      cov.threshold = 88
     end
 
     gem = GemBuilding.new(core)
@@ -44,8 +43,6 @@ ClosureCompiler::Build.new do |build|
   build.entry_point = "rhetButler.Presenter"
 end
 
-file "default-configuration/assets/javascript/present.js" => "javascript/src/present.js" do |task|
-  cmd("cp", "default-configuration/assets/javascript/present.js", "javascript/src/present.js").must_succeed!
-end
+task 'gemspec_files:files_exist' => "default-configuration/assets/javascript/rhet-present.js"
 
 task :default => [:release, :publish_docs]

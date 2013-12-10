@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rhet-butler"
-  spec.version		= "0.5.0"
+  spec.version		= "0.6.0"
   author_list = {
     "Judson Lester" => 'nyarly@gmail.com'
   }
@@ -63,6 +63,34 @@ Gem::Specification.new do |spec|
     default-configuration/assets/stylesheets/google-open-sans.css
     default-configuration/assets/stylesheets/presenter/presentation.css
     default-configuration/assets/stylesheets/highlight/solarized_dark.css
+    default-configuration/assets/stylesheets/highlight/pojoaque.css
+    default-configuration/assets/stylesheets/highlight/pojoaque.jpg
+    default-configuration/assets/stylesheets/highlight/ascetic.css
+    default-configuration/assets/stylesheets/highlight/tomorrow-night-blue.css
+    default-configuration/assets/stylesheets/highlight/dark.css
+    default-configuration/assets/stylesheets/highlight/rainbow.css
+    default-configuration/assets/stylesheets/highlight/github.css
+    default-configuration/assets/stylesheets/highlight/school_book.css
+    default-configuration/assets/stylesheets/highlight/school_book.png
+    default-configuration/assets/stylesheets/highlight/xcode.css
+    default-configuration/assets/stylesheets/highlight/default.css
+    default-configuration/assets/stylesheets/highlight/googlecode.css
+    default-configuration/assets/stylesheets/highlight/far.css
+    default-configuration/assets/stylesheets/highlight/idea.css
+    default-configuration/assets/stylesheets/highlight/brown_papersq.png
+    default-configuration/assets/stylesheets/highlight/tomorrow-night-bright.css
+    default-configuration/assets/stylesheets/highlight/sunburst.css
+    default-configuration/assets/stylesheets/highlight/zenburn.css
+    default-configuration/assets/stylesheets/highlight/tomorrow.css
+    default-configuration/assets/stylesheets/highlight/monokai.css
+    default-configuration/assets/stylesheets/highlight/ir_black.css
+    default-configuration/assets/stylesheets/highlight/solarized_light.css
+    default-configuration/assets/stylesheets/highlight/vs.css
+    default-configuration/assets/stylesheets/highlight/tomorrow-night.css
+    default-configuration/assets/stylesheets/highlight/arta.css
+    default-configuration/assets/stylesheets/highlight/tomorrow-night-eighties.css
+    default-configuration/assets/stylesheets/highlight/brown_paper.css
+    default-configuration/assets/stylesheets/highlight/magula.css
     default-configuration/assets/stylesheets/setup.css
     default-configuration/assets/stylesheets/presentation.css
     default-configuration/assets/javascript/sockjs-0.2.1.js
@@ -71,13 +99,17 @@ Gem::Specification.new do |spec|
     default-configuration/assets/javascript/highlight.js/README.md
     default-configuration/assets/javascript/highlight.js/README.ru.md
     default-configuration/assets/javascript/highlight.js/classref.txt
-    default-configuration/assets/javascript/impress.js
+    default-configuration/assets/javascript/rhet-present.js
+    default-configuration/assets/javascript/rhet-present.min.js
     default-configuration/assets/javascript/sockjs-0.3.js
     default-configuration/presenter/config.yaml
     default-configuration/presenter/templates/stylesheets.html.erb
+    default-configuration/presenter/templates/slide.html.erb
     default-configuration/presenter/templates/slide-notes.html.erb
     default-configuration/presenter/templates/live-javascript.html.erb
     default-configuration/common/config.yaml
+    default-configuration/common/templates/group.html.erb
+    default-configuration/common/templates/slide.html.erb
     default-configuration/common/templates/header-javascript.html
     default-configuration/common/templates/stylesheets.html.erb
     default-configuration/common/templates/presentation.html.erb
@@ -100,12 +132,14 @@ Gem::Specification.new do |spec|
 
   spec.executables = %w{rhet-butler}
 
+  spec.add_dependency("compass", "~> 0.12.2")
+  spec.add_dependency("compass-animate", "~> 0.0.1")
   spec.add_dependency("tilt", "~> 1.4")
   spec.add_dependency("thor", "> 0")
   spec.add_dependency("rack", "> 0")
   spec.add_dependency("thin", "> 0")
   spec.add_dependency("sockjs", "~> 0.2.1")
-  spec.add_dependency("valise", "~> 0.9.1")
+  spec.add_dependency("valise", "~> 1.0.0")
 
   spec.add_dependency("system-getifaddrs", "~> 0.2.0")
   spec.add_dependency("rqrcode", "~> 0.4.2")

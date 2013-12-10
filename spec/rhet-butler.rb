@@ -2,19 +2,6 @@ require 'rhet-butler'
 
 describe RhetButler do
   describe "web server" do
-    describe "presentation view" do
-      it "should serve a presentation"
-
-      it "should include impress.js"
-
-      it "should have get WebSocket commands to sync with presenter"
-
-      it "should be able to split from presenter"
-
-      it "should be able to resync with presenter"
-
-      it "should have a resource for the current presenter's slide"
-    end
 
     describe "passive view" do
       it "should serve the presentation"

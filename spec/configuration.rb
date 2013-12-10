@@ -20,8 +20,8 @@ describe RhetButler::Configuration, "defaults" do
   its(:static_target){ should == "static" }
   its(:impress_config){ should == {} }
   its(:root_arrangement){ should == "horizontal" }
-  its(:arrangement_blueprint){ should == {} }
+  its(:arrangement_blueprint){ should == [] }
   its(:serve_port){ should == 8081 }
   its(:root_slide){ should == "slides.yaml" }
-  its(:default_slide_type){ should == "textile" }
+  its('default_content_filters.first'){ should be_an_instance_of RhetButler::SlideRenderers::Textile }
 end

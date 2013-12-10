@@ -20,7 +20,7 @@ module RhetButler
 
     def html_document
       html_generator = HTMLGenerator.new(configuration, template_handler)
-      html_generator.slides = SlideLoader.new(@base_valise, configuration).load_slides
+      html_generator.root_step = SlideLoader.new(@base_valise, configuration).load_slides
 
       return html_generator.render(@root_slide_template)
     end

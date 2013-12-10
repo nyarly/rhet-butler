@@ -1,3 +1,5 @@
+require 'rhet-butler/yaml-schema'
+
 module RhetButler
   #This class is used to manage application config throughout. Basically it
   #wraps a hash loaded from the base fileset. Since the file search path can be
@@ -10,8 +12,9 @@ module RhetButler
     def initialize(files, overrides=nil)
       @base_hash =
         begin
-          files.find("config.yaml").contents rescue {}
-        rescue Object
+          files.find("config.yaml").contents
+        rescue Valise::Errors::NotFound
+          warn "No config.yaml found in #{files.inspect} - using defaults"
           {}
         end
       @base_hash.merge!(overrides) unless overrides.nil?
@@ -58,7 +61,7 @@ module RhetButler
     end
 
     def arrangement_blueprint
-      @base_hash["blueprint"] || {}
+      @base_hash["blueprint"] || []
     end
 
     def serve_port
@@ -69,8 +72,12 @@ module RhetButler
       @base_hash["root_slide"] || "slides.yaml"
     end
 
-    def default_slide_type
-      @base_hash["default_slide_type"] || "textile"
+    def default_content_filters
+      @default_content_filters ||= @base_hash["default_content_filters"] || [SlideRenderers::Textile.new]
+    end
+
+    def default_note_filters
+      @default_note_filters ||= @base_hash["default_note_filters"] || [SlideRenderers::Textile::new]
     end
   end
 end

@@ -10,6 +10,12 @@ describe RhetButler::HTMLGenerator do
     [ one ]
   end
 
+  let :prez do
+    RhetButler::SlideGroup.new.tap do |prez|
+      prez.slides = slides
+    end
+  end
+
   let :files do
     manager = RhetButler::FileManager.new
   end
@@ -24,7 +30,7 @@ describe RhetButler::HTMLGenerator do
 
   let :generator do
     described_class.new(configuration, template_handler).tap do |gen|
-      gen.slides = slides
+      gen.root_step = prez
     end
   end
 

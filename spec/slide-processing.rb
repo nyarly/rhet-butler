@@ -37,15 +37,16 @@ describe RhetButler::SlideProcessor do
     ]
   end
 
-  let :default_slide_type do
-    "textile"
+  let :default_content_filters do
+    [RhetButler::SlideRenderers::Textile.new]
   end
 
   let :processor do
     processor = RhetButler::SlideProcessor.new
     processor.root_group = root_group
     processor.blueprint = blueprint
-    processor.default_slide_type = default_slide_type
+    processor.default_content_filters = default_content_filters
+    processor.default_note_filters = default_content_filters
     processor
   end
 

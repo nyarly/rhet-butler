@@ -15,6 +15,8 @@ describe RhetButler::StaticGenerator do
 
     generator = RhetButler::StaticGenerator.new(files)
 
+    puts "\n#{__FILE__}:#{__LINE__} => #{generator.configuration.inspect}"
+
     FileUtils::rm_rf test_target
     FileUtils::mkdir_p test_target
 
@@ -24,4 +26,8 @@ describe RhetButler::StaticGenerator do
   it "should make some files" do
     Dir.entries(test_target).should include("presentation.html")
   end
+
+  it "should copy in static javascript"
+  it "should copy in static stylesheets"
+  it "should render sass files"
 end

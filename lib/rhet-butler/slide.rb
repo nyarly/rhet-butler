@@ -1,14 +1,15 @@
 require 'rhet-butler/yaml-type'
 
 module RhetButler
-  class Slide
-    include YamlType
+  class Slide < YamlType
+    register "slide"
+
     class << self
       def optional_config
         %w[
           title html_id html_classes html_class
           pos_x pos_y pos_z rot_x rot_y rot_z scale
-          notes type
+          notes filters note_filters
         ]
       end
 
@@ -46,17 +47,14 @@ module RhetButler
     end
 
     def setup_defaults
-      @html_classes = ["step"]
+      @template_name = "slide.html"
+      @html_classes = ["slide"]
       @html_id = nil
       @position = Position.new
       @rotation = Rotation.new
       @scale = 1.0
       @notes = ""
       @type = nil
-    end
-
-    def initialize
-      setup_defaults
     end
 
     def initialize_copy(source)
@@ -67,25 +65,22 @@ module RhetButler
       @html_id = source.html_id.dup unless source.html_id.nil?
       @position = source.position.dup unless source.position.nil?
       @rotation = source.rotation.dup unless source.rotation.nil?
-      @type = source.type.dup unless source.type.nil?
       @html_classes = source.html_classes.dup unless source.html_classes.nil?
     end
 
-    def init_with(coder)
-      setup_defaults
 
-      @config_hash =
-        case coder.type
-        when :map
-          coder.map
-        when :scalar
-          { 'content' => coder.scalar.to_s }
-        when :seq
-          warn "Got a sequence for a slide - not sure how to parse that.  Skipping"
-        end
+    def normalize_config(coder)
+      case coder.type
+      when :map
+        coder.map
+      when :scalar
+        { 'content' => coder.scalar.to_s }
+      when :seq
+        warn "Got a sequence for a slide - not sure how to parse that.  Skipping"
+      end
+    end
 
-      check_config_hash(@config_hash)
-
+    def configure
       value_from_config("title") do |title|
         @html_id = title.downcase.split(/\s/).join("-")
       end
@@ -136,24 +131,42 @@ module RhetButler
         @scale = value
       end
 
-      value_from_config("type") do |value|
-        @type = value
-        @html_classes << value
+      value_from_config("filters") do |value|
+        @content_filters = value
+        @html_classes += value.map do |filter|
+          filter.html_class
+        end.compact
+      end
+
+      value_from_config("note-filters") do |value|
+        @note_filters = value
+        @html_classes += value.map do |filter|
+          "notes-" + filter.html_class unless filter.html_class.nil?
+        end
       end
     end
 
     attr_reader :config_hash
     attr_accessor :content, :html_classes, :html_id, :notes
-    attr_reader :position, :rotation, :type
+    attr_reader :position, :rotation, :content_filters, :note_filters
     attr_accessor :scale
+    attr_reader :template_name
+
+    def id_attr
+      if @html_id.nil?
+        return ""
+      else
+        "id='#@html_id'"
+      end
+    end
+
+    def classes
+      @html_classes.join(" ")
+    end
 
     def impress_attrs
       attrs = []
-      unless @html_id.nil?
-        attrs << "id='#@html_id'"
-      end
 
-      attrs << "class='#{@html_classes.join(" ")}'"
       attrs << @position.to_attrs
       attrs << @rotation.to_attrs
       attrs << "data-scale='#{"%0.2f" % scale}'"

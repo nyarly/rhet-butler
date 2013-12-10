@@ -1,0 +1,5 @@
+<div <%= id_attr %> class="rhet-butler <%= classes %>">
+  <% each do |child| %>
+    <%= render child.template_name, child %>
+  <% end %>
+</div>

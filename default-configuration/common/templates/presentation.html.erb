@@ -9,25 +9,21 @@
     <meta name="description" content="<%= presentation.description %>" />
     <meta name="author" content="<%= presentation.author_name %>" />
 
+    <script src="/javascript/rhet-present.js"></script>
     <%= render 'stylesheets.html' %>
     <%= render 'header-javascript.html' %>
   </head>
 
-  <body class="impress-not-supported">
+  <body id="presentation" class="impress-not-supported">
 
     <div class="fallback-message">
-      <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+      <p>Your browser <b>doesn't support the features required</b> by Rhet Butler so you are presented with a simplified version of this presentation.</p>
       <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
     </div>
 
-    <div id="impress" <% impress_config.each_pair do |name, value| %>
-        data-<%= name %>="<%= value %>"
-      <% end %>>
-      <% slides.each do |slide| %>
-        <div <%= slide.impress_attrs %>>
-          <%= slide.content %>
-          <%= render 'slide-notes.html', slide %>
-        </div>
+    <div class="rhet-butler root" >
+      <% root_step.each do |child| %>
+        <%= render child.template_name, child %>
       <% end %>
     </div>
 
@@ -36,9 +32,11 @@
       <p id="touch-hint" style="display:none">Tap on the left or right to navigate</p>
     </div>
 
-    <script src="/javascript/impress.js"></script>
     <%= render 'live-javascript.html' %>
-    <script>impress().init();</script>
+    <script>
+        var presenter = new rhetButler.Presenter(document, window);
+        presenter.setup("presentation");
+    </script>
 
   </body>
 </html>

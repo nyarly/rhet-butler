@@ -1,8 +1,9 @@
 require 'rhet-butler/yaml-type'
 
 module RhetButler
-  class LayoutRule
-    include YamlType
+  class LayoutRule < YamlType
+    register "layout-rule"
+
     def initialize
       @match = {}
       @layout_args = nil
@@ -17,19 +18,22 @@ module RhetButler
       %w[layout]
     end
 
-    def init_with(coder)
-      @config_hash =
-        case coder.type
-        when :seq
-          { 'match' => coder.seq[0], 'layout' => coder.seq[1] }
-        when :map
-          coder.map
-        else
-          raise "Tried to configure a layout rule with non-sequence: #{coder.inspect}"
-        end
+    def setup_defaults
 
-      check_config_hash(@config_hash)
+    end
 
+    def normalize_config(coder)
+      case coder.type
+      when :seq
+        { 'match' => coder.seq[0], 'layout' => coder.seq[1] }
+      when :map
+        coder.map
+      else
+        raise "Tried to configure a layout rule with non-sequence: #{coder.inspect}"
+      end
+    end
+
+    def configure
       value_from_config("match") do |value|
         if value == 'default'
           @match = {}

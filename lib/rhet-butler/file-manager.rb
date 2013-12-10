@@ -1,5 +1,6 @@
 require 'valise'
 require 'rhet-butler/configuration'
+require 'compass'
 
 module RhetButler
   #All file handling is routed through this class.
@@ -51,7 +52,30 @@ module RhetButler
     end
 
     def base_assets
-      all_files.templates("assets")
+      all_files.templates("assets") do |mapping|
+        assets_config(mapping)
+      end
+    end
+
+    def all_files
+      current_directory + configured_search_path + base_config_set
+    end
+
+    def base_config_search_path
+      set = current_directory + base_config_set
+      set + set.sub_set("common")
+    end
+
+    def assets_config(type)
+      case type
+      when "sass", "scss"
+        configs = ::Compass.sass_engine_options
+        sass_search_path = all_files.sub_set("assets").map(&:to_s)
+        configs[:load_paths] = sass_search_path + configs[:load_paths]
+        {:template_options => configs}
+      else
+        nil
+      end
     end
 
     def aspect_config(aspect_name)
@@ -62,6 +86,13 @@ module RhetButler
       @cached_templates[aspect] ||= aspect_search_path(aspect).templates
     end
 
+    def aspect_search_path(aspect)
+      aspect = aspect.to_s
+      set = all_files.sub_set(aspect)
+      set += all_files.sub_set("common")
+      set += all_files
+      return set
+    end
 
     def load_config(files)
       Configuration.new(files, @overrides)
@@ -104,23 +135,6 @@ module RhetButler
             rw target_directory
           end
         end
-    end
-
-    def all_files
-      current_directory + configured_search_path + base_config_set
-    end
-
-    def base_config_search_path
-      set = current_directory + base_config_set
-      set + set.sub_set("common")
-    end
-
-    def aspect_search_path(aspect)
-      aspect = aspect.to_s
-      set = all_files.sub_set(aspect)
-      set += all_files.sub_set("common")
-      set += all_files
-      return set
     end
   end
 end

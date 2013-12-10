@@ -8,7 +8,7 @@ describe RhetButler::Web::MainApp do
     include Rack::Test::Methods
 
     let :files do
-      RhetButler::FileManager.new
+      RhetButler::FileManager.new("sources" => %w{ spec_support/fixtures/project })
     end
 
     let :app do
@@ -26,13 +26,13 @@ describe RhetButler::Web::MainApp do
 
       it "should have a script tag for impress.js" do
         doc = Nokogiri::HTML(last_response.body)
-        doc.xpath("//script[contains(@src, 'impress.js')]").should_not be_empty
+        doc.xpath("//script[contains(@src, 'rhet-present.js')]").should_not be_empty
       end
     end
 
-    describe "/javascript/impress.js" do
+    describe "/javascript/rhet-present.js" do
       before :each do
-        get "/javascript/impress.js"
+        get "/javascript/rhet-present.js"
       end
 
       it "should serve the javascript" do
@@ -42,12 +42,11 @@ describe RhetButler::Web::MainApp do
       it "should serve as application/javascript" do
         last_response.headers["Content-Type"].should == "application/javascript"
       end
-
     end
 
-    describe "/assets/javascript/impress.js" do
+    describe "/assets/javascript/rhet-present.js" do
       before :each do
-        get "/assets/javascript/impress.js"
+        get "/assets/javascript/rhet-present.js"
       end
 
       it "should serve the javascript" do
@@ -57,7 +56,20 @@ describe RhetButler::Web::MainApp do
       it "should serve as application/javascript" do
         last_response.headers["Content-Type"].should == "application/javascript"
       end
+    end
 
+    describe "/stylesheets/test.css" do
+      before :each do
+        get "/stylesheets/test.css"
+      end
+
+      it "should serve the CSS" do
+        last_response.should be_ok
+      end
+
+      it "should serve as text/css" do
+        last_response.headers["Content-Type"].should == "text/css"
+      end
     end
 
 

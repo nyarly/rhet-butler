@@ -21,8 +21,8 @@ module RhetButler
         @file_manager.slide_files
       end
 
-      def slides
-        @slides ||=
+      def root_step
+        @root_step ||=
           begin
             slide_loader = SlideLoader.new(slides_valise, configuration)
             slide_loader.load_slides
@@ -33,7 +33,7 @@ module RhetButler
         @html_generator ||=
           begin
             generator = HTMLGenerator.new(configuration, template_handler)
-            generator.slides = slides
+            generator.root_step = root_step
             generator
           end
       end

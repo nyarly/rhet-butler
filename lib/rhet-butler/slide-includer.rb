@@ -1,7 +1,10 @@
-module RhetButler
-  class Includer
-    include Enumerable
+require 'rhet-butler/yaml-type'
 
+module RhetButler
+  class Includer < YamlType
+    register 'include'
+
+    include Enumerable
 
     def initialize
       @slides = []

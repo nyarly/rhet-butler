@@ -1,5 +1,5 @@
 require 'nokogiri'
 
 RSpec.configure do |config|
-  config.backtrace_clean_patterns.delete(/gems/)
+  config.backtrace_exclusion_patterns.delete(/gems/)
 end
