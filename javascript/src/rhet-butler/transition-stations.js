@@ -23,6 +23,7 @@ rhetButler.TransitionStations = function(presenter, firstStep, currentStep, last
   this.currentStep = currentStep;
   this.lastStep = lastStep;
   this.buildList();
+  this.currentState = null;
   this.changeState("preparing")
 };
 
@@ -83,8 +84,9 @@ rhetButler.TransitionStations = function(presenter, firstStep, currentStep, last
       if(this.currentStation().checkIn){
         return this.advanceStation();
       } else {
-        this.currentStation().setArriveHandler(
-          rhetButler.bindFunction(this.arriveListener, this, this.currentStation()));
+        var stationList = this;
+        var targetStation = this.currentStation();
+        this.currentStation().setArriveHandler( function(event){ stationList.arriveListener(targetStation, event); });
         return false;
       }
     };
@@ -181,6 +183,7 @@ rhetButler.TransitionStations = function(presenter, firstStep, currentStep, last
       this.presenter.rootStep.completeTransition(this);
 
       this.firstStep.completeDeparture();
+      this.lastStep.cancelArrival();
     };
 
     states.arrived.enterState = function(){
@@ -204,7 +207,17 @@ rhetButler.TransitionStations = function(presenter, firstStep, currentStep, last
       return false;
     };
 
+    states.arrived.cancel = function(){
+      return false;
+    };
+
     stationList.changeState = function(name){
+      if(typeof quiet_console == "undefined"){
+        console.log("Changing state: " + name +
+            " S/C/E: " + this.firstStep.toString() +
+            " / " + this.currentStep.toString() +
+            " / " + this.lastStep.toString());
+        }
       var newState = states[name];
       for(func in newState){
         this[func] = newState[func];
@@ -213,6 +226,7 @@ rhetButler.TransitionStations = function(presenter, firstStep, currentStep, last
         this.presenter.rootStep.removeClass(stateName);
       }
       this.presenter.rootStep.addClass(name);
+      this.currentState = name;
       this.enterState();
     }
 
@@ -252,7 +266,11 @@ rhetButler.TransitionStations = function(presenter, firstStep, currentStep, last
       this.downhill.forEach(func, this);
     };
 
+    //XXX The bind does not appear to be working:
+    //  station is an animation event, and
+    //  event is undefined
     stationList.arriveListener = function(station, event){
+      console.log("rhet-butler/transition-stations.js:256", "event", event);
       event.stopPropagation();
 
       station.visited();
@@ -262,6 +280,10 @@ rhetButler.TransitionStations = function(presenter, firstStep, currentStep, last
     };
 
     stationList.elementArrived = function(station){
-      while(this.nextStation()){};
+      while(this.nextStation()){
+      };
+      if(typeof quiet_console == "undefined"){
+        console.log("Waiting for event")
+      };
     };
   })();

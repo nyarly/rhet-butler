@@ -69,6 +69,7 @@ rhetButler.Presenter = function(document, window){
     };
 
     presenter.bindHandlers = function(){
+      var presenter = this;
       //Our own :init event
       var initListener = function(){
         // last hash detected
@@ -89,23 +90,25 @@ rhetButler.Presenter = function(document, window){
         // And it has to be set after animation finishes, because in Chrome it
         // makes transtion laggy.
         // BUG: http://code.google.com/p/chromium/issues/detail?id=62820
-        this.root.addEventListener("rhet:stepenter", function (event) {
+        presenter.root.addEventListener("rhet:stepenter", function (event) {
             window.location.hash = lastHash = "#/" + event.target.id;
           }, false);
 
-        window.addEventListener("hashchange", rhetButler.bindFunction(function () {
-            if (window.location.hash !== lastHash) {
-              this.goto( this.getElementFromHash() );
+
+        window.addEventListener("hashchange",
+          function(event){
+            if(window.location.hash !== lastHash) {
+              presenter.moveTo( presenter.getElementFromHash() );
             }
-          }, this), false);
+          }, false);
 
         // START
         // by selecting step defined in url or first step of the presentation
 
-        this.teleport(this.getElementFromHash() || this.rootStep.firstItem);
+        presenter.teleport(presenter.getElementFromHash() || presenter.rootStep.firstItem);
       };
 
-      this.root.addEventListener("rhet:init", utils.bindFunction(initListener, this), false);
+      this.root.addEventListener("rhet:init", initListener, false);
     };
 
     presenter.resolveStep = function(reference, thing){
@@ -155,24 +158,34 @@ rhetButler.Presenter = function(document, window){
       return this.currentTransition.currentStep;
     };
 
-    presenter.buildTransition = function(reference, thing){
+    presenter.buildTransition = function(nextStep){
       var previousStep = this.currentTransition.resumeStep();
       var currentStep = this.currentTransition.currentStep;
-      var nextStep = this.resolveStep(reference, thing);
+      if(typeof quiet_console == "undefined") {
+        console.log("New transition list: " +
+            "S/C/E: " + previousStep.toString() +
+            " / " + currentStep.toString() +
+            " / " + nextStep.toString());
+        }
 
       this.currentTransition.cancel();
       this.currentTransition = new rhetButler.TransitionStations(this, previousStep, currentStep, nextStep);
     };
 
-    presenter.teleport = function(reference){
-      this.buildTransition(reference);
-      this.currentTransition.forceFinish();
+    presenter.teleport = function(reference, thing){
+      var nextStep = this.resolveStep(reference, thing);
+      if(nextStep){
+        this.buildTransition(nextStep);
+        this.currentTransition.forceFinish();
+      }
     };
 
-    presenter.goto = function(reference, thing){
-      //console.log("rhet-butler/presenter.js:168", "goto: reference", reference);
-      this.buildTransition(reference, thing);
-      this.currentTransition.start();
+    presenter.moveTo = function(reference, thing){
+      var nextStep = this.resolveStep(reference, thing);
+      if(nextStep){
+        this.buildTransition(nextStep);
+        this.currentTransition.start();
+      }
     };
 
     presenter.completeTransition = function(){
@@ -224,7 +237,7 @@ rhetButler.Presenter = function(document, window){
       var prev = this.steps.indexOf( this.activeStep ) - 1;
       prev = prev >= 0 ? this.steps[ prev ] : this.getStep(-1);
 
-      return this.goto(prev);
+      return this.moveTo(prev);
     };
 
     // `next` API function goes to next step (in document order)
@@ -232,7 +245,7 @@ rhetButler.Presenter = function(document, window){
       var next = steps.indexOf( activeStep ) + 1;
       next = next < steps.length ? steps[ next ] : steps[ 0 ];
 
-      return this.goto(next);
+      return this.moveTo(next);
     };
 
     //thisClassNotThose(someEl, "setMe", "unsetMe", "unsetMeToo")

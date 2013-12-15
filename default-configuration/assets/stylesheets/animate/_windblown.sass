@@ -1,0 +1,17 @@
+// ---------------------------------------------------------------------------
+// imports
+
+@import windblown/windblownIn
+@import windblown/windblownOut
+
+// ---------------------------------------------------------------------------
+// windblown [ in | out | all ]
+
+=animate-windblown($sub: all, $class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $sub: compact($sub)
+  $in: yepnope($sub, all in)
+  $out: yepnope($sub, all out)
+  @if $in
+    +animate-windblownIn($class, $keyframes)
+  @if $out
+    +animate-windblownOut($class, $keyframes)

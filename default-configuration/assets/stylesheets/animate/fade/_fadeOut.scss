@@ -1,0 +1,211 @@
+// ---------------------------------------------------------------------------
+// imports
+
+@import "compass/css3/animation";
+@import "compass/css3/transform";
+@import "compass/css3/opacity";
+
+// ---------------------------------------------------------------------------
+// fadeOut
+
+@mixin animate-fadeOut(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: fadeOut;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// fadeOutUp
+
+@mixin animate-fadeOutUp(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: fadeOutUp;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        @include translateY(0);
+        opacity: 1;
+      }
+      100% {
+        @include translateY(-20px);
+        opacity: 0;
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// fadeOutDown
+
+@mixin animate-fadeOutDown(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: fadeOutDown;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        @include translateY(0);
+        opacity: 1;
+      }
+      100% {
+        @include translateY(20px);
+        opacity: 0;
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// fadeOutRight
+
+@mixin animate-fadeOutRight(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: fadeOutRight;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        @include translateX(0);
+        opacity: 1;
+      }
+      100% {
+        @include translateX(20px);
+        opacity: 0;
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// fadeOutLeft
+
+@mixin animate-fadeOutLeft(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: fadeOutLeft;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        @include translateX(0);
+        opacity: 1;
+      }
+      100% {
+        @include translateX(-20px);
+        opacity: 0;
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// fadeOutUpBig
+
+@mixin animate-fadeOutUpBig(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: fadeOutUpBig;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        @include translateY(0);
+        opacity: 1;
+      }
+      100% {
+        @include translateY(-2000px);
+        opacity: 0;
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// fadeOutDownBig
+
+@mixin animate-fadeOutDownBig(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: fadeOutDownBig;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        opacity: 1;
+        @include translateY(0);
+      }
+      100% {
+        opacity: 0;
+        @include translateY(2000px);
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// fadeOutRightBig
+
+@mixin animate-fadeOutRightBig(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: fadeOutRightBig;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        opacity: 1;
+        @include translateX(0);
+      }
+      100% {
+        opacity: 0;
+        @include translateX(2000px);
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// fadeOutLeftBig
+
+@mixin animate-fadeOutLeftBig(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: fadeOutLeftBig;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        opacity: 1;
+        @include translateX(0);
+      }
+      100% {
+        opacity: 0;
+        @include translateX(-2000px);
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}

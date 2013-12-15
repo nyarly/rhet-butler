@@ -1,11 +1,14 @@
 source 'https://rubygems.org'
 
-gem 'corundum'
-gem 'mattock'
+group :deploy do
+  gem 'compass', "~> 1.0.alpha"
+  gem 'corundum', :path => "../corundum"
+end
 
-gem 'nokogiri'
-gem 'rack-test'
-
-gem 'fuubar'
+group :test do
+  gem 'nokogiri'
+  gem 'rack-test'
+  gem 'fuubar'
+end
 
 gemspec

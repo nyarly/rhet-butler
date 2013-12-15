@@ -12,7 +12,10 @@ describe RhetButler::Web::MainApp do
     end
 
     let :app do
-      described_class.new(files).app
+      main = described_class.new(files)
+      main.presentation_app_class = RhetButler::Web::MemoizedPresentationApp
+      main.assets_app_class = RhetButler::Web::MemoizedAssetsApp
+      main.app
     end
 
     describe "/" do

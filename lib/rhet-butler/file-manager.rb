@@ -1,6 +1,7 @@
 require 'valise'
 require 'rhet-butler/configuration'
-require 'compass'
+require 'compass/import-once'
+require 'compass/core'
 
 module RhetButler
   #All file handling is routed through this class.
@@ -51,12 +52,6 @@ module RhetButler
       all_files.sub_set("slides") + all_files
     end
 
-    def base_assets
-      all_files.templates("assets") do |mapping|
-        assets_config(mapping)
-      end
-    end
-
     def all_files
       current_directory + configured_search_path + base_config_set
     end
@@ -66,24 +61,32 @@ module RhetButler
       set + set.sub_set("common")
     end
 
-    def assets_config(type)
+    def template_config(type)
       case type
       when "sass", "scss"
-        configs = ::Compass.sass_engine_options
-        sass_search_path = all_files.sub_set("assets").map(&:to_s)
-        configs[:load_paths] = sass_search_path + configs[:load_paths]
-        {:template_options => configs}
+        load_paths = all_files.sub_set("assets").map(&:to_s)
+        load_paths << Compass::Core.base_directory("stylesheets")
+        {:template_options =>
+          { :load_paths => load_paths }}
       else
         nil
       end
     end
 
     def aspect_config(aspect_name)
-      @cached_configs[aspect_name] ||= load_config(aspect_search_path(aspect_name))
+      load_config(aspect_search_path(aspect_name))
     end
 
-    def aspect_templates(aspect)
-      @cached_templates[aspect] ||= aspect_search_path(aspect).templates
+    def base_assets(template_cache)
+      all_files.templates("assets") do |mapping|
+        (template_config(mapping) || {}).merge(:template_cache => template_cache)
+      end
+    end
+
+    def aspect_templates(aspect, template_cache = nil)
+      aspect_search_path(aspect).templates do |mapping|
+        (template_config(mapping) || {}).merge(:template_cache => template_cache)
+      end
     end
 
     def aspect_search_path(aspect)

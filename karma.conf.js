@@ -22,7 +22,6 @@ module.exports = function(config) {
 
   settings.preprocessors = {
     'javascript/test_support/**/*.html': ['html2js'],
-    'javascript/test_support/**/*.js': ['html2js'],
     'javascript/test/*.js': ['closure', 'closure-iit'],
     'javascript/src/**/*.js': ['closure'],
     'node_modules/closure-library/closure/goog/deps.js': ['closure-deps']
@@ -44,6 +43,7 @@ module.exports = function(config) {
   // level of logging
   // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
   settings.logLevel = config.LOG_INFO;
+  settings.logLevel = config.LOG_DEBUG;
 
   // enable / disable watching file and executing tests whenever any file changes
   settings.autoWatch = true;

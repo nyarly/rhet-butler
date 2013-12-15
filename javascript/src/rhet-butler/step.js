@@ -67,6 +67,7 @@ rhetButler.Step = function(element){
 
     step.beginDeparture = function(){
       this.addClass("previous");
+      this.removeClass("current");
     };
 
     step.completeDeparture = function(){
@@ -74,6 +75,7 @@ rhetButler.Step = function(element){
 
       this.removeClass("present");
       this.removeClass("future");
+      this.removeClass("current");
       this.addClass("past");
     };
 
@@ -90,6 +92,10 @@ rhetButler.Step = function(element){
       this.addClass("present");
     };
 
+    step.cancelArrival = function(){
+      this.removeClass("next");
+    };
+
     step.eachStep = function(dothis){
       dothis(this);
       this.children.forEach(function(step){
@@ -99,19 +105,20 @@ rhetButler.Step = function(element){
 
     // Given a structure level, return the kind and direction of transition to another step
     step.relativeLevelPosition = function(level, target){
+      if(!target){ return ["none", "same", level]; };
       var difference = target.indexes[level] - this.indexes[level];
 
       if(difference < -1){
-        return ["jump", "backwards", level];
+        return ["jump", "backwards", "by-" + level];
       } else if(difference == -1){
-        return ["advance", "backwards", level];
+        return ["advance", "backwards", "by-" + level];
       } else if(difference == 1){
-        return ["advance", "forwards", level];
+        return ["advance", "forwards", "by-" + level];
       } else if(difference > 1){
-        return ["jump", "forwards", level];
+        return ["jump", "forwards", "by-" + level];
       }
 
-      return ["none", "same", level];
+      return ["none", "same", "by-" + level];
     };
 
     step.relativePosition = function(target){

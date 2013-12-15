@@ -15,13 +15,17 @@ rhetButler.TransitionStation = function(step){
       "animation-play-state"
     ];
 
-    var motionCompleteEvents = (function(){
-        var events = ["transitionend", "animationend"];
-        var prefixes = ["webkit", "o"];
+    var motionCompleteEvents = []
+
+    ;(function(){
+        var events = ["TransitionEnd", "AnimationEnd"];
+        var prefixes = ["webkit", "o", "MS", ""];
         prefixes.forEach(function(prefix){
-            events = events.concat(events.map(function(event){ return prefix + event; }))
-          })
-        return events;
+            events.forEach(function(event){
+                motionCompleteEvents.push(prefix + event);
+                motionCompleteEvents.push(prefix + event.toLowerCase());
+              });
+          });
       })();
 
     var station = rhetButler.TransitionStation.prototype;

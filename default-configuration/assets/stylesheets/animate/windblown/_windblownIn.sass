@@ -1,0 +1,28 @@
+// ---------------------------------------------------------------------------
+// imports
+
+@import compass/css3/animation
+@import compass/css3/transform
+@import compass/css3/opacity
+
+// ---------------------------------------------------------------------------
+// windblownIn
+
+=animate-windblownIn($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+
+  $name: windblownIn
+  @if $keyframes
+    +keyframes($name)
+      $num: 10
+      @for $frame from 0 through $num
+        $x: 100% - ($frame * (100% / $num))
+        $y: 50% - ((($frame / $num) * ($frame / $num)) * 50%)
+        $z: 400px - ((($frame / $num) * ($frame / $num)) * 400px)
+        $r: 50deg - ($frame * (50deg / $num))
+        #{$frame * 80 / $num}%
+          +transform(translate3d($x, $y, $z) rotate3d(1, -1, 0.3, $r) rotateZ(10deg))
+          +animation-timing-function(linear)
+
+      100%
+        +transform(translate3d(0,0,0) rotateZ(0deg))
+  +animation-class($name, $class)

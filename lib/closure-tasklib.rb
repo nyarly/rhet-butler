@@ -90,7 +90,6 @@ module ClosureCompiler
 
           file target_javascript.abspath => [header_comments.abspath, target_dir.abspath] + source_files do |file|
             tmpfile = File::join(temp_dir.abspath, file.to_s.gsub(File::Separator, "_"))
-            puts "\n#{__FILE__}:#{__LINE__} => #{source_files.inspect}"
             sh "java -jar #{closure_jar.abspath} " +
               "--closure_entry_point '#{entry_point}' " +
               "--create_source_map '#{source_map.abspath}' " +
@@ -100,12 +99,19 @@ module ClosureCompiler
               "--js_output_file #{tmpfile}"
 
             sh "cat #{header_comments.abspath} #{tmpfile} > #{file}"
+            #Trouble is that CC builds a source map with the full FS paths of
+            #the sources - Chrome then tries to use those as the paths for URLs
+            #to fetch them...
+            #sh "echo '//# sourceMappingURL=/javascript/#{source_map.relpath}'
+            #>> #{file}"
           end
 
           file target_minified.abspath => [target_javascript.abspath, header_comments.abspath, temp_dir.abspath] do |file|
             tmpfile = File::join(temp_dir.abspath, file.to_s.gsub(File::Separator, "_"))
             sh "java -jar #{closure_jar.abspath} --js #{target_javascript.abspath} --js_output_file #{tmpfile}"
             sh "cat #{header_comments.abspath} #{tmpfile} > #{file}"
+            #sh "echo '//# sourceMappingURL=/javascript/#{source_map.relpath}'
+            #>> #{file}"
           end
 
           task :project => [:clobber_header_comments, target_javascript.abspath, target_minified.abspath]

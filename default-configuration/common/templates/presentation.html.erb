@@ -10,17 +10,12 @@
     <meta name="author" content="<%= presentation.author_name %>" />
 
     <script src="/javascript/rhet-present.js"></script>
+    <script src="/javascript/keyboard-nav.js"></script>
     <%= render 'stylesheets.html' %>
     <%= render 'header-javascript.html' %>
   </head>
 
-  <body id="presentation" class="impress-not-supported">
-
-    <div class="fallback-message">
-      <p>Your browser <b>doesn't support the features required</b> by Rhet Butler so you are presented with a simplified version of this presentation.</p>
-      <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
-    </div>
-
+  <body id="presentation">
     <div class="rhet-butler root" >
       <% root_step.each do |child| %>
         <%= render child.template_name, child %>
@@ -36,6 +31,7 @@
     <script>
         var presenter = new rhetButler.Presenter(document, window);
         presenter.setup("presentation");
+        setupUserInterface(presenter);
     </script>
 
   </body>

@@ -1,0 +1,117 @@
+@import 'compass/reset'
+@import 'compass'
+@import 'animate-helpers'
+@import 'animate/windblown'
+
+$default-animation-class-mode: silent
+$default-animation-duration: 0.5s
+$default-animation-timing-function: ease
+
++animate-windblown()
+
+html
+  height: 100vh
+  +perspective(1000)
+  +transform-style(preserve-3d)
+
+body
+  font-family: 'PT Sans', sans-serif
+  background: rgba(215, 215, 215, 0.5)
+  @include background-image(radial-gradient( rgba(165, 165, 165, 0.5), rgba(211, 211, 211, 0.5)))
+  overflow: hidden
+  height: 100vh
+
+.hint
+  display: none
+
+.root.moving
+  &.by-slide
+    &.forwards
+      .slide
+        &.previous
+          z-index: 10
+        &.current
+          z-index: 5
+        &.next
+          z-index: 3
+      .slide.previous.am-at
+        +animation(windblownOut 1s ease)
+    &.backwards
+      .slide
+        &.previous
+          z-index: 3
+        &.current
+          z-index: 5
+        &.next
+          z-index: 10
+      .slide.next.am-at
+        +animation(windblownIn 1s ease)
+  &.by-item
+    &.advance
+      &.forwards
+      &.backwards
+
+.slide
+  @include box-sizing(border-box)
+
+  -webkit-backface-visibility: hidden
+  +perspective(1000)
+  position: absolute
+  top: 0
+  left: 0
+
+  display: none
+
+  &.current,&.next,&.previous
+    display: block
+
+  &.previous
+    z-index: 10
+
+  &.current
+    z-index: 5
+
+  &.next
+    z-index: 3
+
+  width: 92vw
+  height: 92vh
+  margin: 4vh 4vw
+  padding: 10vh 10vw
+
+  @include background-image(linear-gradient(white, rgb(230, 230, 230)))
+
+  border: 1px solid rgba(0, 0, 0, .3)
+  border-radius: 10px
+  @include single-box-shadow(2px, 2px, 8px, 2px, rgb(100,100,100))
+
+  color: black
+  text-shadow: 0 2px 2px rgba(0, 0, 0, .1)
+
+  font-family: 'Open Sans', Arial, sans-serif
+  font-size: 10vh
+  line-height: 1.1em
+  letter-spacing: -1px
+  text-align: center
+
+  li
+    opacity: 0
+
+  @for $i from 1 through 10
+    &.current-cue-#{$i}
+      @for $j from 1 through $i
+        li.cue-#{$j}
+          opacity: 1
+
+  p
+    margin: .4em 0
+
+  q
+    display: block
+    font-size: 50px
+    line-height: 72px
+
+    margin-top: 100px
+
+    strong
+      white-space: nowrap

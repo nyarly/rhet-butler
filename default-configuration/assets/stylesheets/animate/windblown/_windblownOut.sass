@@ -1,0 +1,24 @@
+// ---------------------------------------------------------------------------
+// imports
+
+@import compass/css3/animation
+@import compass/css3/transform
+@import compass/css3/opacity
+
+// ---------------------------------------------------------------------------
+// windblownOut
+
+=animate-windblownOut($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: windblownOut
+  @if $keyframes
+    +keyframes($name)
+      $num: 10
+      @for $frame from 0 through $num
+        $x: $frame * (-100% / $num)
+        $y: (($frame / (100.0 / $num)) * ($frame / (100.0 / $num))) * -150%
+        $z: (($frame / (100.0 / $num)) * ($frame / (100.0 / $num))) * 400px
+        $r: $frame * (50deg / $num)
+        #{$frame * 10}%
+          +transform(translate3d($x, $y, $z) rotate3d(1, -1, 0.3, $r))
+          +animation-timing-function(linear)
+  +animation-class($name, $class)

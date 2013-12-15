@@ -2,10 +2,10 @@ module RhetButler
   module Web
     class AssetsApp
       def initialize(file_manager)
-        @template_handler = file_manager.base_assets
+        @file_manager = file_manager
       end
 
-      attr_reader :template_handler
+      attr_reader :file_manager
 
       class AssetsContext
         def initialize(template_handler)
@@ -22,8 +22,12 @@ module RhetButler
         end
       end
 
+      def template_handler
+        file_manager.base_assets(::Tilt::Cache.new)
+      end
+
       def assets_context
-        @context ||= AssetsContext.new(template_handler)
+        AssetsContext.new(template_handler)
       end
 
       def call(env)
@@ -36,6 +40,16 @@ module RhetButler
       rescue Object => ex
         puts ex
         raise
+      end
+    end
+
+    class MemoizedAssetsApp < AssetsApp
+      def template_handler
+        @template_handler ||= super
+      end
+
+      def assets_context
+        @assets_contenxt ||= super
       end
     end
   end

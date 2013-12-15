@@ -166,19 +166,19 @@ describe("Presentor", function(){
           });
 
         it('should advance a slide', function() {
-            presenter.goto('next', 'slide');
+            presenter.moveTo('next', 'slide');
           });
 
         it('should advance by an item', function() {
-            presenter.goto('next', 'item');
+            presenter.moveTo('next', 'item');
           });
 
         it('should reverse by a slide', function() {
-            presenter.goto('previous', 'slide');
+            presenter.moveTo('previous', 'slide');
           });
 
         it('should reverse by an item', function() {
-            presenter.goto('previous', 'item');
+            presenter.moveTo('previous', 'item');
           });
       });
 
@@ -273,6 +273,10 @@ describe("Presentor", function(){
 
       });
 
+
+    //XXX going previous from first step sets "cancelled" on root, and following nextSlide *doesn't* unset "present" from first slide
+    //XXX going next from last step likewise
+
     describe('advance by slide', function() {
         var rootStep;
         var list;
@@ -287,7 +291,7 @@ describe("Presentor", function(){
             list.changeState("uphill");
           });
 
-        it("should set slide class", function() { expect(rootStep.hasClass("slide")).toBeTruthy(); })
+        it("should set 'by-slide' class", function() { expect(rootStep.hasClass("by-slide")).toBeTruthy(); })
         it('should set "moving" class', function() { expect(rootStep.hasClass("moving")).toBe(true) });
         it('should set "advance" class', function() { expect(rootStep.hasClass("advance")).toBe(true) });
         it('should set "forwards" class', function() { expect(rootStep.hasClass("forwards")).toBe(true) });
@@ -301,6 +305,8 @@ describe("Presentor", function(){
                 list.elementArrived();
               });
 
+            //XXX Only end step should be current
+            //
             it('should set "past" on start step', function() { expect(startStep.hasClass("past")).toBe(true); });
 
             it('should not set "present" on start step', function() { expect(startStep.hasClass("present")).toBe(false); });
@@ -322,15 +328,41 @@ describe("Presentor", function(){
         });
       });
 
-    describe("goto next", function() {
-        var endStep;
+    describe("moveTo previous from first", function(){
+        var rootStep;
+
         beforeEach(function() {
+            rootStep = presenter.rootStep;
+            presenter.moveTo("slide-1");
+            expect(presenter.currentStep().element.id).toEqual("slide-1");
+            presenter.moveTo("previous", "slide")
+          });
+
+        it("should be arrived", function() { expect(rootStep.hasClass("arrived")).toBeTruthy(); });
+        it("should not be cancelled", function() { expect(rootStep.hasClass("cancelled")).toBeFalsy(); });
+      });
+
+    describe("moveTo next", function() {
+        var rootStep, endStep;
+
+        beforeEach(function() {
+            rootStep = presenter.rootStep;
             endStep = presenter.resolveStep("next", "slide");
-            presenter.goto("next", "slide");
+            presenter.moveTo("next", "slide");
           });
 
         it("should set a hash fragment", function() {
             expect(window.location.hash).toMatch("#/" + endStep.element.id);
+          });
+
+        it("should only set current on the current step", function() {
+            rootStep.eachStep(function(step){
+                if(step == endStep){
+                  expect(step.hasClass("current")).toBeTruthy();
+                } else {
+                  expect(step.hasClass("current")).toBeFalsy();
+                }
+              })
           });
 
       });
@@ -363,12 +395,12 @@ describe("Presentor", function(){
             list.changeState("uphill");
           });
 
-        it("should set 'item' class", function() { expect(rootStep.hasClass("item")).toBeTruthy(); });
+        it("should set 'by-item' class", function() { expect(rootStep.hasClass("by-item")).toBeTruthy(); });
         it('should set "moving" class', function() { expect(rootStep.hasClass("moving")).toBe(true) });
         it('should set "advance" class', function() { expect(rootStep.hasClass("advance")).toBe(true) });
         it('should set "forwards" class', function() { expect(rootStep.hasClass("forwards")).toBe(true) });
 
-        it("should not set slide class", function() { expect(rootStep.hasClass("slide")).toBeFalsy(); })
+        it("should not set 'by-slide' class", function() { expect(rootStep.hasClass("by-slide")).toBeFalsy(); })
         it('should not set "jump" class', function() { expect(rootStep.hasClass("jump")).toBe(false) });
         it('should not set "backwards" class', function() { expect(rootStep.hasClass("backwards")).toBe(false) });
         it("should not set 'undefined' class", function() { expect(rootStep.hasClass("undefined")).toBeFalsy(); });
@@ -390,6 +422,11 @@ describe("Presentor", function(){
                 list.elementArrived();
               });
 
+            //XXX parent slide should be present
+
+            it("should set current on parentSlide", function() { expect(parentSlide.hasClass("current")).toBeTruthy(); });
+            it("should set present on parentSlide", function() { expect(parentSlide.hasClass("present")).toBeTruthy(); });
+
             it("should set current-cue-2", function() { expect(parentSlide.hasClass("current-cue-2")).toBeTruthy(); });
 
             it("should not set prev-cue-1", function() { expect(parentSlide.hasClass("prev-cue-1")).toBeFalsy(); });
@@ -408,7 +445,7 @@ describe("Presentor", function(){
             list.changeState("uphill");
           });
 
-        it("should set slide class", function() { expect(rootStep.hasClass("slide")).toBeTruthy(); })
+        it("should set 'by-slide' class", function() { expect(rootStep.hasClass("by-slide")).toBeTruthy(); })
         it('should set "moving" class', function() { expect(rootStep.hasClass("moving")).toBe(true) });
         it('should set "advance" class', function() { expect(rootStep.hasClass("advance")).toBe(true) });
         it('should set "backwards" class', function() { expect(rootStep.hasClass("backwards")).toBe(true) });
@@ -428,7 +465,7 @@ describe("Presentor", function(){
             list.changeState("uphill");
           });
 
-        it("should set slide class", function() { expect(rootStep.hasClass("slide")).toBeTruthy(); })
+        it("should set 'by-slide' class", function() { expect(rootStep.hasClass("by-slide")).toBeTruthy(); })
         it('should set "moving" class', function() { expect(rootStep.hasClass("moving")).toBe(true) });
         it('should set "jump" class', function() { expect(rootStep.hasClass("jump")).toBe(true) });
         it('should set "forwards" class', function() { expect(rootStep.hasClass("forwards")).toBe(true) });
@@ -442,7 +479,7 @@ describe("Presentor", function(){
     if(/phantom/i.test(window.navigator.userAgent)) {
       console.log("NOTA MOLTO BENE: Skipping transition & animation related tests which PhantomJS doesn't support")
     } else {
-      describe('goto slide past animation', function(){
+      describe('moveTo slide past animation', function(){
           var startStep, endStep;
 
           beforeEach(function() {
@@ -457,7 +494,7 @@ describe("Presentor", function(){
               transitioning = presenter.resolveStep("group-1");
 
               presenter.teleport("slide-2");
-              presenter.goto("slide-5");
+              presenter.moveTo("slide-5");
             });
 
           it("should be at animated step", function() {
@@ -469,7 +506,7 @@ describe("Presentor", function(){
               var rootStep;
               beforeEach(function() {
                   rootStep = presenter.rootStep;
-                  presenter.goto("next", "slide");
+                  presenter.moveTo("next", "slide");
                 });
 
               it("should should arrive at next slide", function() {
@@ -624,12 +661,12 @@ describe("Presentor", function(){
             list.changeState("uphill");
           });
 
-        it("should set slide class", function() { expect(rootStep.hasClass("slide")).toBeTruthy(); })
+        it("should set 'by-slide' class", function() { expect(rootStep.hasClass("by-slide")).toBeTruthy(); })
         it('should set "moving" class', function() { expect(rootStep.hasClass("moving")).toBe(true) });
         it('should set "jump" class', function() { expect(rootStep.hasClass("jump")).toBe(true) });
         it('should set "backwards" class', function() { expect(rootStep.hasClass("backwards")).toBe(true) });
 
-        it("should not set 'item' class", function() { expect(rootStep.hasClass('item')).toBeFalsy(); });
+        it("should not set 'by-item' class", function() { expect(rootStep.hasClass('by-item')).toBeFalsy(); });
         it('should not set "advance" class', function() { expect(rootStep.hasClass("advance")).toBe(false) });
         it('should not set "forwards" class', function() { expect(rootStep.hasClass("forwards")).toBe(false) });
 
@@ -643,6 +680,6 @@ describe("Presentor", function(){
 //  Set next_id/prev_id class on root
 //
 //Bounce fragments work properly
-//  stub the goto() to check that it's called properly.
+//  stub the moveTo() to check that it's called properly.
 //
 //(If AJAX: sinon Ajax comes *after* fixtures)

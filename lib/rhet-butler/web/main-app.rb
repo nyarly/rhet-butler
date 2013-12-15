@@ -31,6 +31,8 @@ module RhetButler
         @file_manager = file_manager
       end
 
+      attr_accessor :presentation_app_class, :assets_app_class
+
       # Notes re filesets config and slides:
       # All PresentationApps need the same slides but different configs
       # (including templates, etc.)
@@ -53,8 +55,8 @@ module RhetButler
       #Simply renders the bodies of the viewer and presenter apps to make sure
       #there aren't any exceptions
       def check
-        viewer_app = PresentationApp.new(:viewer, @file_manager)
-        presenter_app = PresentationApp.new(:presenter, @file_manager)
+        viewer_app = presentation_app_class.new(:viewer, @file_manager)
+        presenter_app = presentation_app_class.new(:presenter, @file_manager)
         viewer_app.body
         presenter_app.body
         #XXX static generator "populate assets" - make sure all the assets
@@ -74,9 +76,9 @@ module RhetButler
           :queue => SlideMessageQueue.new
         }
 
-        viewer_app = PresentationApp.new(:viewer, @file_manager)
-        presenter_app = PresentationApp.new(:presenter, @file_manager)
-        assets_app = AssetsApp.new(@file_manager)
+        viewer_app = presentation_app_class.new(:viewer, @file_manager)
+        presenter_app = presentation_app_class.new(:presenter, @file_manager)
+        assets_app = assets_app_class.new(@file_manager)
         qr_app = QrDisplayApp.new(@file_manager, "/presenter")
         presenter_config = presenter_app.configuration
         auth_validation = build_authentication_block(presenter_config)

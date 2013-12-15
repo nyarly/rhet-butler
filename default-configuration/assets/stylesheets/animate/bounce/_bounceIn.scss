@@ -1,0 +1,151 @@
+// ---------------------------------------------------------------------------
+// imports
+
+@import "compass/css3/animation";
+@import "compass/css3/transform";
+@import "compass/css3/opacity";
+
+// ---------------------------------------------------------------------------
+// bounceIn
+
+@mixin animate-bounceIn(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: bounceIn;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        opacity: 0;
+        @include scale(0.3);
+      }
+      50% {
+        opacity: 1;
+        @include scale(1.05);
+      }
+      70% {
+        @include scale(0.9);
+      }
+      100% {
+        @include scale(1);
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// bounceInDown
+
+@mixin animate-bounceInDown(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: bounceInDown;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        opacity: 0;
+        @include translateY(-2000px);
+      }
+      60% {
+        opacity: 1;
+        @include translateY(30px);
+      }
+      80% {
+        @include translateY(-10px);
+      }
+      100% {
+        @include translateY(0);
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// bounceInUp
+
+@mixin animate-bounceInUp(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: bounceInUp;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        opacity: 0;
+        @include translateY(2000px);
+      }
+      60% {
+        opacity: 1;
+        @include translateY(-30px);
+      }
+      80% {
+        @include translateY(10px);
+      }
+      100% {
+        @include translateY(0);
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// bounceInRight
+
+@mixin animate-bounceInRight(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: bounceInRight;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        opacity: 0;
+        @include translateX(2000px);
+      }
+      60% {
+        opacity: 1;
+        @include translateX(-30px);
+      }
+      80% {
+        @include translateX(10px);
+      }
+      100% {
+        @include translateX(0);
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}
+
+// ---------------------------------------------------------------------------
+// bounceInLeft
+
+@mixin animate-bounceInLeft(
+  $class      : $default-animation-class-mode,
+  $keyframes  : $default-keyframes-output
+) {
+  $name: bounceInLeft;
+  @if $keyframes {
+    @include keyframes($name) {
+      0% {
+        opacity: 0;
+        @include translateX(-2000px);
+      }
+      60% {
+        opacity: 1;
+        @include translateX(30px);
+      }
+      80% {
+        @include translateX(-10px);
+      }
+      100% {
+        @include translateX(0);
+      }
+    }
+  }
+  @include animation-class($name, $class) {}
+}

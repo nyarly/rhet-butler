@@ -37,18 +37,22 @@ rhetButler.Steps.Item.prototype = new rhetButler.ChildStep;
     item.beginDeparture = function(){
       this.parent.addClass("prev-" + this.cue());
       this.parent.removeClass(/^current-cue-.*/);
+      this.parent.beginDeparture();
     };
 
     item.completeDeparture = function(){
       this.parent.removeClass("prev-" + this.cue());
+      this.parent.completeDeparture();
     };
 
     item.beginArrival = function(){
       this.parent.addClass("next-" + this.cue());
+      this.parent.beginArrival();
     };
 
     item.completeArrival = function(){
       this.parent.removeClass("next-" + this.cue());
       this.parent.addClass("current-" + this.cue());
+      this.parent.completeArrival();
     };
   })();

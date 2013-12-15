@@ -28,40 +28,6 @@ goog.provide('rhetButler');
         el.dispatchEvent(event);
     };
 
-    utils.bindFunction = (function() {
-        if(!Function.prototype.bind){
-          return function(fToBind, thisArg) {
-            if (typeof fToBind !== "function") {
-              // closest thing possible to the ECMAScript 5 internal IsCallable function
-              throw new TypeError("bindFunction - what is trying to be bound is not callable");
-            }
-
-            var aArgs = Array.prototype.slice.call(arguments, 2),
-            fNOP = function () {},
-            fBound = function () {
-              return fToBind.apply(thisArg, aArgs.concat(Array.prototype.slice.call(arguments)));
-              /*
-               * Probably more correct, but fails if `this` has undefined prototype
-               * which sometimes happens with DOM nodes...
-              return fToBind.apply(this instanceof fNOP && thisArg
-                ? this
-                : thisArg,
-                aArgs.concat(Array.prototype.slice.call(arguments)));
-                */
-            };
-
-            fNOP.prototype = this.prototype;
-            fBound.prototype = new fNOP();
-
-            return fBound;
-          };
-        } else {
-          return function(fun, thisArg) {
-            return fun.bind(thisArg);
-          };
-        }
-      })();
-
     var prefixes = ['Webkit', 'webkit', 'moz', 'Moz', 'o', 'O', 'ms', 'khtml', 'Khtml'];
 
     // `pfx` is a function that takes a standard CSS property name as a parameter

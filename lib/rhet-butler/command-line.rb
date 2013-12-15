@@ -35,6 +35,19 @@ module RhetButler
       say "  Serving slides and assets found in: #{app.slides}"
     end
 
+    desc "author", "Run the presentation in authoring mode"
+    shared_options
+    def author
+      require 'rhet-butler/web/main-app'
+
+      file_manager = FileManager.new(options)
+      app = Web::MainApp.new(file_manager)
+      app.presentation_app_class = Web::PresentationApp
+      app.assets_app_class = Web::AssetsApp
+      app.check
+      app.start
+    end
+
     desc "serve", "Run the presentation server"
     shared_options
     def serve
@@ -42,6 +55,8 @@ module RhetButler
 
       file_manager = FileManager.new(options)
       app = Web::MainApp.new(file_manager)
+      app.presentation_app_class = Web::MemoizedPresentationApp
+      app.assets_app_class = Web::MemoizedAssetsApp
       app.check
       app.start
     end
