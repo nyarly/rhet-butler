@@ -7,7 +7,7 @@
 
   sock.onmessage = function(e) {
     console.log("message", e.data);
-    impress().goto(e.data);
+    presenter.moveTo(e.data);
   };
 
   sock.onclose = function() {

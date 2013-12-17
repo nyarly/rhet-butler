@@ -20,12 +20,11 @@ module RhetButler
     def normalize_config(coder)
       case coder.type
       when :seq
-        hash = {}
-        hash = Hash[positional_options.zip(coder.seq)]
+        Hash[positional_options.zip(coder.seq)]
       when :map
         coder.map
       else
-        {}
+        Hash[positional_options.zip([coder.scalar])]
       end
     end
 
@@ -40,3 +39,4 @@ end
 
 require 'rhet-butler/slide-renderers/code'
 require 'rhet-butler/slide-renderers/textile'
+require 'rhet-butler/slide-renderers/cues'

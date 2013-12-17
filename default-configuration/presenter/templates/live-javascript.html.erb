@@ -4,11 +4,12 @@
     var currentStep = null;
 
     var earlyStepEnter = function(event){ currentStep = event.target.id };
-    document.addEventListener("impress:stepenter", earlyStepEnter);
+    document.addEventListener("rhet:stepenter", earlyStepEnter);
 
     var handleSockOpen = function() {
-      document.removeEventListener("impress:stepenter", earlyStepEnter);
-      document.addEventListener("impress:stepenter", function(event){
+      document.removeEventListener("rhet:stepenter", earlyStepEnter);
+      document.addEventListener("rhet:stepenter", function(event){
+          console.log(event);
           sock.send(event.target.id);
           })
       if(currentStep !== null){

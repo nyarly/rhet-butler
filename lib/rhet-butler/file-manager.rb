@@ -64,7 +64,7 @@ module RhetButler
     def template_config(type)
       case type
       when "sass", "scss"
-        load_paths = all_files.sub_set("assets").map(&:to_s)
+        load_paths = all_files.sub_set("assets/stylesheets").map(&:to_s)
         load_paths << Compass::Core.base_directory("stylesheets")
         {:template_options =>
           { :load_paths => load_paths }}

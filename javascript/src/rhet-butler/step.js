@@ -68,6 +68,7 @@ rhetButler.Step = function(element){
     step.beginDeparture = function(){
       this.addClass("previous");
       this.removeClass("current");
+      this.parent.beginDeparture();
     };
 
     step.completeDeparture = function(){
@@ -77,10 +78,12 @@ rhetButler.Step = function(element){
       this.removeClass("future");
       this.removeClass("current");
       this.addClass("past");
+      this.parent.completeDeparture();
     };
 
     step.beginArrival = function(){
       this.addClass("next");
+      this.parent.beginArrival();
     };
 
     step.completeArrival = function(){
@@ -90,6 +93,7 @@ rhetButler.Step = function(element){
       this.removeClass("future");
       this.removeClass("past");
       this.addClass("present");
+      this.parent.completeArrival();
     };
 
     step.cancelArrival = function(){

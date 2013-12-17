@@ -29,9 +29,15 @@ module RhetButler
 
       file_manager = FileManager.new(options)
       app = Web::MainApp.new(file_manager)
+      app.presentation_app_class = Web::MemoizedPresentationApp
+      app.assets_app_class = Web::MemoizedAssetsApp
+      app.check
 
+      slide_count = app.viewer_app.root_step.each_slide.inject(0) do |count, slide|
+        count + 1
+      end
       say "Slides loaded and parsed"
-      say "  #{app.viewer_app.slides.length} slides loaded"
+      say "  #{slide_count} slides loaded"
       say "  Serving slides and assets found in: #{app.slides}"
     end
 

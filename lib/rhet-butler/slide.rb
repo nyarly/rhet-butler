@@ -133,9 +133,6 @@ module RhetButler
 
       value_from_config("filters") do |value|
         @content_filters = value
-        @html_classes += value.map do |filter|
-          filter.html_class
-        end.compact
       end
 
       value_from_config("note-filters") do |value|
@@ -148,7 +145,7 @@ module RhetButler
 
     attr_reader :config_hash
     attr_accessor :content, :html_classes, :html_id, :notes
-    attr_reader :position, :rotation, :content_filters, :note_filters
+    attr_accessor :position, :rotation, :content_filters, :note_filters
     attr_accessor :scale
     attr_reader :template_name
 

@@ -52,10 +52,13 @@ module RhetButler
         @file_manager.slide_files
       end
 
+      def viewer_app
+        @viewer_app ||= presentation_app_class.new(:viewer, @file_manager)
+      end
+
       #Simply renders the bodies of the viewer and presenter apps to make sure
       #there aren't any exceptions
       def check
-        viewer_app = presentation_app_class.new(:viewer, @file_manager)
         presenter_app = presentation_app_class.new(:presenter, @file_manager)
         viewer_app.body
         presenter_app.body
@@ -76,7 +79,7 @@ module RhetButler
           :queue => SlideMessageQueue.new
         }
 
-        viewer_app = presentation_app_class.new(:viewer, @file_manager)
+        viewer_app = self.viewer_app
         presenter_app = presentation_app_class.new(:presenter, @file_manager)
         assets_app = assets_app_class.new(@file_manager)
         qr_app = QrDisplayApp.new(@file_manager, "/presenter")

@@ -36,4 +36,9 @@ rhetButler.Steps.Root.prototype = new rhetButler.Step;
           this.removeClass(dirPart);
         }, this);
     };
+
+    root.beginArrival = function(){ };
+    root.completeArrival = function(){ };
+    root.beginDeparture = function(){ };
+    root.completeDeparture = function(){ };
   })();

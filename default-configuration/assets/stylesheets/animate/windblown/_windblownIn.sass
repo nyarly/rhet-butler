@@ -15,7 +15,7 @@
     +keyframes($name)
       $num: 10
       @for $frame from 0 through $num
-        $x: 100% - ($frame * (100% / $num))
+        $x: -100% + ($frame * (100% / $num))
         $y: 50% - ((($frame / $num) * ($frame / $num)) * 50%)
         $z: 400px - ((($frame / $num) * ($frame / $num)) * 400px)
         $r: 50deg - ($frame * (50deg / $num))

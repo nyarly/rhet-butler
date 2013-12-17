@@ -1,4 +1,38 @@
+Re-connect the presenter/display WS connection
+
+Fix "quit" hang - currently needs a kill9
+
+Update sockjs-ruby, and update dep from RB
+
+let audience members download slides, code samples or other supplementary material
+
+Items/cues: Handle am-at and animation delay for multiple cued item elements?
+
+Raw HTML inclusion (pre rendered/hand built slides)
+
+meta-filters (code + cues, with options)
+
+cue macros outside of RedCloth %(1)
+
+YAML highlighting for highlight.js
+
+Admin style (and templating) for next slide, simple layout
+
+Admin slide index
+  UX needs consideration
+  Jump to slide
+
+Localize assets - e.g. download everything in the Google Web Font stylesheet
+
+next/previous/current classes on all parents of active slide
+  so that e.g. group could set different background
+
 Slide group "default slide type" setting
+
+Stylesheet overrides?
+  e.g. One off font sizes
+
+Strip out old impress stuff?
 
 SSL support - self-signed certs, signed certs...
 
@@ -15,45 +49,8 @@ current slide/increment?"
 
 Better error for missing slide type
 
-Incrementals: slideset member -> multiple related slides.  Processing thing like:
-
-  Here are some bullets:
-
-  [1+: A bullet]
-  [2+: Another bullet]
-  [3+: More bulleting]
-
-  Or
-
-  def a_method([1: hl: args])
-    [2: hl: interesting_line]
-    another thing([1: hl: args])
-  end
-
-  Becomes nested div.step s in output - allows for css like:
-
-  div.step.inc-1 span.highlight.inc-1 {
-    @include !code-highlighting
-  }
-
-  Incrementals differ from Steps because a) going back skips them and b) in an index view they're not listed
-
-Admin style (and templating) for next slide, simple layout
-
-Admin slide index
-  UX needs consideration
-  Jump to slide
-
 Publish static to github pages - other destinations?
 
-Slide reloading - I'm running EM already, so something like Watcher seems
-obvious
-
-Arrangements and layouts - actual use
-
-Arrangement stereotype (automatic anonymous subclasses)
-
-Localize assets - e.g. download everything in the Google Web Font stylesheet
 
 Add Markdown slide renderer, make default
   Implication is plugable types - RedCloth and Kramdown? Why?

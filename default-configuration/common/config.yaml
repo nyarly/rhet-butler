@@ -1,4 +1,19 @@
 ---
+named-filters:
+  normal:
+    - !textile
+    - !cues
+  code:
+    - !code
+    - !textile
+    - !cues
+
+default-content-filters:
+  normal
+
+default-note-filters:
+  normal
+
 arrangement: horizontal
 impress-config:
   transition-duration: 200

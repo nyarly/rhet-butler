@@ -72,12 +72,16 @@ module RhetButler
       @base_hash["root_slide"] || "slides.yaml"
     end
 
+    def named_filter_lists
+      @base_hash["named-filters"] || {"textile" => [SlideRenderers::Texttile.new]}
+    end
+
     def default_content_filters
-      @default_content_filters ||= @base_hash["default_content_filters"] || [SlideRenderers::Textile.new]
+      @default_content_filters ||= @base_hash["default-content-filters"] || "textile"
     end
 
     def default_note_filters
-      @default_note_filters ||= @base_hash["default_note_filters"] || [SlideRenderers::Textile::new]
+      @default_note_filters ||= @base_hash["default-note-filters"] || "textile"
     end
   end
 end

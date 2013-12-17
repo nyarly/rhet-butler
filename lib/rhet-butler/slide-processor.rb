@@ -10,8 +10,6 @@ module RhetButler
     def process
       rendering = SlideRendering.new
       rendering.root_group = @root_group
-      rendering.default_content_filters = @default_content_filters
-      rendering.default_note_filters = @default_note_filters
       rendering.traverse
 
       finder = ArrangementFinder.new

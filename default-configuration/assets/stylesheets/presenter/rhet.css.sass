@@ -26,42 +26,74 @@ body
 .hint
   display: none
 
-.root.moving
-  &.by-slide
-    &.forwards
-      .slide
-        &.previous
-          z-index: 10
-        &.current
-          z-index: 5
-        &.next
-          z-index: 3
-      .slide.previous.am-at
-        +animation(windblownOut .5s ease)
-    &.backwards
-      .slide
-        &.previous
-          z-index: 3
-        &.current
-          z-index: 5
-        &.next
-          z-index: 10
-      .slide.next.am-at
-        +animation(windblownIn .5s ease)
+/*
+  .root.moving
+    &.by-slide
+      &.forwards
+        .slide
+          &.previous
+            z-index: 10
+          &.current
+            z-index: 5
+          &.next
+            z-index: 3
+        .slide.previous.am-at
+          +animation(windblownOut .5s ease)
+      &.backwards
+        .slide
+          &.previous
+            z-index: 3
+          &.current
+            z-index: 5
+          &.next
+            z-index: 10
+        .slide.next.am-at
+          +animation(windblownIn .5s ease)
+
+.rhet-butler
+  &.root
+    @include box-sizing(border-box)
+    width: 100vw
+    height: 50vh
+    margin: 0
+    padding: 0
+    overflow: hidden
+
+  &.current ~ .slide
+    display: block
+    left: 50vw
+    opacity: .7
+
+  &.current ~ .group .slide
+    display: block
+    left: 50vw
+    opacity: .7
 
 .slide
   @include box-sizing(border-box)
-
-  -webkit-backface-visibility: hidden
-  +perspective(1000)
-  position: absolute
-  top: 0
-  left: 0
+  width: 46vw
+  height: 46vh
+  margin: 2vh 2vw
+  padding: 5vh 5vw
+  float: left
 
   display: none
 
   &.current,&.next,&.previous
     display: block
+
+  &.current
+    .notes
+      position: absolute
+      display: block
+      width: 89vw
+      height: 39vh
+      margin: 2vh 2vw
+      padding: 3vh 3vw
+      top: 50vh
+      left: 0
+      border: 1px solid black
+      background-color: honeydew
 
   &.previous
     z-index: 10
@@ -71,11 +103,6 @@ body
 
   &.next
     z-index: 3
-
-  width: 92vw
-  height: 92vh
-  margin: 4vh 4vw
-  padding: 10vh 10vw
 
   @include background-image(linear-gradient(white, rgb(230, 230, 230)))
 
@@ -87,7 +114,7 @@ body
   text-shadow: 0 2px 2px rgba(0, 0, 0, .1)
 
   font-family: 'Open Sans', Arial, sans-serif
-  font-size: 10vh
+  font-size: 5vh
   line-height: 1.1em
   letter-spacing: -1px
   text-align: center
@@ -99,14 +126,14 @@ body
   pre
     font-family: monospace
     text-align: initial
-    font-size: 6vh
+    font-size: 4vh
     line-height: 1em
     code
       border-radius: 10px
       +box-shadow(-2px -2px 8px 2px rgb(140,140,140) inset, 2px 2px 8px 2px rgb(40, 40, 40) inset)
 
   li
-    opacity: 0
+    opacity: 0.5
 
   @for $i from 1 through 10
     &.current-cue-#{$i}
@@ -115,8 +142,6 @@ body
         +box-shadow(-1px -1px 0px 1px rgba(140,140,140,0.5) inset, 1px 1px 0px 1px rgba(40, 40, 40, 0.5) inset)
         background-color: rgba(255,255,255,0.1)
 
-      li.cue-#{$i}
-        +animation(fadeIn .6s ease both)
       @for $j from 1 through $i
         li.cue-#{$j}
           opacity: 1

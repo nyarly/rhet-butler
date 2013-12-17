@@ -1,0 +1,139 @@
+// ---------------------------------------------------------------------------
+// imports
+
+@import compass/css3/animation
+@import compass/css3/transform
+@import compass/css3/opacity
+
+// ---------------------------------------------------------------------------
+// fadeOut
+
+=animate-fadeOut($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: fadeOut
+  @if $keyframes
+    +keyframes($name)
+      0%
+        opacity: 1
+      100%
+        opacity: 0
+  +animation-class($name, $class)
+
+// ---------------------------------------------------------------------------
+// fadeOutUp
+
+=animate-fadeOutUp($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: fadeOutUp
+  @if $keyframes
+    +keyframes($name)
+      0%
+        +translateY(0)
+        opacity: 1
+      100%
+        +translateY(-20px)
+        opacity: 0
+  +animation-class($name, $class)
+
+// ---------------------------------------------------------------------------
+// fadeOutDown
+
+=animate-fadeOutDown($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: fadeOutDown
+  @if $keyframes
+    +keyframes($name)
+      0%
+        +translateY(0)
+        opacity: 1
+      100%
+        +translateY(20px)
+        opacity: 0
+  +animation-class($name, $class)
+
+// ---------------------------------------------------------------------------
+// fadeOutRight
+
+=animate-fadeOutRight($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: fadeOutRight
+  @if $keyframes
+    +keyframes($name)
+      0%
+        +translateX(0)
+        opacity: 1
+      100%
+        +translateX(20px)
+        opacity: 0
+  +animation-class($name, $class)
+
+// ---------------------------------------------------------------------------
+// fadeOutLeft
+
+=animate-fadeOutLeft($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: fadeOutLeft
+  @if $keyframes
+    +keyframes($name)
+      0%
+        +translateX(0)
+        opacity: 1
+      100%
+        +translateX(-20px)
+        opacity: 0
+  +animation-class($name, $class)
+
+// ---------------------------------------------------------------------------
+// fadeOutUpBig
+
+=animate-fadeOutUpBig($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: fadeOutUpBig
+  @if $keyframes
+    +keyframes($name)
+      0%
+        +translateY(0)
+        opacity: 1
+      100%
+        +translateY(-2000px)
+        opacity: 0
+  +animation-class($name, $class)
+
+// ---------------------------------------------------------------------------
+// fadeOutDownBig
+
+=animate-fadeOutDownBig($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: fadeOutDownBig
+  @if $keyframes
+    +keyframes($name)
+      0%
+        opacity: 1
+        +translateY(0)
+      100%
+        opacity: 0
+        +translateY(2000px)
+  +animation-class($name, $class)
+
+// ---------------------------------------------------------------------------
+// fadeOutRightBig
+
+=animate-fadeOutRightBig($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: fadeOutRightBig
+  @if $keyframes
+    +keyframes($name)
+      0%
+        opacity: 1
+        +translateX(0)
+      100%
+        opacity: 0
+        +translateX(2000px)
+  +animation-class($name, $class)
+
+// ---------------------------------------------------------------------------
+// fadeOutLeftBig
+
+=animate-fadeOutLeftBig($class: $default-animation-class-mode, $keyframes: $default-keyframes-output)
+  $name: fadeOutLeftBig
+  @if $keyframes
+    +keyframes($name)
+      0%
+        opacity: 1
+        +translateX(0)
+      100%
+        opacity: 0
+        +translateX(-2000px)
+  +animation-class($name, $class)

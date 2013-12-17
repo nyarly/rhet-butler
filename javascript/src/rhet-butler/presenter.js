@@ -189,7 +189,8 @@ rhetButler.Presenter = function(document, window){
     };
 
     presenter.completeTransition = function(){
-      utils.triggerEvent(this.currentTransition.currentStep.element, "rhet:stepenter", { api: this });
+      var elem = document.getElementById(this.currentTransition.currentStep.element.id);
+      utils.triggerEvent(elem, "rhet:stepenter", { api: this });
     };
 
     ///// METHODS BELOW HERE STILL IN NEED OF REFACTORING
