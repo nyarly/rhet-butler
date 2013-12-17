@@ -39,7 +39,6 @@ describe RhetButler::Web::MainApp do
       end
 
       it "should serve a presentation" do
-        puts "\n#{__FILE__}:#{__LINE__} => #{last_response.body}"
         last_response.should be_ok
       end
     end
