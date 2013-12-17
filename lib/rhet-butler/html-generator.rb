@@ -42,8 +42,8 @@ module RhetButler
 
     attr_accessor :root_step, :presentation, :impress_config
 
-    def render(template)
-      RenderFacade.new(@templates, self).render(template)
+    def render(template, item=nil)
+      RenderFacade.new(@templates, item || self).render(template)
     end
   end
 end

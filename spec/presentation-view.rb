@@ -33,6 +33,17 @@ describe RhetButler::Web::MainApp do
       end
     end
 
+    describe "/qr" do
+      before :each do
+        get "/qr"
+      end
+
+      it "should serve a presentation" do
+        puts "\n#{__FILE__}:#{__LINE__} => #{last_response.body}"
+        last_response.should be_ok
+      end
+    end
+
     describe "/javascript/rhet-present.js" do
       before :each do
         get "/javascript/rhet-present.js"

@@ -33,7 +33,6 @@ module RhetButler
       def html_generator
         generator = HTMLGenerator.new(configuration, template_handler)
         generator.root_step = root_step
-        puts "\n#{__FILE__}:#{__LINE__} => #{generator.object_id.inspect}"
         generator
       end
 

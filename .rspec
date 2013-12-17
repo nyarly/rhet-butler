@@ -6,4 +6,5 @@
 -I lib
 -I spec_support
 -r setup
+-r simplecov
 --pattern **/*.rb

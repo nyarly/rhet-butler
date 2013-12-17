@@ -5,6 +5,10 @@ group :deploy do
   gem 'corundum', :path => "../corundum"
 end
 
+group :test, :development do
+  gem "cadre"
+end
+
 group :test do
   gem 'nokogiri'
   gem 'rack-test'

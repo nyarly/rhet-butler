@@ -15,8 +15,6 @@ describe RhetButler::StaticGenerator do
 
     generator = RhetButler::StaticGenerator.new(files)
 
-    puts "\n#{__FILE__}:#{__LINE__} => #{generator.configuration.inspect}"
-
     FileUtils::rm_rf test_target
     FileUtils::mkdir_p test_target
 

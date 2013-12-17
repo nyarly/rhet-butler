@@ -73,7 +73,7 @@ module RhetButler
     end
 
     def named_filter_lists
-      @base_hash["named-filters"] || {"textile" => [SlideRenderers::Texttile.new]}
+      @base_hash["named-filters"] || {"textile" => [SlideRenderers::Textile.new]}
     end
 
     def default_content_filters

@@ -23,5 +23,5 @@ describe RhetButler::Configuration, "defaults" do
   its(:arrangement_blueprint){ should == [] }
   its(:serve_port){ should == 8081 }
   its(:root_slide){ should == "slides.yaml" }
-  its('default_content_filters.first'){ should be_an_instance_of RhetButler::SlideRenderers::Textile }
+  its('default_content_filters'){ should == "textile" }
 end

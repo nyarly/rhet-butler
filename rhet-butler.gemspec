@@ -36,7 +36,18 @@ Gem::Specification.new do |spec|
     lib/rhet-butler/static-generator.rb
     lib/rhet-butler/yaml-type.rb
     lib/rhet-butler/layout-rule.rb
-    lib/rhet-butler.rb
+    lib/rhet-butler/arrangement-finder.rb
+    lib/rhet-butler/file-loading.rb
+    lib/rhet-butler/filter-resolver.rb
+    lib/rhet-butler/include-processor.rb
+    lib/rhet-butler/slide-arranger.rb
+    lib/rhet-butler/slide-processor.rb
+    lib/rhet-butler/slide-renderer.rb
+    lib/rhet-butler/slide-renderers/code.rb
+    lib/rhet-butler/slide-renderers/cues.rb
+    lib/rhet-butler/slide-renderers/textile.rb
+    lib/rhet-butler/slide-rendering.rb
+    lib/rhet-butler/slide-traverser.rb
     bin/rhet-butler
     spec/slide-loader.rb
     spec/slide-processing.rb
@@ -61,7 +72,41 @@ Gem::Specification.new do |spec|
     default-configuration/assets/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3aCWcynf_cDxXwCLxiixG1c.ttf
     default-configuration/assets/fonts/opensans/v6/PRmiXeptR36kaC0GEAetxi8cqLH4MEiSE0ROcU-qHOA.ttf
     default-configuration/assets/stylesheets/google-open-sans.css
-    default-configuration/assets/stylesheets/presenter/presentation.css
+    default-configuration/assets/stylesheets/rhet.css.sass
+    default-configuration/assets/stylesheets/presenter/rhet.css.sass
+    default-configuration/assets/stylesheets/_animate-helpers.scss
+    default-configuration/assets/stylesheets/animate/fade/_fadeIn.sass
+    default-configuration/assets/stylesheets/animate/fade/_fadeOut.sass
+    default-configuration/assets/stylesheets/animate/flip/_flipOut.scss
+    default-configuration/assets/stylesheets/animate/flip/_flipIn.scss
+    default-configuration/assets/stylesheets/animate/roll/_rollIn.scss
+    default-configuration/assets/stylesheets/animate/roll/_rollOut.scss
+    default-configuration/assets/stylesheets/animate/attention/_tada.scss
+    default-configuration/assets/stylesheets/animate/attention/_pulse.scss
+    default-configuration/assets/stylesheets/animate/attention/_wobble.scss
+    default-configuration/assets/stylesheets/animate/attention/_swing.scss
+    default-configuration/assets/stylesheets/animate/attention/._pulse.scss.swp
+    default-configuration/assets/stylesheets/animate/attention/_shake.scss
+    default-configuration/assets/stylesheets/animate/attention/_wiggle.scss
+    default-configuration/assets/stylesheets/animate/attention/_flash.scss
+    default-configuration/assets/stylesheets/animate/windblown/_windblownIn.sass
+    default-configuration/assets/stylesheets/animate/windblown/_windblownOut.sass
+    default-configuration/assets/stylesheets/animate/_fade.scss
+    default-configuration/assets/stylesheets/animate/_attention.scss
+    default-configuration/assets/stylesheets/animate/_special.scss
+    default-configuration/assets/stylesheets/animate/special/_hinge.scss
+    default-configuration/assets/stylesheets/animate/bounce/_bounceOut.scss
+    default-configuration/assets/stylesheets/animate/bounce/_bounceIn.scss
+    default-configuration/assets/stylesheets/animate/_lightSpeed.scss
+    default-configuration/assets/stylesheets/animate/lightSpeed/_lightSpeedOut.scss
+    default-configuration/assets/stylesheets/animate/lightSpeed/_lightSpeedIn.scss
+    default-configuration/assets/stylesheets/animate/_flip.scss
+    default-configuration/assets/stylesheets/animate/_roll.scss
+    default-configuration/assets/stylesheets/animate/_rotate.scss
+    default-configuration/assets/stylesheets/animate/rotate/_rotateIn.scss
+    default-configuration/assets/stylesheets/animate/rotate/_rotateOut.scss
+    default-configuration/assets/stylesheets/animate/_bounce.scss
+    default-configuration/assets/stylesheets/animate/_windblown.sass
     default-configuration/assets/stylesheets/highlight/solarized_dark.css
     default-configuration/assets/stylesheets/highlight/pojoaque.css
     default-configuration/assets/stylesheets/highlight/pojoaque.jpg
@@ -94,6 +139,7 @@ Gem::Specification.new do |spec|
     default-configuration/assets/stylesheets/setup.css
     default-configuration/assets/stylesheets/presentation.css
     default-configuration/assets/javascript/sockjs-0.2.1.js
+    default-configuration/assets/javascript/keyboard-nav.js
     default-configuration/assets/javascript/highlight.pack.js
     default-configuration/assets/javascript/highlight.js/LICENSE
     default-configuration/assets/javascript/highlight.js/README.md

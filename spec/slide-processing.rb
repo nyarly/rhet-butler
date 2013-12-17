@@ -4,6 +4,8 @@ describe RhetButler::SlideProcessor do
   def slide(content)
     slide = RhetButler::Slide.new
     slide.content = content
+    slide.content_filters = default_content_filters
+    slide.note_filters = default_content_filters
     slide
   end
 

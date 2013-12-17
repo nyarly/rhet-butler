@@ -11,3 +11,5 @@ coverage/
 default-configuration/assets/javascript/rhet-present.*
 javascript/tmp/
 .sass-cache/
+errors.err
+.cadre

@@ -11,6 +11,8 @@ module RhetButler
 
       attr_reader :template_handler
 
+      QRItem = Struct.new(:qr, :view_url, :presenter_url)
+
       def call(env)
         url = [env["rack.url_scheme"], "://"]
         if env["HTTP_HOST"].nil? or env["HTTP_HOST"].empty?
@@ -27,9 +29,10 @@ module RhetButler
         qr = RQRCode::QRCode.new(url, :size => 5)
 
         mime_type = "text/html"
+        qr_item = QRItem.new(qr, view_url, url)
         generator = HTMLGenerator.new(@config, @templates)
         [200, {'Content-Type' => mime_type}, [
-          generator.render("presenter-qr.html", qr, :view_url => view_url, :presenter_url => url)
+          generator.render("presenter-qr.html", qr_item)
         ]]
       end
     end

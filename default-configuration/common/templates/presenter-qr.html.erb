@@ -48,10 +48,10 @@
         <li>
         Scanning this QR code to control the presentation from your smart phone
         <table cellspacing="0">
-          <% module_count.times do |x| %>
+          <% qr.module_count.times do |x| %>
             <tr>
-              <% module_count.times do |y| %>
-                <td class='<%= dark?(x,y) ? "dark" : "light" %>'>&nbsp</td>
+              <% qr.module_count.times do |y| %>
+                <td class='<%= qr.dark?(x,y) ? "dark" : "light" %>'>&nbsp</td>
               <% end %>
             </tr>
           <% end %>
