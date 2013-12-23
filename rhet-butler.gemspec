@@ -50,6 +50,18 @@ Gem::Specification.new do |spec|
     lib/rhet-butler/slide-renderers/textile.rb
     lib/rhet-butler/slide-rendering.rb
     lib/rhet-butler/slide-traverser.rb
+    lib/rhet-butler/resource-localizer.rb
+    lib/rhet-butler/sass-functions.rb
+    lib/rhet-butler/stasis.rb
+    lib/rhet-butler/stasis/css-transform.rb
+    lib/rhet-butler/stasis/document-transform.rb
+    lib/rhet-butler/stasis/html-transform.rb
+    lib/rhet-butler/stasis/http-loader.rb
+    lib/rhet-butler/stasis/identity-transform.rb
+    lib/rhet-butler/stasis/rack-loader.rb
+    lib/rhet-butler/stasis/resource-mapping.rb
+    lib/rhet-butler/stasis/transform-queue.rb
+    lib/rhet-butler/stasis/writer.rb
     bin/rhet-butler
     spec/slide-loader.rb
     spec/slide-processing.rb
