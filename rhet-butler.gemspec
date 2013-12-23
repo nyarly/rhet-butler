@@ -1,13 +1,15 @@
 Gem::Specification.new do |spec|
   spec.name		= "rhet-butler"
-  spec.version		= "0.6.0"
+  spec.version		= "0.9.0"
   author_list = {
     "Judson Lester" => 'nyarly@gmail.com'
   }
   spec.authors		= author_list.keys
   spec.email		= spec.authors.map {|name| author_list[name]}
-  spec.summary		= ""
+  spec.summary		= "A web tech presentation system"
   spec.description	= <<-EndDescription
+  Rhet Butler is a presentation assistant. Build a slide deck in simple YAML,
+  design it in CSS, run the presentation with your smartphone over Websockets.
   EndDescription
 
   spec.rubyforge_project= spec.name.downcase
