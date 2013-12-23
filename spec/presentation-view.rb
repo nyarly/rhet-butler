@@ -15,7 +15,7 @@ describe RhetButler::Web::MainApp do
       main = described_class.new(files)
       main.presentation_app_class = RhetButler::Web::MemoizedPresentationApp
       main.assets_app_class = RhetButler::Web::MemoizedAssetsApp
-      main.app
+      main.builder.to_app
     end
 
     describe "/" do
