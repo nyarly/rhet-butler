@@ -73,8 +73,14 @@ Gem::Specification.new do |spec|
     default-configuration/assets/fonts/opensans/v6/xjAJXh38I15wypJXxuGMBp0EAVxt0G0biEntp43Qt6E.ttf
     default-configuration/assets/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3aCWcynf_cDxXwCLxiixG1c.ttf
     default-configuration/assets/fonts/opensans/v6/PRmiXeptR36kaC0GEAetxi8cqLH4MEiSE0ROcU-qHOA.ttf
+    default-configuration/assets/themes.googleusercontent.com/static/fonts/cinzeldecorative/v1/pXhIVnhFtL_B9Vb1wq2F9wIh9oxuYcmvOvyh_107lQs.ttf
+    default-configuration/assets/themes.googleusercontent.com/static/fonts/cinzeldecorative/v1/pXhIVnhFtL_B9Vb1wq2F9zCUrkmwPfdnoTjOU_kXqBI.ttf
+    default-configuration/assets/themes.googleusercontent.com/static/fonts/arimo/v5/K-bXE71xZHgbUS_UdQjugvesZW2xOQ-xsNqO47m55DA.ttf
+    default-configuration/assets/themes.googleusercontent.com/static/fonts/slackey/v3/bJZDrYrGx8atJRHR9DVdqg.ttf
+    default-configuration/assets/themes.googleusercontent.com/static/fonts/droidsansmono/v4/ns-m2xQYezAtqh7ai59hJYW_AySPyikQrZReizgrnuw.ttf
     default-configuration/assets/stylesheets/google-open-sans.css
     default-configuration/assets/stylesheets/rhet.css.sass
+    default-configuration/assets/stylesheets/font.css
     default-configuration/assets/stylesheets/presenter/rhet.css.sass
     default-configuration/assets/stylesheets/_animate-helpers.scss
     default-configuration/assets/stylesheets/animate/fade/_fadeIn.sass
@@ -162,10 +168,14 @@ Gem::Specification.new do |spec|
     default-configuration/common/templates/stylesheets.html.erb
     default-configuration/common/templates/presentation.html.erb
     default-configuration/common/templates/presenter-qr.html.erb
+    default-configuration/skels/slides.yaml
+    default-configuration/skels/config.yaml
     default-configuration/viewer/config.yaml
     default-configuration/viewer/templates/slide-notes.html.erb
     default-configuration/viewer/templates/live-javascript.html.erb
-  ]
+  ] #+ ["default-configuration/assets/fonts.googleapis.com/css/family=Arimo:700|Droid, Sans, Mono|Cinzel, Decorative:700,900|Slackey,subset=latin,latin-ext"]
+
+
 
   spec.test_file        = "spec_support/gem_test_suite.rb"
   spec.licenses = ["MIT"]
