@@ -1,5 +1,6 @@
 @import 'compass/reset'
 @import 'compass'
+@import 'font.css'
 @import 'animate-helpers'
 @import 'animate/windblown'
 @import 'animate/fade'
@@ -17,7 +18,7 @@ html
   +transform-style(preserve-3d)
 
 body
-  font-family: 'PT Sans', sans-serif
+  font-family: 'Arimo', sans-serif
   background: rgba(215, 215, 215, 0.5)
   @include background-image(radial-gradient( rgba(165, 165, 165, 0.5), rgba(211, 211, 211, 0.5)))
   overflow: hidden
@@ -86,18 +87,24 @@ body
   color: black
   text-shadow: 0 2px 2px rgba(0, 0, 0, .1)
 
-  font-family: 'Open Sans', Arial, sans-serif
+  font-family: 'Arimo', sans-serif
   font-size: 10vh
   line-height: 1.1em
   letter-spacing: -1px
   text-align: center
+
+  .comic
+    font-family: 'Slackey', cursive
+
+  .dignified
+    font-family: 'Cinzel Decorative', cursive
 
   img
     max-width: 100%
     max-height: 100%
 
   pre
-    font-family: monospace
+    font-family: 'Droid Sans Mono', monospace
     text-align: initial
     font-size: 6vh
     line-height: 1em

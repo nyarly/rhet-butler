@@ -29,9 +29,11 @@ module RhetButler
     class MainApp
       def initialize(file_manager)
         @file_manager = file_manager
+        @capture_exceptions = true
       end
 
       attr_accessor :presentation_app_class, :assets_app_class
+      attr_accessor :capture_exceptions
 
       # Notes re filesets config and slides:
       # All PresentationApps need the same slides but different configs
@@ -73,7 +75,7 @@ module RhetButler
         end)
       end
 
-      def app
+      def builder
         sockjs_options = {
           :sockjs_url => "/assets/javascript/sockjs-0.2.1.js",
           :queue => SlideMessageQueue.new
@@ -98,7 +100,9 @@ module RhetButler
             run Rack::SockJS.new(LeaderSession, sockjs_options)
           end
 
-          use Rack::ShowExceptions
+          if @capture_exceptions
+            use Rack::ShowExceptions
+          end
 
           map "/assets" do
             run assets_app
@@ -134,7 +138,7 @@ module RhetButler
         end
         EM.run do
           thin = Rack::Handler.get("thin")
-          thin.run(app.to_app, :Host => "0.0.0.0", :Port => configuration.serve_port) do |server|
+          thin.run(builder.to_app, :Host => "0.0.0.0", :Port => configuration.serve_port) do |server|
             server.threaded = true
           end
         end

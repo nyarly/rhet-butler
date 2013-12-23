@@ -2,6 +2,8 @@ require 'valise'
 require 'rhet-butler/configuration'
 require 'compass/import-once'
 require 'compass/core'
+require 'rhet-butler/sass-functions'
+require 'fileutils'
 
 module RhetButler
   #All file handling is routed through this class.
@@ -66,8 +68,9 @@ module RhetButler
       when "sass", "scss"
         load_paths = all_files.sub_set("assets/stylesheets").map(&:to_s)
         load_paths << Compass::Core.base_directory("stylesheets")
+        FileUtils::mkdir_p base_config.template_cache
         {:template_options =>
-          { :load_paths => load_paths }}
+          { :load_paths => load_paths, :cache_location => base_config.template_cache }}
       else
         nil
       end

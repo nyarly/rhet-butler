@@ -187,6 +187,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency("sockjs", "~> 0.2.1")
   spec.add_dependency("valise", "~> 1.0.0")
 
+  spec.add_dependency("nokogiri")
+  spec.add_dependency("crass")
+  spec.add_dependency("addressable")
   spec.add_dependency("system-getifaddrs", "~> 0.2.0")
   spec.add_dependency("rqrcode", "~> 0.4.2")
 

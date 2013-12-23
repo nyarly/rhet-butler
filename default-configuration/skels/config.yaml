@@ -8,14 +8,8 @@ named-filters:
     - !textile
     - !cues
 
-template-cache: .template-cache
-
 default-content-filters:
   normal
 
 default-note-filters:
   normal
-
-arrangement: horizontal
-impress-config:
-  transition-duration: 200

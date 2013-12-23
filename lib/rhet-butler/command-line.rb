@@ -10,6 +10,30 @@ module RhetButler
       method_option :root_slide, :type => :string
     end
 
+    desc "init", "Create example skeleton files to get started with"
+    def init
+      require 'fileutils'
+
+      file_manager = FileManager.new(options)
+
+      FileUtils.mkdir_p "assets"
+      FileUtils.mkdir_p "presenter/assets"
+      FileUtils.mkdir_p "viewer/assets"
+
+      skels = file_manager.all_files.sub_set("skels")
+
+      %w{slides.yaml}.each do |path|
+        unless Dir.glob(path).empty?
+          puts "Refusing to clobber existing: #{path}"
+          next
+        end
+
+        File::open(path, "w") do |file|
+          file.write skels.contents(path)
+        end
+      end
+    end
+
     desc "static", "Builds a static version of the presentation"
     method_option :target, :type => :string
     shared_options
@@ -20,6 +44,25 @@ module RhetButler
       generator = StaticGenerator.new(file_manager)
 
       generator.go!
+    end
+
+    desc "import URL TARGET", "Pulls presentation assets from the web and removes remote dependencies"
+    method_option :role, :type => :string, :desc => "The presentation role for to localize to", :enum => %w{presenter viewer common}
+    def import(url, target)
+      require 'rhet-butler/resource-localizer'
+      file_manager = FileManager.new(options)
+      localizer = ResourceLocalizer.new
+
+      case options[:role]
+      when "presenter", "viewer"
+        localizer.files = file_manager.aspect_search_path(options[:role])
+      else
+        localizer.files = file_manager.all_files
+      end
+      localizer.source_uri = url
+      localizer.target_path = target
+
+      localizer.go!
     end
 
     desc "check", "Load slide set to check syntax"

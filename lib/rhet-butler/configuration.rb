@@ -48,6 +48,10 @@ module RhetButler
       @base_hash["sources"] || []
     end
 
+    def template_cache
+      @base_hash["template-cache"] || ".template-cache"
+    end
+
     def static_target
       @base_hash["static_target"] || "static"
     end

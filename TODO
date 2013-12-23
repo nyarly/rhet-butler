@@ -1,5 +1,3 @@
-Re-connect the presenter/display WS connection
-
 Fix "quit" hang - currently needs a kill9
 
 Update sockjs-ruby, and update dep from RB
@@ -7,32 +5,30 @@ Update sockjs-ruby, and update dep from RB
 let audience members download slides, code samples or other supplementary material
 
 Items/cues: Handle am-at and animation delay for multiple cued item elements?
+  Effectively needs a semaphore...
 
 Raw HTML inclusion (pre rendered/hand built slides)
-
-meta-filters (code + cues, with options)
 
 cue macros outside of RedCloth %(1)
 
 YAML highlighting for highlight.js
 
-Admin style (and templating) for next slide, simple layout
+Presentation widgets
+  Presenter slide index
+    UX needs consideration
+    Jump to slide
+  Next/previous buttons (a/o/t taps on areas of screen)
+  Timers (count up/down)
+  Follower information (where they are etc)
+  Voting?
+  Twitter?
 
-Admin slide index
-  UX needs consideration
-  Jump to slide
+Live follow widgets
+  voting
+  pause connection = let me wander
+  resume = jump to current presenters position
 
-Localize assets - e.g. download everything in the Google Web Font stylesheet
-
-next/previous/current classes on all parents of active slide
-  so that e.g. group could set different background
-
-Slide group "default slide type" setting
-
-Stylesheet overrides?
-  e.g. One off font sizes
-
-Strip out old impress stuff?
+CSS emitters: impress-inspired layouts but with CSS instead of data-*
 
 SSL support - self-signed certs, signed certs...
 
@@ -47,11 +43,6 @@ Better control messages
 Slide Queue needs to manage app state better - "is there a presenter?" "what's
 current slide/increment?"
 
-Better error for missing slide type
-
-Publish static to github pages - other destinations?
-
-
 Add Markdown slide renderer, make default
   Implication is plugable types - RedCloth and Kramdown? Why?
 
@@ -59,14 +50,3 @@ rhet-butler init <dir>
   mkdir, Load skeleton project from base_config, populate into <dir>
 
 Presentation address macro (for live follow)
-
-Live follow widgets - voting, pause connection (let me wander, resume = jump to
-current presenters position)
-
-Presentation widgets
-  Timers (count up/down)
-  Follower information (where they are etc)
-  Voting?
-  Twitter?
-
-Configuration for Tilt template options

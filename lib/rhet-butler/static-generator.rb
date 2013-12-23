@@ -1,44 +1,34 @@
-require 'valise'
-require 'rhet-butler/html-generator'
-require 'rhet-butler/arrangement'
-require 'rhet-butler/file-manager'
-require 'rhet-butler/slide-loader'
+require 'rhet-butler/web/main-app'
+require 'rhet-butler/stasis'
 
 module RhetButler
   class StaticGenerator
     def initialize(file_manager)
-      @configuration = file_manager.base_config
-      @base_valise = file_manager.slide_files
+      @file_manager = file_manager
       @target_valise = file_manager.target_valise
-      @root_slide = configuration.root_slide
-      @root_slide_template = configuration.root_slide_template
-      @template_handler = file_manager.aspect_templates(:viewer)
     end
 
-    attr_accessor :target_directory, :root_slides
-    attr_reader :configuration, :template_handler, :target_valise
+    attr_reader :target_valise
 
-    def html_document
-      html_generator = HTMLGenerator.new(configuration, template_handler)
-      html_generator.root_step = SlideLoader.new(@base_valise, configuration).load_slides
-
-      return html_generator.render(@root_slide_template)
-    end
-
-    def populate_assets
-      @base_valise.sub_set("templates").glob("assets/**").map do |stack|
-        stack.segments[1..-2] +
-          [stack.segments.last.sub(/(.*(?:\..*)?).*/){|| $1}]
-      end.uniq.each do |target_file|
-        target_valise.get(target_file).writable.first.contents =
-          template_handler.render(target_file, nil)
-      end
+    def app
+      web_app = Web::MainApp.new(@file_manager)
+      web_app.presentation_app_class = Web::MemoizedPresentationApp
+      web_app.assets_app_class = Web::MemoizedAssetsApp
+      web_app.capture_exceptions = false
+      web_app.check
+      web_app.builder.to_app
     end
 
     def go!
-      target_valise.get("presentation.html").writable.first.contents = html_document
+      app_url = "http://example.com/"
+      transform_queue = Stasis::TransformQueue.new
+      transform_queue.loader = Stasis::RackLoader.new(app_url, app)
+      transform_queue.mapping = Stasis::ResourceMapping.new
+      transform_queue.mapping.default_uri = app_url
+      transform_queue.writer = Stasis::ValiseWriter.new(@target_valise)
 
-      populate_assets
+      transform_queue.add("/")
+      transform_queue.go
     end
   end
 end

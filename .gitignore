@@ -13,3 +13,4 @@ javascript/tmp/
 .sass-cache/
 errors.err
 .cadre
+.template-cache/

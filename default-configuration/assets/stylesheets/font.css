@@ -1,0 +1,30 @@
+@font-face {
+  font-family: 'Arimo';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Arimo Bold'), local('Arimo-Bold'), url(../../themes.googleusercontent.com/static/fonts/arimo/v5/K-bXE71xZHgbUS_UdQjugvesZW2xOQ-xsNqO47m55DA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Cinzel Decorative';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Cinzel Decorative Bold'), local('CinzelDecorative-Bold'), url(../../themes.googleusercontent.com/static/fonts/cinzeldecorative/v1/pXhIVnhFtL_B9Vb1wq2F9wIh9oxuYcmvOvyh_107lQs.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Cinzel Decorative';
+  font-style: normal;
+  font-weight: 900;
+  src: local('Cinzel Decorative Black'), local('CinzelDecorative-Black'), url(../../themes.googleusercontent.com/static/fonts/cinzeldecorative/v1/pXhIVnhFtL_B9Vb1wq2F9zCUrkmwPfdnoTjOU_kXqBI.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Droid Sans Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Droid Sans Mono'), local('DroidSansMono'), url(../../themes.googleusercontent.com/static/fonts/droidsansmono/v4/ns-m2xQYezAtqh7ai59hJYW_AySPyikQrZReizgrnuw.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Slackey';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Slackey'), url(../../themes.googleusercontent.com/static/fonts/slackey/v3/bJZDrYrGx8atJRHR9DVdqg.ttf) format('truetype');
+}
