@@ -36,18 +36,21 @@ module RhetButler
 
     desc "static", "Builds a static version of the presentation"
     method_option :target, :type => :string
+    method_option :quiet, :type => :boolean, :aliases => "-q", :desc => "Suppress listing of files as their written"
     shared_options
     def static
       require 'rhet-butler/static-generator'
 
       file_manager = FileManager.new(options)
       generator = StaticGenerator.new(file_manager)
+      generator.store_log = $stderr unless options[:quiet]
 
       generator.go!
     end
 
     desc "import URL TARGET", "Pulls presentation assets from the web and removes remote dependencies"
     method_option :role, :type => :string, :desc => "The presentation role for to localize to", :enum => %w{presenter viewer common}
+    method_option :quiet, :type => :boolean, :aliases => "-q", :desc => "Suppress listing of files as their written"
     def import(url, target)
       require 'rhet-butler/resource-localizer'
       file_manager = FileManager.new(options)
@@ -61,6 +64,7 @@ module RhetButler
       end
       localizer.source_uri = url
       localizer.target_path = target
+      localizer.store_log = $stderr unless options[:quiet]
 
       localizer.go!
     end

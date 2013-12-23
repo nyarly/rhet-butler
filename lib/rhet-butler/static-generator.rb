@@ -9,6 +9,7 @@ module RhetButler
     end
 
     attr_reader :target_valise
+    attr_accessor :store_log
 
     def app
       web_app = Web::MainApp.new(@file_manager)
@@ -26,6 +27,7 @@ module RhetButler
       transform_queue.mapping = Stasis::ResourceMapping.new
       transform_queue.mapping.default_uri = app_url
       transform_queue.writer = Stasis::ValiseWriter.new(@target_valise)
+      transform_queue.writer.store_log = store_log
 
       transform_queue.add("/")
       transform_queue.go

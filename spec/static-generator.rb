@@ -22,7 +22,12 @@ describe RhetButler::StaticGenerator do
     "spec_support/tmp/test_target"
   end
 
-  before :all do
+  let :store_log do
+    require 'stringio'
+    StringIO.new
+  end
+
+  before :each do
     test_target = "spec_support/tmp/test_target"
 
     files = RhetButler::FileManager.new(
@@ -30,6 +35,7 @@ describe RhetButler::StaticGenerator do
       "static_target" => test_target)
 
     generator = RhetButler::StaticGenerator.new(files)
+    generator.store_log = store_log
 
     FileUtils::rm_rf test_target
     FileUtils::mkdir_p test_target
@@ -39,6 +45,7 @@ describe RhetButler::StaticGenerator do
 
   it "should make some files" do
     Dir.entries(test_target).should include("index.html")
+    store_log.string.lines.to_a.size.should > 3
   end
 
   #it "should copy in static javascript"
