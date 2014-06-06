@@ -22,7 +22,13 @@ module RhetButler
         @loaded_paths[file.full_path] = true
       end
 
-      return YAML.load_stream(file.contents).flatten
+      begin
+        return YAML.load_stream(file.contents).flatten
+      rescue => ex
+        puts "While processing `#{file.full_path}`"
+        puts ex.class
+        raise
+      end
     end
   end
 end

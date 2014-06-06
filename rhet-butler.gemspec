@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rhet-butler"
-  spec.version		= "0.9.0"
+  spec.version		= "0.10.0"
   author_list = {
     "Judson Lester" => 'nyarly@gmail.com'
   }
@@ -90,6 +90,9 @@ Gem::Specification.new do |spec|
     default-configuration/assets/themes.googleusercontent.com/static/fonts/arimo/v5/K-bXE71xZHgbUS_UdQjugvesZW2xOQ-xsNqO47m55DA.ttf
     default-configuration/assets/themes.googleusercontent.com/static/fonts/slackey/v3/bJZDrYrGx8atJRHR9DVdqg.ttf
     default-configuration/assets/themes.googleusercontent.com/static/fonts/droidsansmono/v4/ns-m2xQYezAtqh7ai59hJYW_AySPyikQrZReizgrnuw.ttf
+    default-configuration/assets/stylesheets/prez-local.css
+    default-configuration/assets/stylesheets/solarized.sass
+    default-configuration/assets/stylesheets/solarized.scss
     default-configuration/assets/stylesheets/google-open-sans.css
     default-configuration/assets/stylesheets/rhet.css.sass
     default-configuration/assets/stylesheets/font.css
@@ -204,12 +207,12 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency("compass-core", "~> 1.0.0.alpha")
   spec.add_dependency("compass-import-once", "~> 1.0.1")
-  spec.add_dependency("tilt", "~> 1.4")
   spec.add_dependency("thor", "> 0")
   spec.add_dependency("rack", "> 0")
   spec.add_dependency("thin", "> 0")
   spec.add_dependency("sockjs", "~> 0.2.1")
-  spec.add_dependency("valise", "~> 1.0.0")
+  spec.add_dependency("valise", "~> 1.0")
+  spec.add_dependency("tilt", "< 2.0")
 
   spec.add_dependency("nokogiri")
   spec.add_dependency("crass")

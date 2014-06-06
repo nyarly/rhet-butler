@@ -41,6 +41,9 @@ module RhetButler
       check_config_hash(@config_hash)
 
       configure
+    rescue => ex
+      puts "Processing #{coder.inspect}"
+      raise
     end
   end
 end

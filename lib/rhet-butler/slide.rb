@@ -133,6 +133,9 @@ module RhetButler
 
       value_from_config("filters") do |value|
         @content_filters = value
+        @html_classes += [*value].map do |filter|
+          filter.html_class
+        end.compact
       end
 
       value_from_config("note-filters") do |value|
@@ -148,6 +151,10 @@ module RhetButler
     attr_accessor :position, :rotation, :content_filters, :note_filters
     attr_accessor :scale
     attr_reader :template_name
+
+    def to_s
+      "Slide: #{content[0..20]}"
+    end
 
     def id_attr
       if @html_id.nil?

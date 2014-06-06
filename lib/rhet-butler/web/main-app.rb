@@ -136,12 +136,15 @@ module RhetButler
           puts "  http://#{interface[:inet_addr].to_s}:#{configuration.serve_port}/"
           puts "  http://#{interface[:inet_addr].to_s}:#{configuration.serve_port}/qr"
         end
-        EM.run do
-          thin = Rack::Handler.get("thin")
-          thin.run(builder.to_app, :Host => "0.0.0.0", :Port => configuration.serve_port) do |server|
-            server.threaded = true
-          end
-        end
+        server = Thin::Server.new(builder.to_app, configuration.serve_port)
+        server.threaded = true
+        server.start
+#        EM.run do
+#          thin = Rack::Handler.get("thin")
+#          thin.run(builder.to_app, :Host => "0.0.0.0", :Port => configuration.serve_port) do |server|
+#            server.threaded = true
+#          end
+#        end
       end
     end
   end

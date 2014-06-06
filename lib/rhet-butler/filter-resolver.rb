@@ -40,6 +40,9 @@ module RhetButler
       slide.html_classes += slide.content_filters.map do |filter|
         "note-" + filter.html_class unless filter.html_class.nil?
       end
+    rescue => ex
+      puts "While processing #{slide}:"
+      raise
     end
   end
 end

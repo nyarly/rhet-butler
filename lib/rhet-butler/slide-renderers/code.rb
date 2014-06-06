@@ -11,6 +11,10 @@ module RhetButler
         %w{class}
       end
 
+      def html_class
+        "code"
+      end
+
       def process(string)
         "<pre><code#{@config_hash ? " class='#{@config_hash['class']}'" : ""}>#{string}</code></pre>"
       end

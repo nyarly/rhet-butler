@@ -61,8 +61,14 @@ body
 
   display: none
 
+
   &.current,&.next,&.previous
-    display: block
+    display: table
+    > *
+      display: table-cell
+      vertical-align: middle
+      position: relative
+      top: -10vh
 
   &.previous
     z-index: 10
@@ -103,19 +109,34 @@ body
     max-width: 100%
     max-height: 100%
 
-  pre
-    font-family: 'Droid Sans Mono', monospace
-    text-align: initial
-    font-size: 6vh
-    line-height: 1em
-    code
+  em
+    font-style: italic
+
+  &.code
+    padding: 0
+    > pre
+      position: static
+      width: 100%
+      overflow: hidden
+      height: 100%
+      display: table
+
+
+      font-family: 'Droid Sans Mono', monospace
+      text-align: initial
+      font-size: 6vh
+      line-height: 1em
       border-radius: 10px
       +box-shadow(-2px -2px 8px 2px rgb(140,140,140) inset, 2px 2px 8px 2px rgb(40, 40, 40) inset)
 
-  li
-    opacity: 0
+      code
+        display: table-cell
+        vertical-align: middle
 
   @for $i from 1 through 10
+    li.cue-#{$i}
+      opacity: 0
+
     &.current-cue-#{$i}
       code span.cue-#{$i}
         border-radius: 5px

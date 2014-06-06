@@ -1,6 +1,14 @@
-Fix "quit" hang - currently needs a kill9
+Clean up the impress configuration stuff
+
+Improve documentation
+
+Improve parse errors
 
 Update sockjs-ruby, and update dep from RB
+
+*** 1.0 milestone ***
+
+Automate pushing static slides to gh-pages/S3/...?
 
 let audience members download slides, code samples or other supplementary material
 
@@ -9,11 +17,16 @@ Items/cues: Handle am-at and animation delay for multiple cued item elements?
 
 Raw HTML inclusion (pre rendered/hand built slides)
 
-cue macros outside of RedCloth %(1)
+cue macros outside of RedCloth %(1) (using Ultisnips for this...)
 
-YAML highlighting for highlight.js
+Sub-presentation:
+  e.g. iframe or svg
+  Node in the JS prez tree that references an embedded HTML thing
+  On parse, hooks in r-b.js into the embedded thing
+  Focus "sticks" on the 'included' node until we leave it.
 
-Presentation widgets
+Presentation toolbar
+  [prev] [slide index] [29:05] [next]
   Presenter slide index
     UX needs consideration
     Jump to slide
@@ -45,8 +58,5 @@ current slide/increment?"
 
 Add Markdown slide renderer, make default
   Implication is plugable types - RedCloth and Kramdown? Why?
-
-rhet-butler init <dir>
-  mkdir, Load skeleton project from base_config, populate into <dir>
 
 Presentation address macro (for live follow)
