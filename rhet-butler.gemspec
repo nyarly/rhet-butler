@@ -210,7 +210,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("thor", "> 0")
   spec.add_dependency("rack", "> 0")
   spec.add_dependency("thin", "> 0")
-  spec.add_dependency("sockjs", "~> 0.2.1")
+  spec.add_dependency("sockjs", "~> 0.3.4")
   spec.add_dependency("valise", "~> 1.0")
   spec.add_dependency("tilt", "< 2.0")
 
