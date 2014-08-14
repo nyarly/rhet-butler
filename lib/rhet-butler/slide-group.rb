@@ -8,7 +8,7 @@ module RhetButler
 
     class <<self
       def optional_config
-        %w[type slide_type]
+        %w[type slide_type html_class html_classes html_id]
       end
 
       def required_config
@@ -18,7 +18,7 @@ module RhetButler
 
     def setup_defaults
       @html_id = nil
-      @classes = ["group"]
+      @html_classes = ["group"]
       @slides = []
       @metadata = {}
     end
@@ -52,7 +52,7 @@ module RhetButler
     end
 
     attr_accessor :slides
-    attr_reader :metadata, :classes
+    attr_reader :metadata, :html_classes
 
     def each
       if block_given?

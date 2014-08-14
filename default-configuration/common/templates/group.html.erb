@@ -1,4 +1,4 @@
-<div <%= id_attr %> class="rhet-butler <%= classes.join(" ") %>">
+<div <%= id_attr %> class="rhet-butler <%= html_classes.join(" ") %>">
   <% each do |child| %>
     <%= render child.template_name, child %>
   <% end %>

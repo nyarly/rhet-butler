@@ -7,7 +7,11 @@ describe RhetButler::HTMLGenerator do
   let :slides do
     one = RhetButler::Slide.new
     one.content = "A test slide"
-    [ one ]
+    one.html_classes << "with-class"
+    group = RhetButler::SlideGroup.new
+    group.slides = [ one ]
+    group.html_classes << "with-class"
+    [ group ]
   end
 
   let :prez do
@@ -46,9 +50,25 @@ describe RhetButler::HTMLGenerator do
     html.should be_a(String)
   end
 
-  it "should produce good HTML" do
-    expect do
+  describe "produced HTML" do
+    subject :doc do
       Nokogiri::HTML::Document.parse(html, nil, nil, Nokogiri::XML::ParseOptions::DEFAULT_XML)
-    end.to_not raise_error
+    end
+
+    it "should include the group" do
+      doc.css('.group').should_not be_empty
+    end
+
+    it "should add the class to the group" do
+      doc.css('.group.with-class').should_not be_empty
+    end
+
+    it "should include the slide" do
+      doc.css('.slide').should_not be_empty
+    end
+
+    it "should add the class to the group" do
+      doc.css('.slide.with-class').should_not be_empty
+    end
   end
 end
