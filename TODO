@@ -4,9 +4,14 @@ Improve documentation
 
 Improve parse errors
 
-Update sockjs-ruby, and update dep from RB
+Missing assets: 404 (not 500)
+
+Skel files for init - add *anything* to the right config dirs and have it
+delivered to the new project
 
 *** 1.0 milestone ***
+
+Add transition editing help - "transition station breakpoints" + buttons/keys to manage
 
 Automate pushing static slides to gh-pages/S3/...?
 

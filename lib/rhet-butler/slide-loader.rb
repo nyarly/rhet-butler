@@ -1,7 +1,7 @@
 require 'rhet-butler/yaml-schema'
 require 'rhet-butler/file-loading'
 require 'rhet-butler/include-processor'
-require 'rhet-butler/slide-processor'
+require 'rhet-butler/slide-rendering'
 require 'rhet-butler/filter-resolver'
 
 module RhetButler
@@ -21,8 +21,8 @@ module RhetButler
       includer = Includer.new
       includer.path = @root_slide
       root_group.slides = [includer]
-
       loading = FileLoading.new(@file_set)
+
       including = IncludeProcessor.new(loading)
       including.root_group = root_group
       including.traverse
@@ -34,11 +34,16 @@ module RhetButler
       filter_resolver.default_note_filters = @default_note_filters
       filter_resolver.traverse
 
-      processor = SlideProcessor.new
-      processor.root_group = root_group
-      processor.blueprint = @blueprint
-      processor.process
+      renderer = SlideRendering.new
+      renderer.root_group = root_group
+      renderer.file_set = @file_set
+      renderer.traverse
 
+#      processor = SlideProcessor.new
+#      processor.root_group = root_group
+#      processor.blueprint = @blueprint
+#      processor.process
+#
       return root_group
     end
   end

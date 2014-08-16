@@ -15,7 +15,7 @@ module RhetButler
       transform_queue.writer.store_log = store_log
 
       target_uri = transform_queue.mapping.target_link_for(source_uri)
-      transform_queue.add_mapping(source_uri, target_uri, target_path)
+      transform_queue.add_mapping(nil, source_uri, target_uri, target_path)
       transform_queue.go
     end
   end

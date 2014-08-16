@@ -1,6 +1,8 @@
 require 'rhet-butler/stasis'
 module RhetButler
   module Stasis
+    class LoadFailed < StandardError; end
+
     class RackLoader
       def initialize(url, app)
         require 'stringio'
@@ -46,7 +48,7 @@ module RhetButler
         code, headers, body = *response
 
         unless code == 200
-          raise "Bad response from local server: #{response[0..1].inspect} body: #{response[2].to_a.join.length}"
+          raise LoadFailed, "Bad response from local server for #{source_uri}:\n#{response[0..1].inspect} body: #{response[2].to_a.join.length}"
         end
         doc.type = headers["Content-Type"]
         doc.body = body.to_a.join("")

@@ -29,7 +29,7 @@ module RhetButler
       transform_queue.writer = Stasis::ValiseWriter.new(@target_valise)
       transform_queue.writer.store_log = store_log
 
-      transform_queue.add("/")
+      transform_queue.add(nil, "/")
       transform_queue.go
     end
   end

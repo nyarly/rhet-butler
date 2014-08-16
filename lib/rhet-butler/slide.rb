@@ -53,7 +53,7 @@ module RhetButler
       @position = Position.new
       @rotation = Rotation.new
       @scale = 1.0
-      @notes = ""
+      @raw_notes = ""
       @type = nil
     end
 
@@ -86,13 +86,11 @@ module RhetButler
       end
 
       value_from_config("content") do |content|
-        raise "Slide content needs to be a string, was: #{content.inspect}" unless String === content
-        @content = content
+        @raw_content = content
       end
 
       value_from_config("notes") do |notes|
-        raise "Slide notes needs to be a string, was: #{notes.inspect}" unless String === notes
-        @notes = notes
+        @raw_notes = notes
       end
 
       value_from_config("html_id") do |value|
@@ -147,13 +145,15 @@ module RhetButler
     end
 
     attr_reader :config_hash
-    attr_accessor :content, :html_classes, :html_id, :notes
+    attr_accessor :raw_content, :raw_notes
+    attr_accessor :content, :notes
+    attr_accessor :html_classes, :html_id
     attr_accessor :position, :rotation, :content_filters, :note_filters
     attr_accessor :scale
     attr_reader :template_name
 
     def to_s
-      "Slide: #{content[0..20]}"
+      "Slide: #{content.nil? ? "R:#{raw_content[0..20]}" : content[0..20]}"
     end
 
     def id_attr

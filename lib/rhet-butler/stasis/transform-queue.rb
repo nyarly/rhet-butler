@@ -4,9 +4,9 @@ module RhetButler
     class TranformationOrder
       attr_accessor :source_link, :target_link, :storage_target
 
-      def initialize(source_link, target_link, storage_target)
-        @source_link, @target_link, @storage_target =
-          source_link, target_link, storage_target
+      def initialize(document, source_link, target_link, storage_target)
+        @document, @source_link, @target_link, @storage_target =
+          document, source_link, target_link, storage_target
       end
     end
 
@@ -33,16 +33,16 @@ module RhetButler
       end
       attr_accessor :loader, :writer, :mapping
 
-      def add(source)
+      def add(document, source)
         store_to = mapping.storage_for(source)
         link_target = mapping.target_link_for(source)
-        add_mapping(source, link_target, store_to)
+        add_mapping(document, source, link_target, store_to)
         return link_target
       end
 
-      def add_mapping(source_uri, target_uri, target_path)
+      def add_mapping(document, source_uri, target_uri, target_path)
         @hash[source_uri] = target_uri
-        @list << TranformationOrder.new(source_uri, target_uri, target_path)
+        @list << TranformationOrder.new(document, source_uri, target_uri, target_path)
       end
 
       def transform_class(type)
@@ -50,9 +50,15 @@ module RhetButler
       end
 
       def target_for(document, link)
-        link = canonicalize_uri(mapping.absolute_uri(document.source_uri).join(link))
-        @hash.fetch(link) do
-          add(link)
+        link = Addressable::URI.parse(link)
+        case link.scheme
+        when 'data'
+          link
+        else
+          link = canonicalize_uri(mapping.absolute_uri(document.source_uri).join(link))
+          @hash.fetch(link) do
+            add(document, link)
+          end
         end
       end
 
@@ -62,8 +68,12 @@ module RhetButler
         uri
       end
 
-      def load_document(source_path)
-        loader.load(canonicalize_uri(source_path))
+      def load_document(order)
+        loader.load(canonicalize_uri(order.source_link))
+      rescue LoadFailed
+        require 'pp'
+        puts "Problem loading #{order.pretty_inspect}"
+        raise
       end
 
       def write_document(target_path, document_body)
@@ -74,7 +84,7 @@ module RhetButler
         until @list.empty?
           order = @list.pop
 
-          doc = load_document(order.source_link)
+          doc = load_document(order)
           transformer = transform_class(doc.type).new
           transformer.queue = self
           transformer.document = doc
