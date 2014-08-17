@@ -127,25 +127,25 @@ module RhetButler
         end
       end
 
-      def start
+      def build_server
         configuration = @file_manager.base_config
 
-        puts "Starting server. Try one of these:"
+        Thin::Logging.log_info "Starting server. Try one of these:"
         require 'system/getifaddrs'
         System.get_all_ifaddrs.each do |interface|
-          puts "  http://#{interface[:inet_addr].to_s}:#{configuration.serve_port}/"
-          puts "  http://#{interface[:inet_addr].to_s}:#{configuration.serve_port}/qr"
+          Thin::Logging.log_info "  http://#{interface[:inet_addr].to_s}:#{configuration.serve_port}/"
+          Thin::Logging.log_info "  http://#{interface[:inet_addr].to_s}:#{configuration.serve_port}/qr"
         end
         server = Thin::Server.new(builder.to_app, configuration.serve_port)
         server.threaded = true
-        server.start
-#        EM.run do
-#          thin = Rack::Handler.get("thin")
-#          thin.run(builder.to_app, :Host => "0.0.0.0", :Port => configuration.serve_port) do |server|
-#            server.threaded = true
-#          end
-#        end
+        server
       end
+
+      #:nocov:
+      def start
+        build_server.start
+      end
+      #:nocov:
     end
   end
 end

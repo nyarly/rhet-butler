@@ -39,6 +39,8 @@ Gem::Specification.new do |spec|
     lib/rhet-butler/file-loading.rb
     lib/rhet-butler/filter-resolver.rb
     lib/rhet-butler/include-processor.rb
+    lib/rhet-butler/slide-contents.rb
+    lib/rhet-butler/slide-contents/embed.rb
     lib/rhet-butler/slide-renderer.rb
     lib/rhet-butler/slide-renderers/code.rb
     lib/rhet-butler/slide-renderers/cues.rb

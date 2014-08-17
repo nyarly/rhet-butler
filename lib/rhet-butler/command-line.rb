@@ -10,6 +10,7 @@ module RhetButler
       method_option :root_slide, :type => :string
     end
 
+    #:nocov:
     desc "init", "Create example skeleton files to get started with"
     def init
       require 'fileutils'
@@ -113,5 +114,6 @@ module RhetButler
       app.check
       app.start
     end
+    #:nocov:
   end
 end
