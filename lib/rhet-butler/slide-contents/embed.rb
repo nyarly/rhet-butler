@@ -10,6 +10,10 @@ module RhetButler
         %w{source}
       end
 
+      def self.optional_config
+        %w{filters}
+      end
+
       def positional_options
         %w{source}
       end

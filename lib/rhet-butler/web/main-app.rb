@@ -77,7 +77,7 @@ module RhetButler
 
       def builder
         sockjs_options = {
-          :sockjs_url => "/assets/javascript/sockjs-0.2.1.js",
+          :sockjs_url => "/assets/javascript/sockjs-0.3.4.js",
           :queue => SlideMessageQueue.new
         }
 
