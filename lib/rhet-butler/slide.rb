@@ -8,7 +8,6 @@ module RhetButler
       def optional_config
         %w[
           title html_id html_classes html_class
-          pos_x pos_y pos_z rot_x rot_y rot_z scale
           notes filters note_filters
         ]
       end
@@ -18,41 +17,10 @@ module RhetButler
       end
     end
 
-    class Position
-      def initialize
-        @x = 0
-        @y = 0
-        @z = 0
-      end
-
-      attr_accessor :x, :y, :z
-
-      def to_attrs
-        "data-x='#@x' data-y='#@y' data-z='#@z'"
-      end
-    end
-
-    class Rotation
-      def initialize
-        @x = 0
-        @y = 0
-        @z = 0
-      end
-
-      attr_accessor :x, :y, :z
-
-      def to_attrs
-        "data-rotate-x='#@x' data-rotate-y='#@y' data-rotate-z='#@z'"
-      end
-    end
-
     def setup_defaults
       @template_name = "slide.html"
       @html_classes = ["slide"]
       @html_id = nil
-      @position = Position.new
-      @rotation = Rotation.new
-      @scale = 1.0
       @raw_notes = ""
       @type = nil
     end
@@ -63,8 +31,6 @@ module RhetButler
       @content = source.content.dup unless source.content.nil?
       @notes = source.notes.dup unless source.notes.nil?
       @html_id = source.html_id.dup unless source.html_id.nil?
-      @position = source.position.dup unless source.position.nil?
-      @rotation = source.rotation.dup unless source.rotation.nil?
       @html_classes = source.html_classes.dup unless source.html_classes.nil?
     end
 
@@ -76,7 +42,7 @@ module RhetButler
       when :scalar
         { 'content' => coder.scalar.to_s }
       when :seq
-        warn "Got a sequence for a slide - not sure how to parse that.  Skipping"
+        { 'content' => coder.seq.to_a }
       end
     end
 
@@ -105,30 +71,6 @@ module RhetButler
         @html_classes << value
       end
 
-      value_from_config("pos_x") do |value|
-        @position.x = value
-      end
-      value_from_config("pos_y") do |value|
-        @position.y = value
-      end
-      value_from_config("pos_z") do |value|
-        @position.z = value
-      end
-
-      value_from_config("rot_x") do |value|
-        @rotation.x = value
-      end
-      value_from_config("rot_y") do |value|
-        @rotation.y = value
-      end
-      value_from_config("rot_z") do |value|
-        @rotation.z = value
-      end
-
-      value_from_config("scale") do |value|
-        @scale = value
-      end
-
       value_from_config("filters") do |value|
         @content_filters = value
         @html_classes += [*value].map do |filter|
@@ -148,8 +90,7 @@ module RhetButler
     attr_accessor :raw_content, :raw_notes
     attr_accessor :content, :notes
     attr_accessor :html_classes, :html_id
-    attr_accessor :position, :rotation, :content_filters, :note_filters
-    attr_accessor :scale
+    attr_accessor :content_filters, :note_filters
     attr_reader :template_name
 
     def to_s
@@ -166,16 +107,6 @@ module RhetButler
 
     def classes
       @html_classes.join(" ")
-    end
-
-    def impress_attrs
-      attrs = []
-
-      attrs << @position.to_attrs
-      attrs << @rotation.to_attrs
-      attrs << "data-scale='#{"%0.2f" % scale}'"
-
-      attrs.join(" ")
     end
   end
 end

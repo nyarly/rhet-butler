@@ -1,12 +1,13 @@
 source 'https://rubygems.org'
 
 group :deploy do
-  gem 'compass', "~> 1.0.alpha"
-  gem 'corundum', :path => "../corundum"
+  gem 'compass', "~> 1.0"
+  gem 'corundum'
 end
 
 group :test, :development do
   gem "cadre"
+  gem 'perftools.rb'
 end
 
 group :test do

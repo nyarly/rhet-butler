@@ -205,7 +205,7 @@ Gem::Specification.new do |spec|
 
   spec.executables = %w{rhet-butler}
 
-  spec.add_dependency("compass-core", "~> 1.0.0.alpha")
+  spec.add_dependency("compass-core", "~> 1.0.0")
   spec.add_dependency("compass-import-once", "~> 1.0.1")
   spec.add_dependency("thor", "> 0")
   spec.add_dependency("rack", "> 0")

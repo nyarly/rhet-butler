@@ -2,7 +2,7 @@ require 'yaml'
 require 'rhet-butler/slide'
 require 'rhet-butler/slide-group'
 require 'rhet-butler/slide-includer'
-require 'rhet-butler/layout-rule'
+require 'rhet-butler/slide-contents'
 
 #YAML.add_tag('!slide', RhetButler::Slide)
 #YAML.add_tag('!group', RhetButler::SlideGroup)

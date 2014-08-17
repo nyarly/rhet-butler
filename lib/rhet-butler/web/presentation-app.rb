@@ -25,8 +25,12 @@ module RhetButler
         @file_manager.slide_files
       end
 
+      def assets_valise
+        @file_manager.base_assets(configuration.template_cache)
+      end
+
       def root_step
-        slide_loader = SlideLoader.new(slides_valise, configuration)
+        slide_loader = SlideLoader.new(slides_valise, assets_valise, configuration)
         slide_loader.load_slides
       end
 

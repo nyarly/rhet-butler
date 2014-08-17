@@ -1,23 +1,29 @@
 require 'nokogiri'
 
 module RhetButler
-  module SlideContents
+  class SlideContents
     class Embed < SlideContents
-      register "cues"
+      register "embed"
+      register "embedded"
 
-      def required_config
+      def self.required_config
         %w{source}
       end
 
-      def positional_config
+      def positional_options
         %w{source}
       end
 
       attr_reader :source
+      attr_accessor :filters
 
       def configure
         value_from_config("source") do |source|
           @source = source
+        end
+
+        value_from_config("filters") do |value|
+          @filters = value
         end
       end
 

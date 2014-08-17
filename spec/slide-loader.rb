@@ -14,12 +14,16 @@ describe RhetButler::SlideLoader do
     end
   end
 
+  let :assets do
+    files.templates("assets")
+  end
+
   let :configuration do
     RhetButler::Configuration.new(files)
   end
 
   let :loader do
-    described_class.new(files, configuration)
+    described_class.new(files, assets, configuration)
   end
 
   let :slides do
@@ -34,6 +38,12 @@ describe RhetButler::SlideLoader do
   it "should have the included slide" do
     slides.find do |slide|
       slide.content =~ /included/ if slide.respond_to? :content
+    end.should_not be_nil
+  end
+
+  it "should have the embedded text" do
+    slides.find do |slide|
+      slide.content =~ /which I embedded/ if slide.respond_to? :content
     end.should_not be_nil
   end
 

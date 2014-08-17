@@ -36,11 +36,20 @@ module RhetButler
       slide.html_classes += slide.content_filters.map do |filter|
         filter.html_class
       end
+
       slide.note_filters    = get_filters(slide.note_filters || default_note_filters)
       slide.html_classes += slide.content_filters.map do |filter|
         "note-" + filter.html_class unless filter.html_class.nil?
       end
-    rescue => ex
+
+      [ *slide.raw_content ].each do |content| #XXX This is how all content filtering should work
+        case content
+        when SlideContents
+          content.filters = get_filters(content.filters || default_content_filters)
+        end
+      end
+
+    rescue
       puts "While processing #{slide}:"
       raise
     end

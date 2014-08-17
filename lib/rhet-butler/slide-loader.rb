@@ -6,8 +6,9 @@ require 'rhet-butler/filter-resolver'
 
 module RhetButler
   class SlideLoader
-    def initialize(slide_files, configuration)
+    def initialize(slide_files, asset_files, configuration)
       @file_set = slide_files
+      @asset_set = asset_files
       @named_filter_lists = configuration.named_filter_lists
       @default_content_filters = configuration.default_content_filters
       @default_note_filters = configuration.default_note_filters
@@ -36,14 +37,9 @@ module RhetButler
 
       renderer = SlideRendering.new
       renderer.root_group = root_group
-      renderer.file_set = @file_set
+      renderer.file_set = @asset_set
       renderer.traverse
 
-#      processor = SlideProcessor.new
-#      processor.root_group = root_group
-#      processor.blueprint = @blueprint
-#      processor.process
-#
       return root_group
     end
   end

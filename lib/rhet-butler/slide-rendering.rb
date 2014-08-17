@@ -23,12 +23,10 @@ module RhetButler
         end
       when Array
         content.map{|item| filter_text(item, filters)}.join("")
+      when SlideContents
+        filter_text(content.content(file_set), content.filters)
       else
-        if content.respond_to?(:content)
-          content.content(file_set)
-        else
-          raise "Don't know how to filter slide content like #{content.inspect}"
-        end
+        raise "Don't know how to filter slide content like #{content.inspect}"
       end
     end
   end

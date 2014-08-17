@@ -1,10 +1,21 @@
 ---
+named-filters:
+  normal:
+    - !textile
+    - !cues
+  code:
+    - !code
+    - !textile
+    - !cues
+
+template-cache: .template-cache
+
+default-content-filters:
+  normal
+
+default-note-filters:
+  normal
+
+arrangement: horizontal
 impress-config:
   transition-duration: 200
-blueprint:
-  - !layout-rule
-    - default
-    - [ linear, [ 1000, 0 ]]
-  - !layout-rule
-    - { type: aside }
-    - [ digress-linear, [ 0, 1000 ]]
