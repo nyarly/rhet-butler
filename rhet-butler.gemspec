@@ -155,6 +155,7 @@ Gem::Specification.new do |spec|
     default-configuration/assets/stylesheets/setup.css
     default-configuration/assets/stylesheets/presentation.css
     default-configuration/assets/javascript/sockjs-0.2.1.js
+    default-configuration/assets/javascript/sockjs-0.3.4.js
     default-configuration/assets/javascript/keyboard-nav.js
     default-configuration/assets/javascript/highlight.pack.js
     default-configuration/assets/javascript/highlight.js/LICENSE
