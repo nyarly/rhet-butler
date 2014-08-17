@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rhet-butler"
-  spec.version		= "0.11.1"
+  spec.version		= "0.12.0"
   author_list = {
     "Judson Lester" => 'nyarly@gmail.com'
   }
@@ -30,20 +30,15 @@ Gem::Specification.new do |spec|
     lib/rhet-butler/command-line.rb
     lib/rhet-butler/html-generator.rb
     lib/rhet-butler/slide-group.rb
-    lib/rhet-butler/arrangement.rb
     lib/rhet-butler/yaml-schema.rb
     lib/rhet-butler/slide-loader.rb
     lib/rhet-butler/slide.rb
     lib/rhet-butler/slide-includer.rb
     lib/rhet-butler/static-generator.rb
     lib/rhet-butler/yaml-type.rb
-    lib/rhet-butler/layout-rule.rb
-    lib/rhet-butler/arrangement-finder.rb
     lib/rhet-butler/file-loading.rb
     lib/rhet-butler/filter-resolver.rb
     lib/rhet-butler/include-processor.rb
-    lib/rhet-butler/slide-arranger.rb
-    lib/rhet-butler/slide-processor.rb
     lib/rhet-butler/slide-renderer.rb
     lib/rhet-butler/slide-renderers/code.rb
     lib/rhet-butler/slide-renderers/cues.rb
@@ -64,11 +59,9 @@ Gem::Specification.new do |spec|
     lib/rhet-butler/stasis/writer.rb
     bin/rhet-butler
     spec/slide-loader.rb
-    spec/slide-processing.rb
     spec/html-generation.rb
     spec/rhet-butler.rb
     spec/presentation-view.rb
-    spec/arrangements.rb
     default-configuration/assets/favicon.ico
     default-configuration/assets/apple-touch-icon-precomposed.png
     default-configuration/assets/apple-touch-icon.png
