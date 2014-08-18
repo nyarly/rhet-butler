@@ -48,7 +48,6 @@ module RhetButler
           content.filters = get_filters(content.filters || default_content_filters)
         end
       end
-
     rescue
       puts "While processing #{slide}:"
       raise

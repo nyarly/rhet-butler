@@ -13,6 +13,9 @@ module RhetButler
       slide.notes = filter_text(slide.raw_notes, slide.note_filters)
       raise "Slide content needs to be a string, was: #{slide.content.inspect}" unless String === slide.content
       raise "Slide notes needs to be a string, was: #{slide.notes.inspect}" unless String === slide.notes
+    rescue
+      puts "While processing #{slide}:"
+      raise
     end
 
     def filter_text(content, filters)
