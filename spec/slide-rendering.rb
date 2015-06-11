@@ -45,4 +45,14 @@ describe RhetButler::SlideRenderer do
   it "should apply rendering to all slides" do
     result.first.content.should =~ /<p>/
   end
+
+  describe "with markdown" do
+    let :default_content_filters do
+      [RhetButler::SlideRenderers::Markdown.new]
+    end
+
+    it "should apply rendering to all slides" do
+      result.first.content.should =~ /<p>/
+    end
+  end
 end

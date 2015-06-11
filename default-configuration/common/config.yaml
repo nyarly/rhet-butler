@@ -1,11 +1,11 @@
 ---
 named-filters:
   normal:
-    - !textile
+    - !markdown
     - !cues
   code:
     - !code
-    - !textile
+    - !markdown
     - !cues
 
 template-cache: .template-cache

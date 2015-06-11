@@ -39,4 +39,5 @@ end
 
 require 'rhet-butler/slide-renderers/code'
 require 'rhet-butler/slide-renderers/textile'
+require 'rhet-butler/slide-renderers/markdown'
 require 'rhet-butler/slide-renderers/cues'

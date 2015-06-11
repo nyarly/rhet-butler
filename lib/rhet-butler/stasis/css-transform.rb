@@ -28,6 +28,7 @@ module RhetButler
               [:block, :value].each do |key|
                 children = children[key]
                 break if children.nil?
+                break if children.is_a? Array
               end
               list += url_nodes(children)
             end

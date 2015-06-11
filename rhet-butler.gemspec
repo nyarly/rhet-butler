@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name		= "rhet-butler"
-  spec.version		= "0.12.2"
+  spec.version		= "0.13.0"
   author_list = {
     "Judson Lester" => 'nyarly@gmail.com'
   }
@@ -45,6 +45,7 @@ Gem::Specification.new do |spec|
     lib/rhet-butler/slide-renderers/code.rb
     lib/rhet-butler/slide-renderers/cues.rb
     lib/rhet-butler/slide-renderers/textile.rb
+    lib/rhet-butler/slide-renderers/markdown.rb
     lib/rhet-butler/slide-rendering.rb
     lib/rhet-butler/slide-traverser.rb
     lib/rhet-butler/resource-localizer.rb
@@ -90,7 +91,7 @@ Gem::Specification.new do |spec|
     default-configuration/assets/stylesheets/solarized.scss
     default-configuration/assets/stylesheets/google-open-sans.css
     default-configuration/assets/stylesheets/rhet.css.sass
-    default-configuration/assets/stylesheets/font.css
+    default-configuration/assets/stylesheets/font.sass
     default-configuration/assets/stylesheets/presenter/rhet.css.sass
     default-configuration/assets/stylesheets/_animate-helpers.scss
     default-configuration/assets/stylesheets/animate/fade/_fadeIn.sass
@@ -217,6 +218,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("rqrcode", "~> 0.4.2")
 
   spec.add_dependency("RedCloth", "~> 4.2.9")
+  spec.add_dependency("kramdown", "~> 1.7.0")
 
   #spec.post_install_message = "Thanks for installing my gem!"
 end

@@ -1,4 +1,4 @@
-Clean up the impress configuration stuff
+Clean up the (obsolete) impress configuration stuff
 
 Improve documentation
 
@@ -12,6 +12,8 @@ delivered to the new project
 *** 1.0 milestone ***
 
 Add transition editing help - "transition station breakpoints" + buttons/keys to manage
+
+Live-reload support for authoring
 
 Automate pushing static slides to gh-pages/S3/...?
 
@@ -60,8 +62,5 @@ Better control messages
 
 Slide Queue needs to manage app state better - "is there a presenter?" "what's
 current slide/increment?"
-
-Add Markdown slide renderer, make default
-  Implication is plugable types - RedCloth and Kramdown? Why?
 
 Presentation address macro (for live follow)
