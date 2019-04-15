@@ -104,7 +104,6 @@ Gem::Specification.new do |spec|
     default-configuration/assets/stylesheets/animate/attention/_pulse.scss
     default-configuration/assets/stylesheets/animate/attention/_wobble.scss
     default-configuration/assets/stylesheets/animate/attention/_swing.scss
-    default-configuration/assets/stylesheets/animate/attention/._pulse.scss.swp
     default-configuration/assets/stylesheets/animate/attention/_shake.scss
     default-configuration/assets/stylesheets/animate/attention/_wiggle.scss
     default-configuration/assets/stylesheets/animate/attention/_flash.scss
