@@ -7,7 +7,7 @@ end
 
 group :test, :development do
   gem "cadre"
-  gem 'perftools.rb'
+  # gem 'perftools.rb' # doesn't work on Ruby 2.5?
 end
 
 group :test do
@@ -18,4 +18,4 @@ group :test do
   gem 'webmock'
 end
 
-gemspec
+gemspec name: 'rhet-butler'

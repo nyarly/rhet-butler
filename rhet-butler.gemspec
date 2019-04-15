@@ -194,7 +194,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = %w[lib/]
   spec.rubygems_version = "1.3.5"
 
-  spec.has_rdoc		= true
   spec.extra_rdoc_files = Dir.glob("doc/**/*")
   spec.rdoc_options	= %w{--inline-source }
   spec.rdoc_options	+= %w{--main doc/README }
@@ -217,7 +216,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("system-getifaddrs", "~> 0.2.0")
   spec.add_dependency("rqrcode", "~> 0.4.2")
 
-  spec.add_dependency("RedCloth", "~> 4.2.9")
+  spec.add_dependency("RedCloth", "~> 4.3.0")
   spec.add_dependency("kramdown", "~> 1.7.0")
 
   #spec.post_install_message = "Thanks for installing my gem!"
