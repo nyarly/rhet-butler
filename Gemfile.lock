@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rhet-butler (0.13.0)
+    rhet-butler (0.14.0)
       RedCloth (~> 4.3.0)
       addressable
       compass-core (~> 1.0.0)
@@ -43,7 +43,7 @@ GEM
       sass (>= 3.3.0, < 3.5)
     compass-import-once (1.0.5)
       sass (>= 3.2, < 3.5)
-    corundum (0.6.2)
+    corundum (0.6.3)
       bundler (~> 1.10)
       caliph (~> 0.3)
       mattock (~> 0.9)
@@ -143,7 +143,7 @@ PLATFORMS
 DEPENDENCIES
   cadre
   compass (~> 1.0)
-  corundum
+  corundum (= 0.6.3)
   fuubar
   nokogiri
   rack-test
@@ -152,4 +152,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.17.2
+   1.16.3

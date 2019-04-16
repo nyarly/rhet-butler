@@ -81,11 +81,6 @@ Gem::Specification.new do |spec|
     default-configuration/assets/fonts/opensans/v6/xjAJXh38I15wypJXxuGMBp0EAVxt0G0biEntp43Qt6E.ttf
     default-configuration/assets/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3aCWcynf_cDxXwCLxiixG1c.ttf
     default-configuration/assets/fonts/opensans/v6/PRmiXeptR36kaC0GEAetxi8cqLH4MEiSE0ROcU-qHOA.ttf
-    default-configuration/assets/themes.googleusercontent.com/static/fonts/cinzeldecorative/v1/pXhIVnhFtL_B9Vb1wq2F9wIh9oxuYcmvOvyh_107lQs.ttf
-    default-configuration/assets/themes.googleusercontent.com/static/fonts/cinzeldecorative/v1/pXhIVnhFtL_B9Vb1wq2F9zCUrkmwPfdnoTjOU_kXqBI.ttf
-    default-configuration/assets/themes.googleusercontent.com/static/fonts/arimo/v5/K-bXE71xZHgbUS_UdQjugvesZW2xOQ-xsNqO47m55DA.ttf
-    default-configuration/assets/themes.googleusercontent.com/static/fonts/slackey/v3/bJZDrYrGx8atJRHR9DVdqg.ttf
-    default-configuration/assets/themes.googleusercontent.com/static/fonts/droidsansmono/v4/ns-m2xQYezAtqh7ai59hJYW_AySPyikQrZReizgrnuw.ttf
     default-configuration/assets/stylesheets/prez-local.css
     default-configuration/assets/stylesheets/solarized.sass
     default-configuration/assets/stylesheets/solarized.scss
@@ -179,7 +174,6 @@ Gem::Specification.new do |spec|
     default-configuration/common/templates/stylesheets.html.erb
     default-configuration/common/templates/presentation.html.erb
     default-configuration/common/templates/presenter-qr.html.erb
-    default-configuration/skels/slides.yaml
     default-configuration/skels/config.yaml
     default-configuration/viewer/config.yaml
     default-configuration/viewer/templates/slide-notes.html.erb
