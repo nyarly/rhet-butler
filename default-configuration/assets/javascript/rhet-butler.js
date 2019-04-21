@@ -1,6 +1,16 @@
+/*
+ * RhetButler presentation Javascript (version <%= version %>
+ * Build date: <%= build_date %>
+ *
+ * Copyright <%= copyright_year %> Judson Lester (@judsonlester)
+ *
+ * Inspired by impress.js by
+ *   Bartek Szopka (@bartaz)
+ *
+ * Released under the MIT and GPL Licenses.
+ */
 
 var utils = rhetButler;
-
 // `arraify` takes an array-like object and turns it into real Array
 // to make all the Array.prototype goodness available.
 utils.arrayify = function ( a ) {

@@ -6,25 +6,20 @@ module.exports = function(config) {
   var settings = {};
 
   settings.files=[
-    'node_modules/closure-library/closure/goog/base.js',
     'javascript/test/**/*.js',
     'javascript/test_support/**/*.html',
     'javascript/test_support/**/*.js',
     {pattern: 'javascript/src/**/*.js', included: false},
-    {pattern: 'node_modules/closure-library/closure/goog/deps.js', included: false, served: false}
   ];
 
   // base path, that will be used to resolve files and exclude
   settings.basePath = '';
 
   // frameworks to use
-  settings.frameworks = ['jasmine', 'sinon', 'closure'];
+  settings.frameworks = ['jasmine', 'sinon'];
 
   settings.preprocessors = {
     'javascript/test_support/**/*.html': ['html2js'],
-    'javascript/test/*.js': ['closure', 'closure-iit'],
-    'javascript/src/**/*.js': ['closure'],
-    'node_modules/closure-library/closure/goog/deps.js': ['closure-deps']
   };
 
   // list of files to exclude

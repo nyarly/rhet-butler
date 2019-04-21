@@ -1,6 +1,9 @@
 # vim: set ft=ruby :
 require 'corundum/tasklibs'
 require 'closure-tasklib'
+require 'jasmine'
+
+load 'jasmine/tasks/jasmine.rake'
 
 module Corundum
   Corundum::register_project(__FILE__)
