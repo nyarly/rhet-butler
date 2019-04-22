@@ -1,44 +1,41 @@
-goog.provide('rhetButler.Steps.Root');
-goog.require('rhetButler.Step');
-rhetButler.Steps.Root = function(element, indexes){
-  this.setup(element, indexes);
-};
-rhetButler.Steps.Root.prototype = new rhetButler.Step;
+import Step from "../step.js";
 
-;(function(){
-    var root = rhetButler.Steps.Root.prototype;
+export default class extends Step {
+  constructor(element, indexes){
+    super(element, indexes)
+  }
 
-    root.propagateDescendant = function(newChild){
-    };
+  propagateDescendant(newChild){
+  }
 
-    root.addNextStep = function(step){
-      step.addPrevRoot(this);
-    };
+  addNextStep(step){
+    step.addPrevRoot(this);
+  }
 
-    root.addPrevStep = function(step){
-      step.addNextRoot(this);
-    };
+  addPrevStep(step){
+    step.addNextRoot(this);
+  }
 
-    root.beginTransition = function(stationList){
-      this.addClass("moving");
-      this.addClass(stationList.startElemId());
-      this.addClass(stationList.endElemId());
-      stationList.direction.forEach(function(dirPart){
-          this.addClass(dirPart);
-        }, this);
-    };
+  beginTransition(stationList){
+    this.addClass("moving");
+    this.addClass(stationList.startElemId());
+    this.addClass(stationList.endElemId());
+    stationList.direction.forEach(function(dirPart){
+        this.addClass(dirPart);
+      }, this);
+  }
 
-    root.completeTransition = function(stationList){
-      this.removeClass("moving");
-      this.removeClass(stationList.startElemId());
-      this.removeClass(stationList.endElemId());
-      stationList.direction.forEach(function(dirPart){
-          this.removeClass(dirPart);
-        }, this);
-    };
+  completeTransition(stationList){
+    this.removeClass("moving");
+    this.removeClass(stationList.startElemId());
+    this.removeClass(stationList.endElemId());
+    stationList.direction.forEach(function(dirPart){
+        this.removeClass(dirPart);
+      }, this);
+  }
 
-    root.beginArrival = function(){ };
-    root.completeArrival = function(){ };
-    root.beginDeparture = function(){ };
-    root.completeDeparture = function(){ };
-  })();
+  beginArrival(){ }
+  completeArrival(){ }
+  beginDeparture(){ }
+  completeDeparture(){ }
+}

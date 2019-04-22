@@ -1,36 +1,33 @@
-goog.provide('rhetButler.TransitionStation');
-goog.require('rhetButler');
+import {pfx} from '../utils.js';
 
-rhetButler.TransitionStation = function(step){
-  this.step = step;
-  this.checkIn = false;
-  this.eventListener = null;
-};
+var motionStyles = [
+  "transition-duration",
+  "animation-name",
+  "animation-iteration-count",
+  "animation-play-state"
+];
+
+var motionCompleteEvents = []
 
 ;(function(){
-  var motionStyles = [
-    "transition-duration",
-    "animation-name",
-    "animation-iteration-count",
-    "animation-play-state"
-  ];
-
-  var motionCompleteEvents = []
-
-  ;(function(){
     var events = ["TransitionEnd", "AnimationEnd"];
     var prefixes = ["webkit", "o", "MS", ""];
     prefixes.forEach(function(prefix){
-      events.forEach(function(event){
-        motionCompleteEvents.push(prefix + event);
-        motionCompleteEvents.push(prefix + event.toLowerCase());
+        events.forEach(function(event){
+            motionCompleteEvents.push(prefix + event);
+            motionCompleteEvents.push(prefix + event.toLowerCase());
+          });
       });
-    });
   })();
 
-  var station = rhetButler.TransitionStation.prototype;
+export default class {
+  constructor(step){
+    this.step = step;
+    this.checkIn = false;
+    this.eventListener = null;
+  }
 
-  station.visit = function(){
+  visit(){
     var beforeStyles, afterStyles;
 
     if(this.checkIn){ return true; }
@@ -52,43 +49,43 @@ rhetButler.TransitionStation = function(step){
     if(this.checkIn){ this.step.removeClass("am-at"); };
 
     return this.checkIn;
-  };
+  }
 
-  station.setArriveHandler = function(funk){
+  setArriveHandler(funk){
     this.removeListener();
     this.eventListener = funk;
     this.attachListener();
-  };
+  }
 
-  station.visited = function(){
+  visited(){
     this.step.removeClass("to-come");
     this.step.addClass("has-gone");
     this.checkIn = true;
-  };
+  }
 
-  station.prepare = function(){
+  prepare(){
     this.step.addClass("to-come");
     this.attachListener();
-  };
+  }
 
-  station.complete = function(){
+  complete(){
     this.step.removeClass("to-come");
     this.step.removeClass("has-gone");
     this.step.removeClass("am-at");
     this.removeListener();
-  };
+  }
 
 
-  station.getMotionStyles = function(){
+  getMotionStyles(){
     var style = window.getComputedStyle(document.getElementById(this.step.element.id));
     var result = {}
     motionStyles.map(function(styleName){
-      result[styleName] = style.getPropertyValue(rhetButler.pfx(styleName));
-    });
+        result[styleName] = style.getPropertyValue(pfx(styleName));
+      });
     return result;
   }
 
-  station.elementHasMotion = function(){
+  elementHasMotion(){
     var style = this.getMotionStyles();
     var durations = []
     var states, counts;
@@ -105,32 +102,32 @@ rhetButler.TransitionStation = function(step){
     };
 
     states = style["animation-play-state"].split(/\s*,\s*/);
-counts = style["animation-iteration-count"].split(/\s*,\s*/);
+    counts = style["animation-iteration-count"].split(/\s*,\s*/);
 
-if(states.length < counts.length){
-  states = states.concat(states);
-} else {
-  counts = counts.concat(counts);
+    if(states.length < counts.length){
+      states = states.concat(states);
+    } else {
+      counts = counts.concat(counts);
+    }
+
+    return (states.some(function(state, index){
+          return (state != "paused" && counts[index] != "infinite")
+        }));
+  }
+
+  attachListener(){
+    if(this.eventListener){
+      motionCompleteEvents.forEach(function(eventName){
+          this.step.element.addEventListener(eventName, this.eventListener, true);
+        }, this)
+    }
+  }
+
+  removeListener(){
+    if(this.eventListener){
+      motionCompleteEvents.forEach(function(eventName){
+          this.step.element.removeEventListener(eventName, this.eventListener, true);
+        }, this)
+    }
+  }
 }
-
-return (states.some(function(state, index){
-  return (state != "paused" && counts[index] != "infinite")
-}));
-  };
-
-  station.attachListener = function(){
-    if(this.eventListener){
-      motionCompleteEvents.forEach(function(eventName){
-        this.step.element.addEventListener(eventName, this.eventListener, true);
-      }, this)
-    }
-  };
-
-  station.removeListener = function(){
-    if(this.eventListener){
-      motionCompleteEvents.forEach(function(eventName){
-        this.step.element.removeEventListener(eventName, this.eventListener, true);
-      }, this)
-    }
-  };
-})();

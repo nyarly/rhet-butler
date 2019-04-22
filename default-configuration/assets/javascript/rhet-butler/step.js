@@ -3,210 +3,195 @@
 //    - "which step is <motion> from you?"
 //    - "where is <step> in relation to you?"
 //
-goog.provide('rhetButler.Step');
-goog.require('rhetButler');
-rhetButler.Step = function(element){
-  this.element = element;
-  this.groups = [];
-  this.steps = [];
-};
+//import Slide from './steps/slide.js';
 
-;(function(){
-    var step = rhetButler.Step.prototype;
-    step.toString = function() {
-      return "A Step " + this.element.id
+export default class {
+  constructor(element, indexes){
+    this.element = element;
+    this.groups = [];
+    this.steps = [];
+
+    this.children = [];
+    this.indexes = {};
+    this.childrenById = {};
+
+    for(let field in indexes) {
+      this.indexes[field] = indexes[field];
     };
 
-    step.setup = function(element, indexes){
-      this.element = element;
-      this.children = [];
-      this.indexes = {};
-      this.childrenById = {};
+    this.element.classList.add("future");
 
-      for(field in indexes) {
-        this.indexes[field] = indexes[field];
-      };
+    this.firstSlide = null;
+    this.lastSlide = null;
 
-      this.element.classList.add("future");
+    this.prevSlide = null;
+    this.nextSlide = null;
 
-      this.firstSlide = null;
-      this.lastSlide = null;
+    this.firstItem = null;
+    this.lastItem = null;
 
-      this.prevSlide = null;
-      this.nextSlide = null;
+    this.prevItem = null;
+    this.nextItem = null;
+  }
 
-      this.firstItem = null;
-      this.lastItem = null;
+  toString() {
+    return "A Step " + this.element.id
+  }
 
-      this.prevItem = null;
-      this.nextItem = null;
-    };
+  treeFinished() {
+  }
 
-    step.treeFinished = function() {
-    };
+  addClass(name){
+    this.element.classList.add(name);
+  }
 
-    step.addClass = function(name){
-      this.element.classList.add(name);
-    };
-
-    step.removeClass = function(name){
-      if(name instanceof RegExp){
-        Array.prototype.forEach.call(this.element.classList, function(klass){
+  removeClass(name){
+    if(name instanceof RegExp){
+      Array.prototype.forEach.call(this.element.classList, function(klass){
           if(name.test(klass)){
             this.element.classList.remove(klass);
           }
         }, this)
-      } else {
-        this.element.classList.remove(name);
-      }
-    };
+    } else {
+      this.element.classList.remove(name);
+    }
+  }
 
-    step.hasClass = function(name){
-      return this.element.classList.contains(name);
-    };
+  hasClass(name){
+    return this.element.classList.contains(name);
+  }
 
-    step.beginDeparture = function(){
-      this.addClass("previous");
-      this.removeClass("current");
-      this.parent.beginDeparture();
-    };
+  beginDeparture(){
+    this.addClass("previous");
+    this.removeClass("current");
+    this.parent.beginDeparture();
+  }
 
-    step.completeDeparture = function(){
-      this.removeClass("previous");
+  completeDeparture(){
+    this.removeClass("previous");
 
-      this.removeClass("present");
-      this.removeClass("future");
-      this.removeClass("current");
-      this.addClass("past");
-      this.parent.completeDeparture();
-    };
+    this.removeClass("present");
+    this.removeClass("future");
+    this.removeClass("current");
+    this.addClass("past");
+    this.parent.completeDeparture();
+  }
 
-    step.beginArrival = function(){
-      this.addClass("next");
-      this.parent.beginArrival();
-    };
+  beginArrival(){
+    this.addClass("next");
+    this.parent.beginArrival();
+  }
 
-    step.completeArrival = function(){
-      this.removeClass("next");
-      this.addClass("current");
+  completeArrival(){
+    this.removeClass("next");
+    this.addClass("current");
 
-      this.removeClass("future");
-      this.removeClass("past");
-      this.addClass("present");
-      this.parent.completeArrival();
-    };
+    this.removeClass("future");
+    this.removeClass("past");
+    this.addClass("present");
+    this.parent.completeArrival();
+  }
 
-    step.cancelArrival = function(){
-      this.removeClass("next");
-    };
+  cancelArrival(){
+    this.removeClass("next");
+  }
 
-    step.eachStep = function(dothis){
-      dothis(this);
-      this.children.forEach(function(step){
-          step.eachStep(dothis);
-        });
-    };
+  eachStep(dothis){
+    dothis(this);
+    this.children.forEach(function(step){
+        step.eachStep(dothis);
+      });
+  }
 
-    // Given a structure level, return the kind and direction of transition to another step
-    step.relativeLevelPosition = function(level, target){
-      if(!target){ return ["none", "same", level]; };
-      var difference = target.indexes[level] - this.indexes[level];
+  // Given a structure level, return the kind and direction of transition to another step
+  relativeLevelPosition(level, target){
+    if(!target){ return ["none", "same", level]; };
+    var difference = target.indexes[level] - this.indexes[level];
 
-      if(difference < -1){
-        return ["jump", "backwards", "by-" + level];
-      } else if(difference == -1){
-        return ["advance", "backwards", "by-" + level];
-      } else if(difference == 1){
-        return ["advance", "forwards", "by-" + level];
-      } else if(difference > 1){
-        return ["jump", "forwards", "by-" + level];
-      }
+    if(difference < -1){
+      return ["jump", "backwards", "by-" + level];
+    } else if(difference == -1){
+      return ["advance", "backwards", "by-" + level];
+    } else if(difference == 1){
+      return ["advance", "forwards", "by-" + level];
+    } else if(difference > 1){
+      return ["jump", "forwards", "by-" + level];
+    }
 
-      return ["none", "same", "by-" + level];
-    };
+    return ["none", "same", "by-" + level];
+  }
 
-    step.relativePosition = function(target){
-      var relPos = this.relativeLevelPosition("slide", target);
-      if(relPos[0] == "none"){
-        relPos = this.relativeLevelPosition("item", target);
-      }
-      return relPos;
-    };
+  relativePosition(target){
+    var relPos = this.relativeLevelPosition("slide", target);
+    if(relPos[0] == "none"){
+      relPos = this.relativeLevelPosition("item", target);
+    }
+    return relPos;
+  }
 
-    step.addChild = function(newChild){
-      this.debugAssoc("Xanc", newChild);
-      var lastChild = this.children.slice(-1)[0];
-      if(lastChild){
-        this.debugAssoc("Xalc", lastChild);
-        newChild.addPrevStep(lastChild);
-        lastChild.addNextStep(newChild);
-      }
-      this.children.push(newChild);
-      this.addDescendant(newChild);
-    };
+  addChild(newChild){
+    this.debugAssoc("Xanc", newChild);
+    var lastChild = this.children.slice(-1)[0];
+    if(lastChild){
+      this.debugAssoc("Xalc", lastChild);
+      newChild.addPrevStep(lastChild);
+      lastChild.addNextStep(newChild);
+    }
+    this.children.push(newChild);
+    this.addDescendant(newChild);
+  }
 
-    step.addDescendant = function(newChild){
-      this.childrenById[newChild.element.id] = newChild;
+  addDescendant(newChild){
+    this.childrenById[newChild.element.id] = newChild;
 
-      if(newChild instanceof rhetButler.Steps.Slide){
-        this.lastSlide = newChild;
-        if (this.firstSlide == null) {
-          this.firstSlide = newChild;
-          this.firstItem = newChild;
-          if(this.prevSlide != null){
-            this.prevSlide.addNextSlide(newChild);
-            newChild.addPrevSlide(this.prevSlide);
-          }
-        }
-      }
-      if(newChild instanceof rhetButler.Steps.Item){
-        this.lastItem = newChild;
-      }
+    newChild.joinParent(this);
 
-      this.propagateDescendant(newChild);
-    };
+    this.propagateDescendant(newChild);
+  }
 
-    step.lastChild = function(){
-      if(this.children.length > 0){
-        return this.children.slice(-1)[0];
-      } else {
-        return this
-      }
-    };
+  joinParent(parent){}
 
-    step.debugAssoc = function(assoc, other){
-      //console.log(assoc, this.toString(), other.toString());
-    };
+  lastChild(){
+    if(this.children.length > 0){
+      return this.children.slice(-1)[0];
+    } else {
+      return this
+    }
+  }
 
-    step.addNextRoot = function(root){
-      this.debugAssoc("Xnr", root)
-    };
+  debugAssoc(assoc, other){
+    //console.log(assoc, this.toString(), other.toString());
+  }
 
-    step.addPrevRoot = function(root){
-      this.debugAssoc("Xpr", root)
-    };
+  addNextRoot(root){
+    this.debugAssoc("Xnr", root)
+  }
 
-    step.addNextGroup = function(group){
-      this.debugAssoc("Xng", group)
-    };
+  addPrevRoot(root){
+    this.debugAssoc("Xpr", root)
+  }
 
-    step.addPrevGroup = function(group){
-      this.debugAssoc("Xpg", group)
-    };
+  addNextGroup(group){
+    this.debugAssoc("Xng", group)
+  }
 
-    step.addNextSlide = function(slide){
-      this.debugAssoc("Xns", slide)
-    };
+  addPrevGroup(group){
+    this.debugAssoc("Xpg", group)
+  }
 
-    step.addPrevSlide = function(slide){
-      this.debugAssoc("Xps", slide)
-    };
+  addNextSlide(slide){
+    this.debugAssoc("Xns", slide)
+  }
 
-    step.addNextItem = function(item){
-      this.debugAssoc("Xni", item)
-    };
+  addPrevSlide(slide){
+    this.debugAssoc("Xps", slide)
+  }
 
-    step.addPrevItem = function(item){
-      this.debugAssoc("Xpi", item)
-    };
-  })();
+  addNextItem(item){
+    this.debugAssoc("Xni", item)
+  }
+
+  addPrevItem(item){
+    this.debugAssoc("Xpi", item)
+  }
+}

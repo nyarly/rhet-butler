@@ -1,53 +1,50 @@
-goog.provide('rhetButler.Steps.Group');
-goog.require('rhetButler.ChildStep');
+import ChildStep from "../child-step.js";
 
-rhetButler.Steps.Group = function(parent, element, indexes){
-  this.setup(parent, element, indexes);
-};
-rhetButler.Steps.Group.prototype = new rhetButler.ChildStep;
+export default class extends ChildStep {
+  constructor(parent, element, indexes){
+    super(parent, element, indexes);
+  }
 
-;(function(){
-    var group = rhetButler.Steps.Group.prototype;
-    group.addNextStep = function(step){
-      step.addPrevGroup(this);
-    };
+  addNextStep(step){
+    step.addPrevGroup(this);
+  }
 
-    group.addPrevStep = function(step){
-      step.addNextGroup(this);
-    };
+  addPrevStep(step){
+    step.addNextGroup(this);
+  }
 
-    group.addNextSlide = function(slide){
-      this.debugAssoc("gns", slide)
+  addNextSlide(slide){
+    this.debugAssoc("gns", slide)
 
-      this.nextSlide = slide;
-      if(this.lastSlide){
-        this.lastSlide.addNextSlide(slide);
-      }
-    };
+    this.nextSlide = slide;
+    if(this.lastSlide){
+      this.lastSlide.addNextSlide(slide);
+    }
+  }
 
-    group.addPrevSlide = function(slide){
-      this.debugAssoc("gps", slide)
-      if(!this.lastSlide){
-        this.lastSlide = slide;
-      }
-      if(!this.lastItem){
-        this.lastItem = slide.lastChild();
-      }
-      this.prevSlide = slide;
-      this.prevItem = slide.lastChild();
-    };
+  addPrevSlide(slide){
+    this.debugAssoc("gps", slide)
+    if(!this.lastSlide){
+      this.lastSlide = slide;
+    }
+    if(!this.lastItem){
+      this.lastItem = slide.lastChild();
+    }
+    this.prevSlide = slide;
+    this.prevItem = slide.lastChild();
+  }
 
-    group.addNextGroup = function(group){
-      this.debugAssoc("gng", group)
-      //
-    };
+  addNextGroup(group){
+    this.debugAssoc("gng", group)
+    //
+  }
 
-    group.addPrevGroup = function(group){
-      this.debugAssoc("gpg", group)
+  addPrevGroup(group){
+    this.debugAssoc("gpg", group)
 
-      this.prevSlide = group.lastSlide;
+    this.prevSlide = group.lastSlide;
 
-      this.lastSlide = group.lastSlide;
-      this.lastItem = group.lastItem;
-    };
-  })();
+    this.lastSlide = group.lastSlide;
+    this.lastItem = group.lastItem;
+  }
+}

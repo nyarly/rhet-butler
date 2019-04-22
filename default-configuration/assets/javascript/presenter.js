@@ -5,31 +5,27 @@
 //  Builds StationLists
 
 import * as utils from "./utils.js";
+import TreeBuilder from "./rhet-butler/tree-builder.js";
+import TransitionStations from "./rhet-butler/transition-stations.js";
+import Step from './rhet-butler/step.js';
 
-export class Presenter {
-  constructor(document, window){
+export default class {
+  constructor(document, window, rootId){
     this.document = document;
     this.body = document.body;
     this.window = window;
     this.stepsById = {};
-    this.rootStep = null;
-    this.currentTransition = null;
 
     this.previousSlideIndex = 0;
     this.nextStepIndex = 0;
 
-    this.previousStepIndex = 0;
-    this.nextStepIndex = 0;
-  }
-
-  setup(rootId)
     this.root = utils.byId(rootId);
     this.body.classList.remove("rhet-disabled");
     this.body.classList.add("rhet-enabled");
 
     // get and init steps
     var stepElements = utils.arrayify(this.root.getElementsByClassName("rhet-butler"));
-    var treeBuilder = new rhetButler.TreeBuilder(this.root, "rhet-butler");
+    var treeBuilder = new TreeBuilder(this.root, "rhet-butler");
     this.rootStep = treeBuilder.buildTree();
     this.rootStep.eachStep(function (step) {
         step.addClass("future");
@@ -37,9 +33,10 @@ export class Presenter {
 
     var prev = this.rootStep.firstItem;
 
-    this.currentTransition = new rhetButler.TransitionStations(this, prev, prev, prev);
+    this.currentTransition = new TransitionStations(this, prev, prev, prev);
     this.currentTransition.forceFinish();
 
+    this.unbinders = [];
     this.bindHandlers();
 
     utils.triggerEvent(this.root, "rhet:init", { api: this });
@@ -52,6 +49,10 @@ export class Presenter {
   //      nextStep.eachParent(function(step){ step.removeClass("after"); });
   //    }
 
+  teardown(){
+    this.unbindHandlers();
+  }
+
   markRange(start, end, mark){
     this.stepsList.slice(start, end).forEach(function(elem){
         var containers;
@@ -61,8 +62,25 @@ export class Presenter {
       }, this);
   }
 
+  bindHandler(target, event, funk, capture) {
+    this.unbinders.push(() => {
+        target.removeEventListener(event, funk, capture);
+      })
+
+    target.addEventListener(event, funk, capture);
+  }
+
+  unbindHandlers() {
+    for(let f of this.unbinders){
+      f();
+    }
+  }
+
   bindHandlers(){
     var presenter = this;
+
+    this.unbindHandlers();
+
     //Our own :init event
     var initListener = function(){
       // last hash detected
@@ -83,12 +101,13 @@ export class Presenter {
       // And it has to be set after animation finishes, because in Chrome it
       // makes transtion laggy.
       // BUG: http://code.google.com/p/chromium/issues/detail?id=62820
-      presenter.root.addEventListener("rhet:stepenter", function (event) {
+
+      presenter.bindHandler(presenter.root, "rhet:stepenter", function (event) {
           window.location.hash = lastHash = "#/" + event.target.id;
         }, false);
 
 
-      window.addEventListener("hashchange",
+      presenter.bindHandler(window, "hashchange",
         function(event){
           if(window.location.hash !== lastHash) {
             presenter.moveTo( presenter.getElementFromHash() );
@@ -101,13 +120,13 @@ export class Presenter {
       presenter.teleport(presenter.getElementFromHash() || presenter.rootStep.firstItem);
     }
 
-    this.root.addEventListener("rhet:init", initListener, false);
+    this.bindHandler(this.root, "rhet:init", initListener, false);
   }
 
   resolveStep(reference, thing){
     // find by id
     // find by relavtive pos (next,prev)*(slide,item)
-    if(reference instanceof rhetButler.Step){
+    if(reference instanceof Step){
       return reference;
     } else {
       switch(reference){
@@ -162,7 +181,7 @@ export class Presenter {
       }
 
     this.currentTransition.cancel();
-    this.currentTransition = new rhetButler.TransitionStations(this, previousStep, currentStep, nextStep);
+    this.currentTransition = new TransitionStations(this, previousStep, currentStep, nextStep);
   }
 
   teleport(reference, thing){

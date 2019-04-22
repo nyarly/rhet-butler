@@ -9,7 +9,6 @@
     <meta name="description" content="<%= presentation.description %>" />
     <meta name="author" content="<%= presentation.author_name %>" />
 
-    <script src="/javascript/rhet-present.js"></script>
     <script src="/javascript/keyboard-nav.js"></script>
     <%= render 'stylesheets.html' %>
     <%= render 'header-javascript.html' %>
@@ -28,10 +27,11 @@
     </div>
 
     <%= render 'live-javascript.html' %>
-    <script>
-        var presenter = new rhetButler.Presenter(document, window);
-        presenter.setup("presentation");
-        setupUserInterface(presenter);
+    <script type='module'>
+      import Presenter from '/javascript/presenter.js';
+
+      var presenter = new rhetButler.Presenter(document, window, "presentation");
+      setupUserInterface(presenter);
     </script>
 
   </body>

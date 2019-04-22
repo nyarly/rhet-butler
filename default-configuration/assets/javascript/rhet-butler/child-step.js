@@ -1,21 +1,13 @@
-goog.provide('rhetButler.ChildStep');
-goog.require('rhetButler.Step');
+import Step from './step.js';
 
-rhetButler.ChildStep = function(){
-};
-rhetButler.ChildStep.prototype = new rhetButler.Step;
+export default class extends Step {
+  constructor(parent, element, indexes){
+    super(element, indexes);
+    this.parent = parent;
+    this.parent.addChild(this);
+  };
 
-;(function(){
-    var childStep = rhetButler.ChildStep.prototype;
-    var supertype = rhetButler.Step.prototype;
-
-    childStep.setup = function(parent, element, indexes){
-      this.parent = parent;
-      supertype.setup.call(this, element, indexes);
-      this.parent.addChild(this);
-    };
-
-    childStep.propagateDescendant = function(newChild){
-      this.parent.addDescendant(newChild);
-    };
-})();
+  propagateDescendant(newChild){
+    this.parent.addDescendant(newChild);
+  };
+}
