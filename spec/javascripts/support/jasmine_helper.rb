@@ -1,3 +1,5 @@
+require 'jasmine'
+
 class JasminePage < Jasmine::Page
   def runner_template
     File.read(File.join(File.dirname(__FILE__), "run.html.erb"))

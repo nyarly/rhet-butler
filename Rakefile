@@ -1,6 +1,5 @@
 # vim: set ft=ruby :
 require 'corundum/tasklibs'
-require 'closure-tasklib'
 require 'jasmine'
 
 load 'jasmine/tasks/jasmine.rake'
@@ -40,12 +39,7 @@ module Corundum
   end
 end
 
-ClosureCompiler::Build.new do |build|
-  build.target_dir.absolute_path = "default-configuration/assets/javascript"
-  build.target_javascript.relative_path = "rhet-present.js"
-  build.entry_point = "rhetButler.Presenter"
-end
-
-task 'gemspec_files:files_exist' => "default-configuration/assets/javascript/rhet-present.js"
+#task 'gemspec_files:files_exist' =>
+#"default-configuration/assets/javascript/rhet-present.js"
 
 task :default => [:release, :publish_docs]
