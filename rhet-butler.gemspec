@@ -90,6 +90,11 @@ Gem::Specification.new do |spec|
   ] +
   # !!find default-configuration -not -regex '.*\.sw.' -type f 2>/dev/null
   %w[
+    default-configuration/assets/fonts.gstatic.com/s/droidsansmono/v10/6NUO8FuJNQ2MbkrZ5-J8lKFrp7pRef2u.ttf
+    default-configuration/assets/fonts.gstatic.com/s/slackey/v9/N0bV2SdQO-5yM0-dGlNQIQ.ttf
+    default-configuration/assets/fonts.gstatic.com/s/arimo/v12/P5sBzZCDf9_T_1Wi4TRNrZc.ttf
+    default-configuration/assets/fonts.gstatic.com/s/cinzeldecorative/v7/daaHSScvJGqLYhG8nNt8KPPswUAPniZoadlESTQ.ttf
+    default-configuration/assets/fonts.gstatic.com/s/cinzeldecorative/v7/daaHSScvJGqLYhG8nNt8KPPswUAPniZQa9lESTQ.ttf
     default-configuration/assets/apple-touch-icon-precomposed.png
     default-configuration/assets/fonts/opensans/v6/PRmiXeptR36kaC0GEAetxi8cqLH4MEiSE0ROcU-qHOA.ttf
     default-configuration/assets/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3aCWcynf_cDxXwCLxiixG1c.ttf
@@ -105,6 +110,7 @@ Gem::Specification.new do |spec|
     default-configuration/assets/fonts/ptserif/v5/03aPdn7fFF3H6ngCgAlQzC3USBnSvpkopQaUR-2r7iU.ttf
     default-configuration/assets/rhet-butler.jpg
     default-configuration/assets/favicon.ico
+    default-configuration/assets/fonts.googleapis.com/css/family=Arimo:700|Droid\ Sans\ Mono|Cinzel\ Decorative:700,900|Slackey,subset=latin,latin-ext
     default-configuration/assets/stylesheets/rhet.css.sass
     default-configuration/assets/stylesheets/highlight/tomorrow-night-blue.css
     default-configuration/assets/stylesheets/highlight/tomorrow-night.css
