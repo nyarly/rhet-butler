@@ -29,7 +29,7 @@ describe RhetButler::Web::MainApp do
 
       it "should have a script tag for impress.js" do
         doc = Nokogiri::HTML(last_response.body)
-        doc.xpath("//script[contains(@src, 'rhet-present.js')]").should_not be_empty
+        doc.xpath("//script/text()[contains(., 'javascript/presenter.js')]").should_not be_empty
       end
     end
 
@@ -45,7 +45,7 @@ describe RhetButler::Web::MainApp do
 
     describe "/javascript/rhet-present.js" do
       before :each do
-        get "/javascript/rhet-present.js"
+        get "/javascript/presenter.js"
       end
 
       it "should serve the javascript" do
@@ -57,9 +57,9 @@ describe RhetButler::Web::MainApp do
       end
     end
 
-    describe "/assets/javascript/rhet-present.js" do
+    describe "/assets/javascript/presenter.js" do
       before :each do
-        get "/assets/javascript/rhet-present.js"
+        get "/assets/javascript/presenter.js"
       end
 
       it "should serve the javascript" do

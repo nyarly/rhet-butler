@@ -31,7 +31,7 @@ describe RhetButler::SlideLoader do
   end
 
   it "should parse YAML for the configs" do
-    slides.should have_at_least(1).slides
+    slides.slides.length.should be >= 1
     slides.should be_all{|slide| RhetButler::Slide === slide or RhetButler::SlideGroup === slide }
   end
 

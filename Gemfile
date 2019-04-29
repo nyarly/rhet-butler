@@ -11,5 +11,8 @@ gem 'vcr'
 gem 'webmock'
 gem 'jasmine'
 gem 'chrome_remote'
+gem 'rspec'
+gem 'rspec-its'
+gem 'simplecov-json'
 
 gemspec name: 'rhet-butler'

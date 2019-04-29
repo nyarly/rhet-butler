@@ -1,4 +1,5 @@
 require 'cadre/simplecov'
+require 'simplecov-json'
 
 SimpleCov.start do
   coverage_dir('corundum/docs/coverage')

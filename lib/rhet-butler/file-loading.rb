@@ -26,7 +26,7 @@ module RhetButler
         return YAML.load_stream(file.contents).flatten
       rescue => ex
         puts "While processing `#{file.full_path}`"
-        puts ex.class
+        puts "  #{ex.class}: #{ex.message}"
         raise
       end
     end

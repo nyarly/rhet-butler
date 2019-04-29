@@ -1,6 +1,5 @@
 .bundle/
 *.sw?
-slides.yaml
 static/
 last_run
 corundum/
@@ -8,10 +7,10 @@ spec_support/tmp/
 node_modules/
 pkg/
 coverage/
-default-configuration/assets/javascript/rhet-present.*
 javascript/tmp/
 .sass-cache/
 errors.err
 .cadre
 .template-cache/
 perftools.*
+example_status

@@ -1,0 +1,30 @@
+@font-face {
+  font-family: 'Arimo';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Arimo Bold'), local('Arimo-Bold'), url(../../fonts.gstatic.com/s/arimo/v12/P5sBzZCDf9_T_1Wi4TRNrZc.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Cinzel Decorative';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Cinzel Decorative Bold'), local('CinzelDecorative-Bold'), url(../../fonts.gstatic.com/s/cinzeldecorative/v7/daaHSScvJGqLYhG8nNt8KPPswUAPniZoadlESTQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Cinzel Decorative';
+  font-style: normal;
+  font-weight: 900;
+  src: local('Cinzel Decorative Black'), local('CinzelDecorative-Black'), url(../../fonts.gstatic.com/s/cinzeldecorative/v7/daaHSScvJGqLYhG8nNt8KPPswUAPniZQa9lESTQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Droid Sans Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Droid Sans Mono Regular'), local('DroidSansMono-Regular'), url(../../fonts.gstatic.com/s/droidsansmono/v10/6NUO8FuJNQ2MbkrZ5-J8lKFrp7pRef2u.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Slackey';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Slackey Regular'), local('Slackey-Regular'), url(../../fonts.gstatic.com/s/slackey/v9/N0bV2SdQO-5yM0-dGlNQIQ.ttf) format('truetype');
+}

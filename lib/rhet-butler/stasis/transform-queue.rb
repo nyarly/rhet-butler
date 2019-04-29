@@ -21,6 +21,8 @@ module RhetButler
         end
 
         def lookup(type)
+          type.sub!(/;.*/, '')
+          type.chomp!
           transformers.fetch(type) do
             transformers.fetch(nil)
           end

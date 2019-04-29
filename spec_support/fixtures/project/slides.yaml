@@ -1,0 +1,8 @@
+---
+- !slide #Test#
+- !include included.yaml
+- !slide
+  content: !embed
+    source: embedded.txt
+- !group
+  - !slide grouped one
