@@ -43,7 +43,6 @@ Gem::Specification.new do |spec|
     lib/rhet-butler/slide-contents/embed.rb
     lib/rhet-butler/slide-contents.rb
     lib/rhet-butler/yaml-schema.rb
-    lib/rhet-butler/class-registry.rb
     lib/rhet-butler/static-generator.rb
     lib/rhet-butler/web/presentation-app.rb
     lib/rhet-butler/web/assets-app.rb
