@@ -9,7 +9,20 @@ Missing assets: 404 (not 500)
 Skel files for init - add *anything* to the right config dirs and have it
 delivered to the new project
 
+Devolve to simple websockets instead of sockjs
+
 *** 1.0 milestone ***
+
+Presentation toolbar
+  [prev] [slide index] [29:05] [next]
+  Presenter slide index
+    UX needs consideration
+    Jump to slide
+  Next/previous buttons (a/o/t taps on areas of screen)
+  Timers (count up/down)
+  Follower information (where they are etc)
+  Voting?
+  Twitter?
 
 Add transition editing help - "transition station breakpoints" + buttons/keys to manage
 
@@ -26,22 +39,11 @@ Raw HTML inclusion (pre rendered/hand built slides)
 
 cue macros outside of RedCloth %(1) (using Ultisnips for this...)
 
-Sub-presentation:
+Sub-presentation: (? I think !embed handles this)
   e.g. iframe or svg
   Node in the JS prez tree that references an embedded HTML thing
   On parse, hooks in r-b.js into the embedded thing
   Focus "sticks" on the 'included' node until we leave it.
-
-Presentation toolbar
-  [prev] [slide index] [29:05] [next]
-  Presenter slide index
-    UX needs consideration
-    Jump to slide
-  Next/previous buttons (a/o/t taps on areas of screen)
-  Timers (count up/down)
-  Follower information (where they are etc)
-  Voting?
-  Twitter?
 
 Live follow widgets
   voting
