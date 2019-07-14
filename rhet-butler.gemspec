@@ -12,7 +12,6 @@ Gem::Specification.new do |spec|
   design it in CSS, run the presentation with your smartphone over Websockets.
   EndDescription
 
-  spec.rubyforge_project= spec.name.downcase
   spec.homepage        = "http://nyarly.github.com/#{spec.name.downcase}"
   spec.required_rubygems_version = Gem::Requirement.new(">= 0") if spec.respond_to? :required_rubygems_version=
 
