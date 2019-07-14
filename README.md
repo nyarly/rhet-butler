@@ -55,7 +55,7 @@ do yourself a favor becoming more familiar.
 
 While you're working on a presentation, you can use
 
-  rhet-butler author
+    rhet-butler author
 
 which will reload all files whenever you reload the browser, so you can check your changes.
 
@@ -95,8 +95,8 @@ Yes.
 
 # Many Thanks
 
-Scott Chacon - wrote Showoff, the original inspiration
-Bartek Szopka - author of impress.js which inspired the JS presentation system
-Ryan Tomayko - for Tilt, the excellent templating plugin system
-Ivan Sagalaev - author of highlight.js, used for code highlighting
-Google Fonts
+- Scott Chacon - wrote Showoff, the original inspiration
+- Bartek Szopka - author of impress.js which inspired the JS presentation system
+- Ryan Tomayko - for Tilt, the excellent templating plugin system
+- Ivan Sagalaev - author of highlight.js, used for code highlighting
+- Google Fonts
