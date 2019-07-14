@@ -26,7 +26,7 @@ need a shared directory called cats/
 
 Start by
 
-  gem install rhet-butler
+    gem install rhet-butler
 
 This is one of the rare gems that's actually intended to be used as a command
 line utility, so it really helps to install it system-wide.  (Or at least in
@@ -36,7 +36,7 @@ your user gem path.)
 
 Run
 
-  rhet-butler serve
+    rhet-butler serve
 
 You'll see some possible URLs for the presentation - pick one that seems
 appropriate and plug it into your browser. There's a setup page with
@@ -74,11 +74,11 @@ There's a few custom YAML tags that rhet-butler slides use:
 
 For a more complete reference for the special tags you can use in your slides, see [FORMAT](FORMAT.md).
 
-Rhet-Butler leans hard on the YAML format, c.f. (YAML)[http://yaml.org/YAML_for_ruby.html] or (this cheatsheet.)[http://www.yaml.org/refcard.html]
+Rhet-Butler leans hard on the YAML format, c.f. [YAML](http://yaml.org/YAML_for_ruby.html) or this [YAML cheatsheet](http://www.yaml.org/refcard.html).
 
 # Future work
 
-See the (TODO)[TODO] list.
+See the [TODO](TODO) list.
 
 # FAQ
 
