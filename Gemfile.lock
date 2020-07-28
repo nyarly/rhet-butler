@@ -74,7 +74,7 @@ GEM
       rack (>= 1.2.1)
       rake
     jasmine-core (3.4.0)
-    json (2.2.0)
+    json (2.3.1)
     kramdown (1.7.0)
     mattock (0.10.1)
       calibrate (~> 0.0.1)
