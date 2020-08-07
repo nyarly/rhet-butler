@@ -7,7 +7,7 @@ PATH
       compass-core (~> 1.0.0)
       compass-import-once (~> 1.0.1)
       crass
-      kramdown (~> 1.7.0)
+      kramdown (>= 1.7, < 2.4)
       nokogiri
       rack (> 0)
       rqrcode (~> 0.4.2)
@@ -75,7 +75,8 @@ GEM
       rake
     jasmine-core (3.4.0)
     json (2.2.0)
-    kramdown (1.7.0)
+    kramdown (2.3.0)
+      rexml
     mattock (0.10.1)
       calibrate (~> 0.0.1)
       caliph (~> 0.3)
@@ -98,6 +99,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    rexml (3.2.4)
     rqrcode (0.4.2)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
@@ -132,7 +134,7 @@ GEM
       rack
       rack-mount (~> 0.8.3)
       thin
-    system-getifaddrs (0.2.1)
+    system-getifaddrs (0.2.3)
     thin (1.7.2)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
