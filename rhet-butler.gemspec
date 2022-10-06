@@ -247,7 +247,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("rqrcode", "~> 0.4.2")
 
   spec.add_dependency("RedCloth", "~> 4.3.0")
-  spec.add_dependency("kramdown", ">= 1.7", "< 2.4")
+  spec.add_dependency("kramdown", ">= 1.7", "< 2.5")
 
   #spec.post_install_message = "Thanks for installing my gem!"
 end
