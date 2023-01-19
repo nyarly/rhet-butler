@@ -92,7 +92,7 @@ GEM
     phantomjs (2.1.1.0)
     public_suffix (5.0.0)
     racc (1.6.0)
-    rack (2.2.4)
+    rack (2.2.6.2)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
     rack-test (1.1.0)
